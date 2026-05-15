@@ -1,0 +1,66 @@
+import { http } from "./client";
+import type {
+  Certificate,
+  CertificateWrite,
+  Education,
+  EducationWrite,
+  Experience,
+  ExperienceWrite,
+  MediaAsset,
+  Page,
+  Project,
+  ProjectWrite,
+  SkillCategory,
+  SkillCategoryWrite,
+  Technology,
+  TechnologyWrite,
+  TimelineEntry,
+  TimelineEntryWrite,
+} from "./types";
+
+type Id = number;
+
+function crud<T, W = T>(base: string) {
+  return {
+    async list(): Promise<Page<T>> {
+      const { data } = await http.get<Page<T>>(`${base}/`);
+      return data;
+    },
+    async retrieve(id: Id): Promise<T> {
+      const { data } = await http.get<T>(`${base}/${id}/`);
+      return data;
+    },
+    async create(payload: Partial<W>): Promise<T> {
+      const { data } = await http.post<T>(`${base}/`, payload);
+      return data;
+    },
+    async update(id: Id, payload: Partial<W>): Promise<T> {
+      const { data } = await http.patch<T>(`${base}/${id}/`, payload);
+      return data;
+    },
+    async destroy(id: Id): Promise<void> {
+      await http.delete(`${base}/${id}/`);
+    },
+    async reorder(ids: Id[]): Promise<void> {
+      await Promise.all(ids.map((id, index) => http.patch(`${base}/${id}/`, { order: index })));
+    },
+  };
+}
+
+export const experienceApi = crud<Experience, ExperienceWrite>("/experiences");
+export const educationApi = crud<Education, EducationWrite>("/educations");
+export const certificateApi = crud<Certificate, CertificateWrite>("/certificates");
+export const projectApi = crud<Project, ProjectWrite>("/projects");
+export const timelineApi = crud<TimelineEntry, TimelineEntryWrite>("/timeline");
+export const technologyApi = crud<Technology, TechnologyWrite>("/technologies");
+export const skillCategoryApi = crud<SkillCategory, SkillCategoryWrite>("/skill-categories");
+
+export async function uploadMedia(file: File): Promise<MediaAsset> {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("kind", file.type.startsWith("image/") ? "image" : "document");
+  const { data } = await http.post<MediaAsset>("/media-assets/", form, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+}

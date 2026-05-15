@@ -1,5 +1,6 @@
 {
   "nav": {
+    "brand": "Nicolas Mischler",
     "summary": "Profil",
     "experience": "Erfahrung",
     "education": "Ausbildung",
@@ -18,5 +19,60 @@
     "loading": "Lädt…",
     "error": "Der Lebenslauf konnte nicht geladen werden.",
     "level": "Niveau"
+  },
+  "common": {
+    "loading": "Laden",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "confirm": "Bestätigen"
+  },
+  "admin": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "add": "Hinzufügen",
+    "edit": "Bearbeiten",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "crop": "Zuschneiden & hochladen",
+    "chooseFile": "Datei auswählen…",
+    "viewPublicCv": "Öffentlichen CV anzeigen",
+    "nav": {
+      "dashboard": "Übersicht",
+      "timeline": "Zeitleiste",
+      "technologies": "Technologien"
+    },
+    "fields": {
+      "name": "Name",
+      "name_de": "Name (DE)",
+      "slug": "Slug",
+      "role": "Rolle",
+      "role_de": "Rolle (DE)",
+      "company": "Unternehmen",
+      "location": "Ort",
+      "start_date": "Startdatum",
+      "end_date": "Enddatum",
+      "description": "Beschreibung",
+      "description_de": "Beschreibung (DE)",
+      "degree": "Abschluss",
+      "degree_de": "Abschluss (DE)",
+      "institution": "Institution",
+      "issuer": "Aussteller",
+      "issue_date": "Ausstellungsdatum",
+      "title": "Titel",
+      "title_de": "Titel (DE)",
+      "date": "Datum",
+      "kind": "Art",
+      "category": "Kategorie",
+      "icon": "Symbol",
+      "summary": "Zusammenfassung",
+      "summary_de": "Zusammenfassung (DE)",
+      "url": "URL",
+      "repo_url": "Repository-URL",
+      "published": "Veröffentlicht",
+      "mediaFile": "Anhang"
+    }
   }
 }

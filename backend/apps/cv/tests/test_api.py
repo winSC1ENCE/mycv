@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import pytest
+from django.contrib.auth import get_user_model
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 from rest_framework.test import APIClient
 
@@ -21,6 +23,8 @@ from .factories import (
     TechnologyFactory,
     TimelineEntryFactory,
 )
+
+User = get_user_model()
 
 pytestmark = pytest.mark.django_db
 
@@ -118,3 +122,146 @@ def test_openapi_schema(api_client: APIClient) -> None:
     resp = api_client.get("/api/schema/")
     assert resp.status_code == status.HTTP_200_OK
     assert b"openapi" in resp.content
+
+
+# ---------------------------------------------------------------------------
+# Permission tests — anonymous cannot write, admin can
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture()
+def admin_client(db):
+    user = User.objects.create_user(username="admin", password="x", is_staff=True)
+    client = APIClient()
+    client.force_authenticate(user=user)
+    return client
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/api/experiences/",
+        "/api/educations/",
+        "/api/certificates/",
+        "/api/projects/",
+        "/api/technologies/",
+        "/api/timeline/",
+    ],
+)
+def test_anon_cannot_post(api_client: APIClient, path: str) -> None:
+    resp = api_client.post(path, {}, format="json")
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+
+
+def test_admin_can_create_experience(admin_client: APIClient) -> None:
+    person = PersonFactory()
+    resp = admin_client.post(
+        "/api/experiences/",
+        {
+            "person": person.pk,
+            "role": "Engineer",
+            "company": "ACME",
+            "start_date": "2023-01-01",
+        },
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    assert models.Experience.objects.filter(role="Engineer").exists()
+
+
+def test_admin_can_update_experience(admin_client: APIClient) -> None:
+    person = PersonFactory()
+    exp = ExperienceFactory(person=person, role="Old Role")
+    resp = admin_client.patch(
+        f"/api/experiences/{exp.pk}/",
+        {"role": "New Role"},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    exp.refresh_from_db()
+    assert exp.role == "New Role"
+
+
+def test_admin_can_delete_experience(admin_client: APIClient) -> None:
+    person = PersonFactory()
+    exp = ExperienceFactory(person=person)
+    resp = admin_client.delete(f"/api/experiences/{exp.pk}/")
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    assert not models.Experience.objects.filter(pk=exp.pk).exists()
+
+
+# ---------------------------------------------------------------------------
+# Media asset upload
+# ---------------------------------------------------------------------------
+
+
+def _make_png() -> SimpleUploadedFile:
+    # Minimal 1x1 PNG (67 bytes)
+    png_bytes = (
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01"
+        b"\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00"
+        b"\x00\x0cIDATx\x9cc\xf8\x0f\x00\x00\x11\x00\x01\xbc1\x14"
+        b"I\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    return SimpleUploadedFile("test.png", png_bytes, content_type="image/png")
+
+
+def test_admin_can_upload_media_asset(admin_client: APIClient) -> None:
+    resp = admin_client.post(
+        "/api/media-assets/",
+        {"file": _make_png(), "alt_text": "Test image", "kind": "image"},
+        format="multipart",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    data = resp.json()
+    assert "id" in data
+
+
+def test_anon_cannot_upload_media_asset(api_client: APIClient) -> None:
+    resp = api_client.post(
+        "/api/media-assets/",
+        {"file": _make_png(), "alt_text": "Test image"},
+        format="multipart",
+    )
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
+
+
+def test_admin_sees_unpublished_media_assets(admin_client: APIClient) -> None:
+    MediaAssetFactory(is_published=False)
+    resp = admin_client.get("/api/media-assets/")
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["count"] == 1
+
+
+def test_anon_cannot_see_unpublished_media_assets(api_client: APIClient) -> None:
+    MediaAssetFactory(is_published=False)
+    resp = api_client.get("/api/media-assets/")
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["count"] == 0
+
+
+def test_admin_cv_list_includes_unpublished(admin_client: APIClient) -> None:
+    PersonFactory(is_published=False)
+    resp = admin_client.get("/api/cv/")
+    assert resp.status_code == status.HTTP_200_OK
+
+
+@pytest.mark.parametrize(
+    "path,factory",
+    [
+        ("/api/experiences/", ExperienceFactory),
+        ("/api/educations/", EducationFactory),
+        ("/api/certificates/", CertificateFactory),
+        ("/api/projects/", ProjectFactory),
+        ("/api/technologies/", TechnologyFactory),
+        ("/api/skill-categories/", SkillCategoryFactory),
+        ("/api/timeline/", TimelineEntryFactory),
+    ],
+)
+def test_admin_sees_unpublished_entities(
+    admin_client: APIClient, path: str, factory: type
+) -> None:
+    factory(is_published=False)
+    resp = admin_client.get(path)
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["count"] == 1

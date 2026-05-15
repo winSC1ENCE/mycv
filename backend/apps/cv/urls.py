@@ -13,5 +13,6 @@ router.register("projects", views.ProjectViewSet, basename="project")
 router.register("technologies", views.TechnologyViewSet, basename="technology")
 router.register("skill-categories", views.SkillCategoryViewSet, basename="skill-category")
 router.register("timeline", views.TimelineEntryViewSet, basename="timeline")
+router.register("media-assets", views.MediaAssetViewSet, basename="media-asset")
 
 urlpatterns = router.urls

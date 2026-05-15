@@ -3,6 +3,13 @@
  * Phase 3 will replace this with openapi-typescript generation from /api/schema/.
  */
 
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  is_staff: boolean;
+}
+
 export interface MediaAsset {
   id: number;
   url: string;
@@ -116,6 +123,35 @@ export interface TimelineEntry {
   order: number;
   is_published: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Paginated list response shape (DRF PageNumberPagination)
+// ---------------------------------------------------------------------------
+export interface Page<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+// ---------------------------------------------------------------------------
+// Write payloads (flat, FK fields as IDs)
+// ---------------------------------------------------------------------------
+
+export type ExperienceWrite = Omit<Experience, "technologies"> & {
+  technologies: number[];
+  person?: number;
+};
+export type EducationWrite = Education & { person?: number };
+export type CertificateWrite = Omit<Certificate, "media"> & { media: number | null; person?: number };
+export type ProjectWrite = Omit<Project, "technologies" | "media"> & {
+  technologies: number[];
+  media: number[];
+  person?: number;
+};
+export type TimelineEntryWrite = TimelineEntry & { person?: number };
+export type TechnologyWrite = Technology & { is_published: boolean };
+export type SkillCategoryWrite = Omit<SkillCategory, "skills"> & { is_published: boolean };
 
 export interface Cv {
   id: number;

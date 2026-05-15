@@ -6,6 +6,7 @@ import App from "./App.vue";
 import router from "./router";
 import en from "./locales/en.json";
 import de from "./locales/de.json";
+import { useAuthStore } from "./stores/auth";
 
 import "./styles/tokens.css";
 import "./styles/normal.css";
@@ -19,4 +20,8 @@ const i18n = createI18n({
   messages: { en, de },
 });
 
-createApp(App).use(createPinia()).use(router).use(i18n).mount("#app");
+const app = createApp(App).use(createPinia()).use(router).use(i18n);
+
+// Hydrate auth state from existing session before first navigation
+const authStore = useAuthStore();
+authStore.init().finally(() => app.mount("#app"));

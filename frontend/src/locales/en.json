@@ -1,5 +1,6 @@
 {
   "nav": {
+    "brand": "Nicolas Mischler",
     "summary": "Profile",
     "experience": "Experience",
     "education": "Education",
@@ -18,5 +19,60 @@
     "loading": "Loading…",
     "error": "Something went wrong loading the CV.",
     "level": "Level"
+  },
+  "common": {
+    "loading": "Loading",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm": "Confirm"
+  },
+  "admin": {
+    "login": "Sign in",
+    "logout": "Sign out",
+    "username": "Username",
+    "password": "Password",
+    "add": "Add",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "crop": "Crop & Upload",
+    "chooseFile": "Choose file…",
+    "viewPublicCv": "View public CV",
+    "nav": {
+      "dashboard": "Dashboard",
+      "timeline": "Timeline",
+      "technologies": "Technologies"
+    },
+    "fields": {
+      "name": "Name",
+      "name_de": "Name (DE)",
+      "slug": "Slug",
+      "role": "Role",
+      "role_de": "Role (DE)",
+      "company": "Company",
+      "location": "Location",
+      "start_date": "Start date",
+      "end_date": "End date",
+      "description": "Description",
+      "description_de": "Description (DE)",
+      "degree": "Degree",
+      "degree_de": "Degree (DE)",
+      "institution": "Institution",
+      "issuer": "Issuer",
+      "issue_date": "Issue date",
+      "title": "Title",
+      "title_de": "Title (DE)",
+      "date": "Date",
+      "kind": "Kind",
+      "category": "Category",
+      "icon": "Icon",
+      "summary": "Summary",
+      "summary_de": "Summary (DE)",
+      "url": "URL",
+      "repo_url": "Repository URL",
+      "published": "Published",
+      "mediaFile": "Attachment"
+    }
   }
 }

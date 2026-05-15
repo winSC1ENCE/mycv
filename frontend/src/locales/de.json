@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "summary": "Profil",
+    "experience": "Erfahrung",
+    "education": "Ausbildung",
+    "skills": "Fähigkeiten",
+    "certificates": "Zertifikate",
+    "projects": "Projekte",
+    "contact": "Kontakt"
+  },
+  "actions": {
+    "toggle_theme": "Theme wechseln",
+    "toggle_language": "Sprache wechseln",
+    "download_pdf": "CV herunterladen"
+  },
+  "labels": {
+    "present": "Heute",
+    "loading": "Lädt…",
+    "error": "Der Lebenslauf konnte nicht geladen werden.",
+    "level": "Niveau"
+  }
+}

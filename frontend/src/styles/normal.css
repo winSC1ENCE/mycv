@@ -1,0 +1,15 @@
+/* "Normal" mode — modern flat corporate, smartfactory.ch-inspired. */
+
+[data-theme="normal"] {
+  --color-bg: #f7f8fb;
+  --color-bg-elevated: #ffffff;
+  --color-fg: #0f172a;
+  --color-fg-muted: #475569;
+  --color-accent: #1d4ed8;
+  --color-accent-soft: #dbeafe;
+  --color-border: #e2e8f0;
+  --color-timeline: #1d4ed8;
+
+  --pattern-comic: none;
+  --font-display: var(--font-sans);
+}

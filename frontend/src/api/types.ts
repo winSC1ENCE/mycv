@@ -1,0 +1,141 @@
+/**
+ * API types — mirror of the DRF serializers in backend/apps/cv/serializers.py.
+ * Phase 3 will replace this with openapi-typescript generation from /api/schema/.
+ */
+
+export interface MediaAsset {
+  id: number;
+  url: string;
+  alt_text: string;
+  kind: "image" | "document" | "video";
+  order: number;
+}
+
+export interface Technology {
+  id: number;
+  name: string;
+  slug: string;
+  category: string;
+  icon: string;
+  order: number;
+}
+
+export interface Skill {
+  id: number;
+  name: string;
+  name_de: string;
+  level: number;
+  technologies: Technology[];
+  order: number;
+}
+
+export interface SkillCategory {
+  id: number;
+  name: string;
+  name_de: string;
+  slug: string;
+  skills: Skill[];
+  order: number;
+}
+
+export interface Experience {
+  id: number;
+  role: string;
+  role_de: string;
+  company: string;
+  location: string;
+  start_date: string;
+  end_date: string | null;
+  description: string;
+  description_de: string;
+  technologies: Technology[];
+  order: number;
+  is_published: boolean;
+}
+
+export interface Education {
+  id: number;
+  degree: string;
+  degree_de: string;
+  institution: string;
+  location: string;
+  start_date: string;
+  end_date: string | null;
+  description: string;
+  description_de: string;
+  order: number;
+  is_published: boolean;
+}
+
+export interface Certificate {
+  id: number;
+  name: string;
+  name_de: string;
+  issuer: string;
+  issue_date: string;
+  description: string;
+  description_de: string;
+  media: MediaAsset | null;
+  order: number;
+  is_published: boolean;
+}
+
+export interface Project {
+  id: number;
+  name: string;
+  name_de: string;
+  slug: string;
+  summary: string;
+  summary_de: string;
+  description: string;
+  description_de: string;
+  url: string;
+  repo_url: string;
+  technologies: Technology[];
+  media: MediaAsset[];
+  order: number;
+  is_published: boolean;
+}
+
+export interface SocialLink {
+  id: number;
+  platform: string;
+  label: string;
+  url: string;
+  order: number;
+}
+
+export interface TimelineEntry {
+  id: number;
+  date: string;
+  kind: "milestone" | "award" | "transition" | "other";
+  title: string;
+  title_de: string;
+  description: string;
+  description_de: string;
+  order: number;
+  is_published: boolean;
+}
+
+export interface Cv {
+  id: number;
+  slug: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  title: string;
+  title_de: string;
+  email: string;
+  phone: string;
+  location: string;
+  summary: string;
+  summary_de: string;
+  photo: MediaAsset | null;
+  experiences: Experience[];
+  educations: Education[];
+  certificates: Certificate[];
+  projects: Project[];
+  social_links: SocialLink[];
+  timeline_entries: TimelineEntry[];
+  skill_categories: SkillCategory[];
+}

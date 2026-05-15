@@ -1,0 +1,119 @@
+{
+  "person": {
+    "slug": "nicolas-mischler",
+    "first_name": "Nicolas",
+    "last_name": "Mischler",
+    "title": "Data Engineer",
+    "title_de": "Data Engineer",
+    "email": "nicolas.mischler@metas.ch",
+    "phone": "",
+    "location": "Bern, Switzerland",
+    "summary": "Data Engineer at METAS with full-stack engineering experience and a focus on clean, scalable systems.",
+    "summary_de": "Data Engineer am METAS mit Full-Stack-Erfahrung und Fokus auf saubere, skalierbare Systeme."
+  },
+  "social_links": [
+    {"platform": "email", "label": "Email", "url": "mailto:nicolas.mischler@metas.ch"},
+    {"platform": "github", "label": "GitHub", "url": "https://github.com/winScience"}
+  ],
+  "technologies": [
+    {"name": "Python", "slug": "python", "category": "Language", "icon": "devicon-python-plain"},
+    {"name": "Django", "slug": "django", "category": "Framework", "icon": "devicon-django-plain"},
+    {"name": "Django REST Framework", "slug": "drf", "category": "Framework", "icon": ""},
+    {"name": "Vue.js", "slug": "vue", "category": "Framework", "icon": "devicon-vuejs-plain"},
+    {"name": "TypeScript", "slug": "typescript", "category": "Language", "icon": "devicon-typescript-plain"},
+    {"name": "PostgreSQL", "slug": "postgresql", "category": "Database", "icon": "devicon-postgresql-plain"},
+    {"name": "Docker", "slug": "docker", "category": "Infra", "icon": "devicon-docker-plain"},
+    {"name": "Caddy", "slug": "caddy", "category": "Infra", "icon": ""},
+    {"name": "GitHub Actions", "slug": "github-actions", "category": "CI/CD", "icon": ""}
+  ],
+  "skill_categories": [
+    {
+      "name": "Backend",
+      "name_de": "Backend",
+      "slug": "backend",
+      "skills": [
+        {"name": "Python", "level": 5, "technologies": ["python", "django", "drf"]},
+        {"name": "REST API design", "level": 4, "technologies": ["drf"]},
+        {"name": "PostgreSQL", "level": 4, "technologies": ["postgresql"]}
+      ]
+    },
+    {
+      "name": "Frontend",
+      "name_de": "Frontend",
+      "slug": "frontend",
+      "skills": [
+        {"name": "Vue 3 + Composition API", "level": 4, "technologies": ["vue", "typescript"]},
+        {"name": "TypeScript", "level": 4, "technologies": ["typescript"]}
+      ]
+    },
+    {
+      "name": "Infra & DevOps",
+      "name_de": "Infrastruktur & DevOps",
+      "slug": "infra",
+      "skills": [
+        {"name": "Docker / Compose", "level": 4, "technologies": ["docker"]},
+        {"name": "CI/CD (GitHub Actions)", "level": 4, "technologies": ["github-actions"]},
+        {"name": "Caddy reverse proxy", "level": 3, "technologies": ["caddy"]}
+      ]
+    }
+  ],
+  "experiences": [
+    {
+      "role": "Data Engineer",
+      "role_de": "Data Engineer",
+      "company": "METAS — Federal Institute of Metrology",
+      "location": "Bern-Wabern, Switzerland",
+      "start_date": "2023-01-01",
+      "end_date": null,
+      "description": "Build and operate the institute's data engineering platform: ingest pipelines, structured storage, and downstream analytics tooling.",
+      "description_de": "Aufbau und Betrieb der Data-Engineering-Plattform: Ingest-Pipelines, strukturierte Speicherung und nachgelagerte Analytics-Tools.",
+      "technologies": ["python", "postgresql", "docker"]
+    }
+  ],
+  "educations": [
+    {
+      "degree": "Higher Vocational Diploma — Data Engineering",
+      "degree_de": "Eidg. dipl. Data Engineering",
+      "institution": "METAS Apprenticeship Programme",
+      "location": "Bern-Wabern, Switzerland",
+      "start_date": "2021-08-01",
+      "end_date": "2025-07-01",
+      "description": "Apprenticeship with rotations across data, software, and laboratory IT teams.",
+      "description_de": "Lehrgang mit Rotationen in Daten-, Software- und Labor-IT-Teams."
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Federal Apprenticeship Certificate — Informatik EFZ",
+      "name_de": "Eidg. Fähigkeitszeugnis — Informatik EFZ",
+      "issuer": "Swiss Confederation",
+      "issue_date": "2025-07-01",
+      "description": "",
+      "description_de": ""
+    }
+  ],
+  "projects": [
+    {
+      "name": "mycv — interactive CV",
+      "name_de": "mycv — interaktiver Lebenslauf",
+      "slug": "mycv",
+      "summary": "Full-stack Django + Vue CV with Dog Mode and ATS-friendly PDF export.",
+      "summary_de": "Full-Stack-Django-+-Vue-Lebenslauf mit Dog-Mode und ATS-tauglichem PDF-Export.",
+      "description": "This site. Showcases clean architecture, typed APIs, 100% backend coverage, and a polished UI with a custom Dog Mode theme.",
+      "description_de": "Diese Seite. Demonstriert saubere Architektur, typisierte APIs, 100 % Backend-Coverage und ein poliertes UI mit eigenem Dog-Mode-Theme.",
+      "url": "https://cv.chlous.top",
+      "repo_url": "",
+      "technologies": ["python", "django", "drf", "vue", "typescript", "postgresql", "docker", "caddy"]
+    }
+  ],
+  "timeline_entries": [
+    {
+      "date": "2025-07-01",
+      "kind": "milestone",
+      "title": "Apprenticeship completed",
+      "title_de": "Lehrabschluss",
+      "description": "Federal Apprenticeship Certificate — Informatik EFZ.",
+      "description_de": "Eidg. Fähigkeitszeugnis — Informatik EFZ."
+    }
+  ]
+}

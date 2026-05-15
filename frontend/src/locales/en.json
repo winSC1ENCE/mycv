@@ -1,0 +1,22 @@
+{
+  "nav": {
+    "summary": "Profile",
+    "experience": "Experience",
+    "education": "Education",
+    "skills": "Skills",
+    "certificates": "Certificates",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "actions": {
+    "toggle_theme": "Toggle theme",
+    "toggle_language": "Switch language",
+    "download_pdf": "Download CV"
+  },
+  "labels": {
+    "present": "Present",
+    "loading": "Loading…",
+    "error": "Something went wrong loading the CV.",
+    "level": "Level"
+  }
+}

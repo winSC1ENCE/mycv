@@ -15,6 +15,7 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@sentry/vue": "^8.55.2",
     "@unhead/vue": "^1.11.20",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^11.3.0",

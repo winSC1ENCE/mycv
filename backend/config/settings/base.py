@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "django_filters",
+    "csp",
     "axes",
     "apps.accounts",
     "apps.cv",
@@ -44,6 +45,7 @@ AUTH_USER_MODEL = "accounts.User"
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "csp.middleware.CSPMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -140,3 +142,22 @@ AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1  # hours
 AXES_LOCK_OUT_BY_IP_AND_USER = True
 AXES_RESET_ON_SUCCESS = True
+
+# Sentry — initialised only when SENTRY_DSN is set so dev/test never require it
+SENTRY_DSN = env("SENTRY_DSN", default="")
+if SENTRY_DSN:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.django import DjangoIntegration
+
+        sentry_sdk.init(
+            dsn=SENTRY_DSN,
+            integrations=[DjangoIntegration()],
+            traces_sample_rate=env.float("SENTRY_TRACES_RATE", default=0.1),
+            environment=env("SENTRY_ENV", default="dev"),
+            send_default_pii=False,
+        )
+    except Exception:
+        import logging
+
+        logging.getLogger(__name__).warning("Sentry init failed — continuing without it.")

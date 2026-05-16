@@ -1,23 +1,41 @@
-# Drop this block into your existing Caddyfile on the Hetzner host
-# alongside the other site you already serve. Caddy will provision the
-# Let's Encrypt cert automatically.
+# Merge this snippet into the existing Caddyfile on the Hetzner host.
+# See docs/deployment.md for step-by-step instructions.
 
 cv.chlous.top {
     encode gzip zstd
 
-    @api path /api/* /admin/* /static/* /media/*
-    handle @api {
-        reverse_proxy localhost:8000
-    }
-
-    handle {
-        reverse_proxy localhost:3000
-    }
-
     header {
+        # Security headers — Caddy layer (complement Django's CSP)
         Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-        X-Content-Type-Options "nosniff"
-        X-Frame-Options "DENY"
-        Referrer-Policy "strict-origin-when-cross-origin"
+        X-Content-Type-Options   "nosniff"
+        X-Frame-Options          "DENY"
+        Referrer-Policy          "strict-origin-when-cross-origin"
+        Permissions-Policy       "geolocation=(), microphone=(), camera=()"
+        -Server
+    }
+
+    # Backend handles API, Django admin, static/media files, sitemaps, robots
+    handle /api/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /admin/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /static/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /media/* {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /sitemap.xml {
+        reverse_proxy 127.0.0.1:8000
+    }
+    handle /robots.txt {
+        reverse_proxy 127.0.0.1:8000
+    }
+
+    # Everything else → Vue frontend
+    handle {
+        reverse_proxy 127.0.0.1:3000
     }
 }

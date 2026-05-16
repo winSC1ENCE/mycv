@@ -19,15 +19,29 @@ CSRF_COOKIE_SAMESITE = "Lax"
 
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["https://cv.chlous.top"])
 
+# CSP — strict production policy (django-csp 4.x DIRECTIVES format)
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ["'self'"],
+        # Swagger UI needs unsafe-inline; exclude /api/docs/ at the view level if stricter is needed
+        "script-src": ["'self'", "'unsafe-inline'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "img-src": ["'self'", "data:"],
+        "font-src": ["'self'"],
+        "connect-src": ["'self'"],
+        "frame-ancestors": ["'none'"],
+        "object-src": ["'none'"],
+        "base-uri": ["'self'"],
+    }
+}
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
         "json": {
-            "format": (
-                '{"level":"%(levelname)s","time":"%(asctime)s",'
-                '"logger":"%(name)s","msg":"%(message)s"}'
-            ),
+            "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
+            "format": "%(asctime)s %(levelname)s %(name)s %(message)s",
         },
     },
     "handlers": {

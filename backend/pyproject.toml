@@ -18,6 +18,9 @@ dependencies = [
     "django-axes>=8.0",
     "weasyprint>=63.0",
     "segno>=1.6.0",
+    "django-csp>=3.8",
+    "sentry-sdk[django]>=2.18",
+    "python-json-logger>=2.0",
 ]
 
 [dependency-groups]
@@ -63,7 +66,7 @@ plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
 exclude = ["migrations/", "tests/"]
 
 [[tool.mypy.overrides]]
-module = ["environ.*", "factory.*", "weasyprint.*", "segno.*"]
+module = ["environ.*", "factory.*", "weasyprint.*", "segno.*", "sentry_sdk.*", "pythonjsonlogger.*", "csp.*"]
 ignore_missing_imports = true
 
 [tool.django-stubs]

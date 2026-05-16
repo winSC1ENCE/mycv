@@ -24,6 +24,20 @@ const i18n = createI18n({
 const head = createHead();
 const app = createApp(App).use(createPinia()).use(router).use(i18n).use(head);
 
+// Optional Sentry — loaded only when VITE_SENTRY_DSN is set (no-op in dev)
+const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
+if (sentryDsn) {
+  import("@sentry/vue").then((Sentry) => {
+    Sentry.init({
+      app,
+      dsn: sentryDsn,
+      environment: import.meta.env.MODE,
+      tracesSampleRate: 0.1,
+      integrations: [Sentry.browserTracingIntegration()],
+    });
+  });
+}
+
 // Hydrate auth state from existing session before first navigation
 const authStore = useAuthStore();
 authStore.init().finally(() => app.mount("#app"));

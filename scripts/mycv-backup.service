@@ -1,0 +1,12 @@
+[Unit]
+Description=mycv Postgres backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+User=root
+EnvironmentFile=-/opt/mycv/.env
+ExecStart=/usr/local/bin/mycv-backup.sh
+StandardOutput=journal
+StandardError=journal

@@ -4,9 +4,10 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const _here = dirname(fileURLToPath(import.meta.url));
-const auth = JSON.parse(
-  readFileSync(resolve(_here, ".auth.json"), "utf-8"),
-) as { username: string; password: string };
+const auth = JSON.parse(readFileSync(resolve(_here, ".auth.json"), "utf-8")) as {
+  username: string;
+  password: string;
+};
 
 test("admin login → create experience → see it on public CV", async ({ page }) => {
   // 1. Login
@@ -19,7 +20,6 @@ test("admin login → create experience → see it on public CV", async ({ page 
   // 2. Navigate to Experiences admin
   await page.getByRole("link", { name: "Experience", exact: true }).click();
   await page.waitForURL(/\/admin\/experiences/);
-
 
   // 3. Open the create form
   const uniqueRole = `E2E Role ${Date.now()}`;

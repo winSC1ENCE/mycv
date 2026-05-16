@@ -37,10 +37,17 @@
         <form class="entity-form" @submit.prevent="save">
           <label>{{ $t("admin.fields.role") }}<input v-model="editing.role" required /></label>
           <label>{{ $t("admin.fields.role_de") }}<input v-model="editing.role_de" /></label>
-          <label>{{ $t("admin.fields.company") }}<input v-model="editing.company" required /></label>
+          <label
+            >{{ $t("admin.fields.company") }}<input v-model="editing.company" required
+          /></label>
           <label>{{ $t("admin.fields.location") }}<input v-model="editing.location" /></label>
-          <label>{{ $t("admin.fields.start_date") }}<input v-model="editing.start_date" type="date" required /></label>
-          <label>{{ $t("admin.fields.end_date") }}<input v-model="editing.end_date" type="date" /></label>
+          <label
+            >{{ $t("admin.fields.start_date")
+            }}<input v-model="editing.start_date" type="date" required
+          /></label>
+          <label
+            >{{ $t("admin.fields.end_date") }}<input v-model="editing.end_date" type="date"
+          /></label>
           <label>
             {{ $t("admin.fields.description") }}
             <textarea v-model="editing.description" rows="3"></textarea>
@@ -57,7 +64,9 @@
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
-            <button class="btn" type="button" @click="editing = null">{{ $t("admin.cancel") }}</button>
+            <button class="btn" type="button" @click="editing = null">
+              {{ $t("admin.cancel") }}
+            </button>
           </div>
         </form>
       </div>

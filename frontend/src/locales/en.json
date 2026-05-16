@@ -2,12 +2,19 @@
   "nav": {
     "brand": "Nicolas Mischler",
     "summary": "Profile",
+    "timeline": "Timeline",
     "experience": "Experience",
     "education": "Education",
     "skills": "Skills",
     "certificates": "Certificates",
     "projects": "Projects",
     "contact": "Contact"
+  },
+  "timeline": {
+    "title": "Career Timeline",
+    "lead": "Click any entry to expand details.",
+    "linked_certificates": "Certificates earned",
+    "empty": "No timeline entries yet."
   },
   "actions": {
     "toggle_theme": "Toggle theme",

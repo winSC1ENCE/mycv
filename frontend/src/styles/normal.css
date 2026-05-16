@@ -5,10 +5,14 @@
   --color-bg-elevated: #ffffff;
   --color-fg: #0f172a;
   --color-fg-muted: #475569;
+  --color-muted: #64748b;
   --color-accent: #1d4ed8;
   --color-accent-soft: #dbeafe;
   --color-border: #e2e8f0;
   --color-timeline: #1d4ed8;
+
+  --shadow-card-rest: 0 2px 4px rgba(15, 23, 42, 0.06), 0 12px 32px rgba(15, 23, 42, 0.08);
+  --shadow-card-hover: 0 4px 8px rgba(15, 23, 42, 0.08), 0 18px 48px rgba(15, 23, 42, 0.12);
 
   --pattern-comic: none;
   --font-display: var(--font-sans);

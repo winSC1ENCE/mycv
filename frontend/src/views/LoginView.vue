@@ -72,7 +72,9 @@ const submit = handleSubmit(async (values) => {
     router.push(next);
   } catch (err: unknown) {
     if (err && typeof err === "object" && "response" in err) {
-      const resp = (err as { response?: { status?: number; data?: { non_field_errors?: string[] } } }).response;
+      const resp = (
+        err as { response?: { status?: number; data?: { non_field_errors?: string[] } } }
+      ).response;
       if (resp?.status === 429) {
         apiError.value = "Too many attempts. Please wait a minute.";
       } else {

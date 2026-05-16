@@ -102,6 +102,8 @@ class CertificateSerializer(serializers.ModelSerializer[models.Certificate]):
         model = models.Certificate
         fields = [
             "id",
+            "experience",
+            "education",
             "name",
             "name_de",
             "issuer",
@@ -302,6 +304,8 @@ class CertificateWriteSerializer(serializers.ModelSerializer[models.Certificate]
         fields = [
             "id",
             "person",
+            "experience",
+            "education",
             "name",
             "name_de",
             "issuer",

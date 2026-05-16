@@ -35,18 +35,22 @@ class ExperienceAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     list_filter = ("company",)
     date_hierarchy = "start_date"
     filter_horizontal = ("technologies",)
+    search_fields = ("role", "company")
 
 
 @admin.register(models.Education)
 class EducationAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     list_display = ("degree", "institution", "start_date", "end_date", "is_published")
     date_hierarchy = "start_date"
+    search_fields = ("degree", "institution")
 
 
 @admin.register(models.Certificate)
 class CertificateAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
-    list_display = ("name", "issuer", "issue_date", "is_published")
+    list_display = ("name", "issuer", "issue_date", "experience", "education", "is_published")
+    list_filter = ("experience", "education")
     date_hierarchy = "issue_date"
+    autocomplete_fields = ("person", "experience", "education")
 
 
 @admin.register(models.Project)

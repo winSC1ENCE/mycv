@@ -1,0 +1,157 @@
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useLocaleStore } from "@/stores/locale";
+import { useI18n } from "vue-i18n";
+import { pickLocalized } from "@/composables/useLocalized";
+import type { TimelineRow } from "@/stores/cv";
+
+defineProps<{ row: TimelineRow }>();
+const { locale } = storeToRefs(useLocaleStore());
+const { t } = useI18n();
+</script>
+
+<template>
+  <div class="timeline-detail">
+    <template v-if="row.kind === 'experience'">
+      <p class="timeline-detail__dates">
+        {{ row.data.start_date }} → {{ row.data.end_date ?? t("labels.present") }}
+        <span v-if="row.data.location"> · {{ row.data.location }}</span>
+      </p>
+      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
+        {{ pickLocalized(row.data, "description", locale) }}
+      </p>
+      <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
+        <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
+      </ul>
+      <div v-if="row.certs.length" class="timeline-detail__certs">
+        <h4>{{ t("timeline.linked_certificates") }}</h4>
+        <ul>
+          <li v-for="cert in row.certs" :key="cert.id">
+            <strong>{{ pickLocalized(cert, "name", locale) }}</strong>
+            <span class="timeline-detail__cert-meta">
+              · {{ cert.issuer }} · {{ cert.issue_date }}</span
+            >
+          </li>
+        </ul>
+      </div>
+    </template>
+
+    <template v-else-if="row.kind === 'education'">
+      <p class="timeline-detail__dates">
+        {{ row.data.start_date }} → {{ row.data.end_date ?? t("labels.present") }}
+        <span v-if="row.data.location"> · {{ row.data.location }}</span>
+      </p>
+      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
+        {{ pickLocalized(row.data, "description", locale) }}
+      </p>
+      <div v-if="row.certs.length" class="timeline-detail__certs">
+        <h4>{{ t("timeline.linked_certificates") }}</h4>
+        <ul>
+          <li v-for="cert in row.certs" :key="cert.id">
+            <strong>{{ pickLocalized(cert, "name", locale) }}</strong>
+            <span class="timeline-detail__cert-meta">
+              · {{ cert.issuer }} · {{ cert.issue_date }}</span
+            >
+          </li>
+        </ul>
+      </div>
+    </template>
+
+    <template v-else-if="row.kind === 'certificate'">
+      <p class="timeline-detail__dates">{{ row.data.issuer }} · {{ row.data.issue_date }}</p>
+      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
+        {{ pickLocalized(row.data, "description", locale) }}
+      </p>
+      <img
+        v-if="row.data.media?.url"
+        :src="row.data.media.url"
+        :alt="row.data.media.alt_text || pickLocalized(row.data, 'name', locale)"
+        class="timeline-detail__media"
+      />
+    </template>
+
+    <template v-else>
+      <p class="timeline-detail__dates">
+        <span class="kind-badge">{{ row.data.kind }}</span> · {{ row.data.date }}
+      </p>
+      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
+        {{ pickLocalized(row.data, "description", locale) }}
+      </p>
+    </template>
+  </div>
+</template>
+
+<style scoped>
+.timeline-detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+}
+
+.timeline-detail__dates {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+.timeline-detail__body {
+  margin: 0;
+  line-height: 1.65;
+}
+
+.timeline-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.timeline-detail__certs {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-3);
+}
+
+.timeline-detail__certs h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  margin: 0 0 var(--space-2) 0;
+}
+
+.timeline-detail__certs ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.timeline-detail__cert-meta {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.timeline-detail__media {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.kind-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+</style>

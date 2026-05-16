@@ -2,12 +2,19 @@
   "nav": {
     "brand": "Nicolas Mischler",
     "summary": "Profil",
+    "timeline": "Werdegang",
     "experience": "Erfahrung",
     "education": "Ausbildung",
     "skills": "Fähigkeiten",
     "certificates": "Zertifikate",
     "projects": "Projekte",
     "contact": "Kontakt"
+  },
+  "timeline": {
+    "title": "Werdegang",
+    "lead": "Klick einen Eintrag, um Details zu sehen.",
+    "linked_certificates": "Erworbene Zertifikate",
+    "empty": "Noch keine Einträge."
   },
   "actions": {
     "toggle_theme": "Theme wechseln",

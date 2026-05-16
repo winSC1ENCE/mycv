@@ -76,6 +76,8 @@ export interface Education {
 
 export interface Certificate {
   id: number;
+  experience: number | null;
+  education: number | null;
   name: string;
   name_de: string;
   issuer: string;
@@ -143,7 +145,10 @@ export type ExperienceWrite = Omit<Experience, "technologies"> & {
   person?: number;
 };
 export type EducationWrite = Education & { person?: number };
-export type CertificateWrite = Omit<Certificate, "media"> & { media: number | null; person?: number };
+export type CertificateWrite = Omit<Certificate, "media"> & {
+  media: number | null;
+  person?: number;
+};
 export type ProjectWrite = Omit<Project, "technologies" | "media"> & {
   technologies: number[];
   media: number[];

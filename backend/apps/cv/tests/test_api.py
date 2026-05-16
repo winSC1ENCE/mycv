@@ -261,6 +261,52 @@ def test_admin_cv_list_includes_unpublished(admin_client: APIClient) -> None:
     assert resp.status_code == status.HTTP_200_OK
 
 
+def test_certificate_exposes_experience_and_education_fks(api_client: APIClient) -> None:
+    person = PersonFactory()
+    exp = ExperienceFactory(person=person)
+    edu = EducationFactory(person=person)
+    CertificateFactory(person=person, experience=exp, education=edu)
+    CertificateFactory(person=person)  # unlinked
+    resp = api_client.get("/api/cv/")
+    body = resp.json()
+    certs = sorted(body["certificates"], key=lambda c: (c["experience"] or 0))
+    assert certs[0]["experience"] is None
+    assert certs[0]["education"] is None
+    assert certs[1]["experience"] == exp.pk
+    assert certs[1]["education"] == edu.pk
+
+
+def test_certificate_fk_becomes_null_when_experience_deleted() -> None:
+    person = PersonFactory()
+    exp = ExperienceFactory(person=person)
+    cert = CertificateFactory(person=person, experience=exp)
+    exp.delete()
+    cert.refresh_from_db()
+    assert cert.experience is None
+    assert models.Certificate.objects.filter(pk=cert.pk).exists()
+
+
+def test_admin_can_create_certificate_with_links(admin_client: APIClient) -> None:
+    person = PersonFactory()
+    exp = ExperienceFactory(person=person)
+    edu = EducationFactory(person=person)
+    resp = admin_client.post(
+        "/api/certificates/",
+        {
+            "name": "Linked Cert",
+            "issuer": "Authority",
+            "issue_date": "2024-01-01",
+            "experience": exp.pk,
+            "education": edu.pk,
+        },
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    cert = models.Certificate.objects.get(name="Linked Cert")
+    assert cert.experience_id == exp.pk
+    assert cert.education_id == edu.pk
+
+
 @pytest.mark.parametrize(
     "path,factory",
     [
@@ -273,9 +319,7 @@ def test_admin_cv_list_includes_unpublished(admin_client: APIClient) -> None:
         ("/api/timeline/", TimelineEntryFactory),
     ],
 )
-def test_admin_sees_unpublished_entities(
-    admin_client: APIClient, path: str, factory: type
-) -> None:
+def test_admin_sees_unpublished_entities(admin_client: APIClient, path: str, factory: type) -> None:
     factory(is_published=False)
     resp = admin_client.get(path)
     assert resp.status_code == status.HTTP_200_OK

@@ -7,10 +7,7 @@ import { pickLocalized } from "@/composables/useLocalized";
 import { usePageMeta } from "@/composables/usePageMeta";
 
 import ProfileSection from "@/components/sections/ProfileSection.vue";
-import ExperienceSection from "@/components/sections/ExperienceSection.vue";
-import EducationSection from "@/components/sections/EducationSection.vue";
 import SkillsSection from "@/components/sections/SkillsSection.vue";
-import CertificatesSection from "@/components/sections/CertificatesSection.vue";
 import ProjectsSection from "@/components/sections/ProjectsSection.vue";
 import TimelineSection from "@/components/timeline/TimelineSection.vue";
 import ContactSection from "@/components/sections/ContactSection.vue";
@@ -61,11 +58,8 @@ usePageMeta({
     </section>
 
     <ProfileSection :cv="cv" />
-    <TimelineSection :cv="cv" />
-    <ExperienceSection :experiences="cv.experiences" />
-    <EducationSection :educations="cv.educations" />
+    <TimelineSection />
     <SkillsSection :categories="cv.skill_categories" />
-    <CertificatesSection :certificates="cv.certificates" />
     <ProjectsSection :projects="cv.projects" />
     <ContactSection :cv="cv" />
   </template>

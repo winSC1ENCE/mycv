@@ -33,7 +33,9 @@
         <form class="entity-form" @submit.prevent="save">
           <label>{{ $t("admin.fields.title") }}<input v-model="editing.title" required /></label>
           <label>{{ $t("admin.fields.title_de") }}<input v-model="editing.title_de" /></label>
-          <label>{{ $t("admin.fields.date") }}<input v-model="editing.date" type="date" required /></label>
+          <label
+            >{{ $t("admin.fields.date") }}<input v-model="editing.date" type="date" required
+          /></label>
           <label>
             {{ $t("admin.fields.kind") }}
             <select v-model="editing.kind">
@@ -43,8 +45,14 @@
               <option value="other">Other</option>
             </select>
           </label>
-          <label>{{ $t("admin.fields.description") }}<textarea v-model="editing.description" rows="3"></textarea></label>
-          <label>{{ $t("admin.fields.description_de") }}<textarea v-model="editing.description_de" rows="3"></textarea></label>
+          <label
+            >{{ $t("admin.fields.description")
+            }}<textarea v-model="editing.description" rows="3"></textarea>
+          </label>
+          <label
+            >{{ $t("admin.fields.description_de")
+            }}<textarea v-model="editing.description_de" rows="3"></textarea>
+          </label>
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -52,7 +60,9 @@
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
-            <button class="btn" type="button" @click="editing = null">{{ $t("admin.cancel") }}</button>
+            <button class="btn" type="button" @click="editing = null">
+              {{ $t("admin.cancel") }}
+            </button>
           </div>
         </form>
       </div>

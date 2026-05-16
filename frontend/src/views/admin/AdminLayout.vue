@@ -114,7 +114,9 @@ async function handleLogout(): Promise<void> {
   color: var(--color-fg-muted);
   text-decoration: none;
   font-size: 0.9rem;
-  transition: background 0.1s, color 0.1s;
+  transition:
+    background 0.1s,
+    color 0.1s;
 }
 
 .admin-nav__link:hover,

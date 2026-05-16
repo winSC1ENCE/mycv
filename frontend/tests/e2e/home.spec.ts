@@ -13,15 +13,30 @@ test("home page sets dynamic <title>", async ({ page }) => {
 
 test("home page emits Person JSON-LD", async ({ page }) => {
   await page.goto("/");
-  const jsonLd = await page
-    .locator('script[type="application/ld+json"]')
-    .first()
-    .textContent();
+  const jsonLd = await page.locator('script[type="application/ld+json"]').first().textContent();
   expect(jsonLd, "JSON-LD script must be present").toBeTruthy();
   const data = JSON.parse(jsonLd ?? "{}");
   expect(data["@type"]).toBe("Person");
   expect(data.name).toBe("Nicolas Mischler");
   expect(Array.isArray(data.sameAs)).toBe(true);
+});
+
+test("timeline shows entries and expands details on click", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForSelector(".timeline--alt");
+  // Wait for any scroll-triggered animations to settle.
+  await page.waitForTimeout(500);
+
+  // The seed has at least: Data Engineer (METAS), Apprentice, EFZ education, Cambridge cert.
+  const firstToggle = page.locator(".timeline__card-toggle").first();
+  await expect(firstToggle).toHaveAttribute("aria-expanded", "false");
+  await firstToggle.click();
+  await expect(firstToggle).toHaveAttribute("aria-expanded", "true");
+  await expect(page.locator(".timeline__detail").first()).toBeVisible();
+
+  // Clicking again collapses the same row.
+  await firstToggle.click();
+  await expect(firstToggle).toHaveAttribute("aria-expanded", "false");
 });
 
 test("home page passes axe in normal theme", async ({ page }) => {

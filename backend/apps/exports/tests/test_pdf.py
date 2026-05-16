@@ -38,9 +38,7 @@ def _populated_person():
     return person
 
 
-def test_pdf_returns_pdf_with_published_person(
-    api_client: APIClient, _populated_person
-) -> None:
+def test_pdf_returns_pdf_with_published_person(api_client: APIClient, _populated_person) -> None:
     resp = api_client.get("/api/cv/pdf/?lang=en&theme=normal")
     assert resp.status_code == 200
     assert resp["Content-Type"] == "application/pdf"
@@ -98,9 +96,7 @@ def test_pdf_skips_unpublished_person(api_client: APIClient) -> None:
     assert resp.status_code == 404
 
 
-def test_render_pdf_wrapper_called(
-    api_client: APIClient, _populated_person
-) -> None:
+def test_render_pdf_wrapper_called(api_client: APIClient, _populated_person) -> None:
     """The WeasyPrint wrapper is invoked with proper metadata."""
     with patch("apps.exports.views._render_pdf", return_value=b"%PDF-fake") as mock_render:
         api_client.get("/api/cv/pdf/?lang=en&theme=normal")

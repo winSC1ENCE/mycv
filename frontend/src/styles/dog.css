@@ -97,20 +97,130 @@
   background: var(--color-fg);
 }
 
-/* --- Timeline: thicker spine, hollow dots --- */
-[data-theme="dog"] .timeline::before {
+/* --- Alt timeline (central-axis, alternating, expandable) --- */
+
+[data-theme="dog"] .timeline--alt::before {
+  /* Hand-drawn wavy spine via SVG mask, not a clean linear-gradient */
   background: var(--color-fg);
-  width: 3px;
+  width: 8px;
+  -webkit-mask-image: url("/icons/wavy-line.svg");
+  mask-image: url("/icons/wavy-line.svg");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: repeat-y;
+  mask-repeat: repeat-y;
+  border-radius: 0;
 }
 
-[data-theme="dog"] .timeline__item::before {
-  background: #fff;
+[data-theme="dog"] .timeline__node {
+  width: 36px;
+  height: 36px;
+  margin-top: 1rem;
+  border-radius: 0;
+  background: var(--color-fg);
+  box-shadow: none;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 28px 28px;
+  mask-size: 28px 28px;
+}
+
+[data-theme="dog"] .timeline__node[data-kind="experience"] {
+  -webkit-mask-image: url("/icons/paw.svg");
+  mask-image: url("/icons/paw.svg");
+}
+[data-theme="dog"] .timeline__node[data-kind="education"] {
+  -webkit-mask-image: url("/icons/bone.svg");
+  mask-image: url("/icons/bone.svg");
+}
+[data-theme="dog"] .timeline__node[data-kind="certificate"] {
+  -webkit-mask-image: url("/icons/medal.svg");
+  mask-image: url("/icons/medal.svg");
+}
+[data-theme="dog"] .timeline__node[data-kind="milestone"] {
+  -webkit-mask-image: url("/icons/woof-bubble.svg");
+  mask-image: url("/icons/woof-bubble.svg");
+}
+
+[data-theme="dog"] .timeline__card {
+  background: var(--color-bg-elevated);
+  border-radius: 0;
   border: 3px solid var(--color-fg);
+  box-shadow: 8px 8px 0 var(--color-fg);
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
+}
+
+[data-theme="dog"] .timeline__card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 11px 11px 0 var(--color-fg);
+}
+
+/* Every other card gets halftone fill — comic panel feel */
+[data-theme="dog"] .timeline__row:nth-child(odd) .timeline__card {
+  background-color: #fff;
+  background-image: var(--pattern-comic);
+  background-size: 8px 8px;
+}
+
+[data-theme="dog"] .timeline__date {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  background: #fff;
+  border: 2px solid var(--color-fg);
+  padding: 6px 12px;
+  margin-top: 1rem;
+  box-shadow: 3px 3px 0 var(--color-fg);
+  transform: rotate(-3deg);
+}
+
+[data-theme="dog"] .timeline__row--right .timeline__date {
+  transform: rotate(3deg);
+}
+
+[data-theme="dog"] .timeline__year {
+  color: var(--color-fg);
+}
+[data-theme="dog"] .timeline__month {
+  color: var(--color-fg);
+}
+
+[data-theme="dog"] .timeline__card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-fg);
+  letter-spacing: -0.01em;
+}
+
+[data-theme="dog"] .timeline__card-sub {
+  color: var(--color-fg);
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+[data-theme="dog"] .timeline__chevron {
+  color: var(--color-fg);
+  font-weight: 900;
+}
+
+[data-theme="dog"] .timeline__detail {
+  border-top: 3px solid var(--color-fg);
+}
+
+[data-theme="dog"] .kind-badge {
+  border: 2px solid var(--color-fg);
+  border-radius: 0;
+  background: var(--color-fg);
+  color: #fff;
+  box-shadow: 2px 2px 0 var(--color-fg);
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-theme="dog"] .card,
-  [data-theme="dog"] .timeline__item-card,
+  [data-theme="dog"] .timeline__card,
   [data-theme="dog"] .button {
     transition: none;
   }

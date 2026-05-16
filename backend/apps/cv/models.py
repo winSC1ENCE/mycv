@@ -145,6 +145,20 @@ class Education(Orderable):
 
 class Certificate(Orderable):
     person = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="certificates")
+    experience = models.ForeignKey(
+        "Experience",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="certificates",
+    )
+    education = models.ForeignKey(
+        "Education",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="certificates",
+    )
     name = models.CharField(max_length=200)
     name_de = models.CharField(max_length=200, blank=True)
     issuer = models.CharField(max_length=160)

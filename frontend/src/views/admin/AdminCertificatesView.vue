@@ -31,9 +31,18 @@
           <label>{{ $t("admin.fields.name") }}<input v-model="editing.name" required /></label>
           <label>{{ $t("admin.fields.name_de") }}<input v-model="editing.name_de" /></label>
           <label>{{ $t("admin.fields.issuer") }}<input v-model="editing.issuer" required /></label>
-          <label>{{ $t("admin.fields.issue_date") }}<input v-model="editing.issue_date" type="date" required /></label>
-          <label>{{ $t("admin.fields.description") }}<textarea v-model="editing.description" rows="3"></textarea></label>
-          <label>{{ $t("admin.fields.description_de") }}<textarea v-model="editing.description_de" rows="3"></textarea></label>
+          <label
+            >{{ $t("admin.fields.issue_date")
+            }}<input v-model="editing.issue_date" type="date" required
+          /></label>
+          <label
+            >{{ $t("admin.fields.description")
+            }}<textarea v-model="editing.description" rows="3"></textarea>
+          </label>
+          <label
+            >{{ $t("admin.fields.description_de")
+            }}<textarea v-model="editing.description_de" rows="3"></textarea>
+          </label>
 
           <div class="field-group">
             <span class="field-group__label">{{ $t("admin.fields.mediaFile") }}</span>
@@ -50,7 +59,9 @@
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
-            <button class="btn" type="button" @click="editing = null">{{ $t("admin.cancel") }}</button>
+            <button class="btn" type="button" @click="editing = null">
+              {{ $t("admin.cancel") }}
+            </button>
           </div>
         </form>
       </div>

@@ -33,10 +33,18 @@
           <label>{{ $t("admin.fields.slug") }}<input v-model="editing.slug" required /></label>
           <label>{{ $t("admin.fields.summary") }}<input v-model="editing.summary" /></label>
           <label>{{ $t("admin.fields.summary_de") }}<input v-model="editing.summary_de" /></label>
-          <label>{{ $t("admin.fields.description") }}<textarea v-model="editing.description" rows="3"></textarea></label>
-          <label>{{ $t("admin.fields.description_de") }}<textarea v-model="editing.description_de" rows="3"></textarea></label>
+          <label
+            >{{ $t("admin.fields.description")
+            }}<textarea v-model="editing.description" rows="3"></textarea>
+          </label>
+          <label
+            >{{ $t("admin.fields.description_de")
+            }}<textarea v-model="editing.description_de" rows="3"></textarea>
+          </label>
           <label>{{ $t("admin.fields.url") }}<input v-model="editing.url" type="url" /></label>
-          <label>{{ $t("admin.fields.repo_url") }}<input v-model="editing.repo_url" type="url" /></label>
+          <label
+            >{{ $t("admin.fields.repo_url") }}<input v-model="editing.repo_url" type="url"
+          /></label>
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -44,7 +52,9 @@
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
-            <button class="btn" type="button" @click="editing = null">{{ $t("admin.cancel") }}</button>
+            <button class="btn" type="button" @click="editing = null">
+              {{ $t("admin.cancel") }}
+            </button>
           </div>
         </form>
       </div>

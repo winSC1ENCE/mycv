@@ -46,9 +46,9 @@ class Command(BaseCommand):
         self._upsert_social_links(person, payload.get("social_links", []))
         tech_by_slug = self._upsert_technologies(payload.get("technologies", []))
         self._upsert_skills(payload.get("skill_categories", []), tech_by_slug)
-        self._upsert_experiences(person, payload.get("experiences", []), tech_by_slug)
-        self._upsert_educations(person, payload.get("educations", []))
-        self._upsert_certificates(person, payload.get("certificates", []))
+        exp_by_key = self._upsert_experiences(person, payload.get("experiences", []), tech_by_slug)
+        edu_by_key = self._upsert_educations(person, payload.get("educations", []))
+        self._upsert_certificates(person, payload.get("certificates", []), exp_by_key, edu_by_key)
         self._upsert_projects(person, payload.get("projects", []), tech_by_slug)
         self._upsert_timeline(person, payload.get("timeline_entries", []))
 
@@ -118,24 +118,49 @@ class Command(BaseCommand):
         person: models.Person,
         entries: list[dict[str, Any]],
         tech_by_slug: dict[str, models.Technology],
-    ) -> None:
+    ) -> dict[str, models.Experience]:
         person.experiences.all().delete()
+        out: dict[str, models.Experience] = {}
         for order, entry in enumerate(entries):
             tech_slugs = entry.pop("technologies", [])
+            link_key = entry.pop("link_key", None)
             exp = models.Experience.objects.create(person=person, order=order, **entry)
             exp.technologies.set([tech_by_slug[s] for s in tech_slugs if s in tech_by_slug])
+            if link_key:
+                out[link_key] = exp
+        return out
 
     @staticmethod
-    def _upsert_educations(person: models.Person, entries: list[dict[str, Any]]) -> None:
+    def _upsert_educations(
+        person: models.Person, entries: list[dict[str, Any]]
+    ) -> dict[str, models.Education]:
         person.educations.all().delete()
+        out: dict[str, models.Education] = {}
         for order, entry in enumerate(entries):
-            models.Education.objects.create(person=person, order=order, **entry)
+            link_key = entry.pop("link_key", None)
+            edu = models.Education.objects.create(person=person, order=order, **entry)
+            if link_key:
+                out[link_key] = edu
+        return out
 
     @staticmethod
-    def _upsert_certificates(person: models.Person, entries: list[dict[str, Any]]) -> None:
+    def _upsert_certificates(
+        person: models.Person,
+        entries: list[dict[str, Any]],
+        exp_by_key: dict[str, models.Experience],
+        edu_by_key: dict[str, models.Education],
+    ) -> None:
         person.certificates.all().delete()
         for order, entry in enumerate(entries):
-            models.Certificate.objects.create(person=person, order=order, **entry)
+            exp_key = entry.pop("experience_key", None)
+            edu_key = entry.pop("education_key", None)
+            models.Certificate.objects.create(
+                person=person,
+                order=order,
+                experience=exp_by_key.get(exp_key) if exp_key else None,
+                education=edu_by_key.get(edu_key) if edu_key else None,
+                **entry,
+            )
 
     @staticmethod
     def _upsert_projects(

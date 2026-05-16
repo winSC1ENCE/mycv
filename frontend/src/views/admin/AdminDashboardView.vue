@@ -59,7 +59,9 @@ const cards = [
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--color-fg);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
 }
 
 .dashboard-card:hover {

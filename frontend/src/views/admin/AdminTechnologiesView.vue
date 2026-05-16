@@ -36,7 +36,9 @@
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
-            <button class="btn" type="button" @click="editing = null">{{ $t("admin.cancel") }}</button>
+            <button class="btn" type="button" @click="editing = null">
+              {{ $t("admin.cancel") }}
+            </button>
           </div>
         </form>
       </div>

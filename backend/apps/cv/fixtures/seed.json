@@ -59,37 +59,72 @@
   ],
   "experiences": [
     {
+      "link_key": "metas-data-engineer",
       "role": "Data Engineer",
       "role_de": "Data Engineer",
       "company": "METAS — Federal Institute of Metrology",
       "location": "Bern-Wabern, Switzerland",
-      "start_date": "2023-01-01",
+      "start_date": "2025-08-01",
       "end_date": null,
-      "description": "Build and operate the institute's data engineering platform: ingest pipelines, structured storage, and downstream analytics tooling.",
-      "description_de": "Aufbau und Betrieb der Data-Engineering-Plattform: Ingest-Pipelines, strukturierte Speicherung und nachgelagerte Analytics-Tools.",
+      "description": "Lead engineer on the institute's data platform. Design and build ingest pipelines for calibration measurement data, structured PostgreSQL storage, and downstream analytics tooling. Mentor apprentices rotating through the data team.",
+      "description_de": "Leitender Engineer der Datenplattform des Instituts. Entwurf und Aufbau von Ingest-Pipelines für Kalibriermessdaten, strukturierter PostgreSQL-Speicherung und nachgelagerten Analytics-Tools. Mentoring von Lehrlingen in der Daten-Rotation.",
+      "technologies": ["python", "django", "postgresql", "docker"]
+    },
+    {
+      "link_key": "metas-apprentice",
+      "role": "Apprentice — Informatik EFZ",
+      "role_de": "Lernender — Informatik EFZ",
+      "company": "METAS — Federal Institute of Metrology",
+      "location": "Bern-Wabern, Switzerland",
+      "start_date": "2021-08-01",
+      "end_date": "2025-07-31",
+      "description": "Four-year federal apprenticeship in computer science. Rotations across the data engineering, software development and laboratory IT teams. Delivered production tooling under senior review and presented a graduation project (IPA) on automated calibration workflows.",
+      "description_de": "Vierjährige Berufslehre als Informatiker EFZ. Rotationen durch Data Engineering, Software-Entwicklung und Labor-IT. Lieferte unter Review produktive Tools und präsentierte eine IPA zur Automatisierung von Kalibrier-Workflows.",
       "technologies": ["python", "postgresql", "docker"]
     }
   ],
   "educations": [
     {
-      "degree": "Higher Vocational Diploma — Data Engineering",
-      "degree_de": "Eidg. dipl. Data Engineering",
-      "institution": "METAS Apprenticeship Programme",
-      "location": "Bern-Wabern, Switzerland",
+      "link_key": "efz-informatik",
+      "degree": "Federal Apprenticeship — Informatik EFZ",
+      "degree_de": "Berufslehre — Informatiker EFZ",
+      "institution": "GIBB Berufsfachschule Bern",
+      "location": "Bern, Switzerland",
       "start_date": "2021-08-01",
       "end_date": "2025-07-01",
-      "description": "Apprenticeship with rotations across data, software, and laboratory IT teams.",
-      "description_de": "Lehrgang mit Rotationen in Daten-, Software- und Labor-IT-Teams."
+      "description": "Four-year vocational programme combining on-the-job training with 1–2 days/week of classroom instruction in software engineering, networking, databases and project management.",
+      "description_de": "Vierjährige Berufslehre mit Berufsschule (1–2 Tage/Woche): Softwareentwicklung, Netzwerke, Datenbanken und Projektmanagement."
+    },
+    {
+      "link_key": "gymnasium",
+      "degree": "Secondary School — Sekundarstufe I",
+      "degree_de": "Sekundarstufe I",
+      "institution": "Schule Bern",
+      "location": "Bern, Switzerland",
+      "start_date": "2018-08-01",
+      "end_date": "2021-07-01",
+      "description": "Compulsory secondary school. Mathematics and natural-science focus.",
+      "description_de": "Obligatorische Sekundarstufe I mit Schwerpunkt Mathematik und Naturwissenschaften."
     }
   ],
   "certificates": [
     {
+      "experience_key": "metas-apprentice",
+      "education_key": "efz-informatik",
       "name": "Federal Apprenticeship Certificate — Informatik EFZ",
       "name_de": "Eidg. Fähigkeitszeugnis — Informatik EFZ",
       "issuer": "Swiss Confederation",
       "issue_date": "2025-07-01",
-      "description": "",
-      "description_de": ""
+      "description": "Federal vocational qualification in computer science after four years of work-based learning and final examinations (IPA, practical and written).",
+      "description_de": "Eidg. Fähigkeitszeugnis Informatiker EFZ nach vier Jahren betrieblicher Lehre mit IPA und Abschlussprüfungen."
+    },
+    {
+      "name": "Cambridge English: First (FCE) — B2",
+      "name_de": "Cambridge English: First (FCE) — B2",
+      "issuer": "Cambridge Assessment English",
+      "issue_date": "2021-06-15",
+      "description": "Independent upper-intermediate English certification.",
+      "description_de": "Unabhängiges Englisch-Zertifikat auf Niveau B2."
     }
   ],
   "projects": [
@@ -108,12 +143,12 @@
   ],
   "timeline_entries": [
     {
-      "date": "2025-07-01",
-      "kind": "milestone",
-      "title": "Apprenticeship completed",
-      "title_de": "Lehrabschluss",
-      "description": "Federal Apprenticeship Certificate — Informatik EFZ.",
-      "description_de": "Eidg. Fähigkeitszeugnis — Informatik EFZ."
+      "date": "2025-07-15",
+      "kind": "award",
+      "title": "Apprenticeship completed with distinction",
+      "title_de": "Lehrabschluss mit Auszeichnung",
+      "description": "Federal Apprenticeship Certificate — Informatik EFZ awarded by the Swiss Confederation.",
+      "description_de": "Eidg. Fähigkeitszeugnis Informatik EFZ verliehen durch den Bund."
     }
   ]
 }

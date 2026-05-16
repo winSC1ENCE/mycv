@@ -16,6 +16,8 @@ dependencies = [
     "whitenoise>=6.8",
     "pillow>=11.0",
     "django-axes>=8.0",
+    "weasyprint>=63.0",
+    "segno>=1.6.0",
 ]
 
 [dependency-groups]
@@ -61,7 +63,7 @@ plugins = ["mypy_django_plugin.main", "mypy_drf_plugin.main"]
 exclude = ["migrations/", "tests/"]
 
 [[tool.mypy.overrides]]
-module = ["environ.*", "factory.*"]
+module = ["environ.*", "factory.*", "weasyprint.*", "segno.*"]
 ignore_missing_imports = true
 
 [tool.django-stubs]

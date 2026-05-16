@@ -3,6 +3,7 @@
 [data-theme="dog"] {
   --color-bg: #f5f0e6;
   --color-bg-elevated: #ffffff;
+  --color-surface: #ffffff;
   --color-fg: #0a0a0a;
   --color-fg-muted: #262626;
   --color-accent: #0a0a0a;
@@ -11,27 +12,106 @@
   --color-timeline: #0a0a0a;
 
   /* subtle dotted comic-page texture */
-  --pattern-comic: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.12) 1px, transparent 0);
+  --pattern-comic: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.14) 1px, transparent 0);
   --font-display: "Comic Neue", "Comic Sans MS", var(--font-sans);
 }
 
 [data-theme="dog"] body {
   background-image: var(--pattern-comic);
-  background-size: 14px 14px;
+  background-size: 12px 12px;
 }
 
+/* --- Headings: hand-drawn rotation --- */
+[data-theme="dog"] .hero__title {
+  display: inline-block;
+  transform: rotate(-1deg);
+}
+
+[data-theme="dog"] .section__title,
+[data-theme="dog"] h2.section__title {
+  display: inline-block;
+  background: var(--color-fg);
+  color: #fff;
+  padding: 0.1em 0.5em;
+  transform: rotate(-0.5deg);
+}
+
+/* --- Cards: thicker comic borders + chunky offset shadow --- */
 [data-theme="dog"] .card,
 [data-theme="dog"] .timeline__item-card {
-  border: 2px solid var(--color-border);
-  box-shadow: 4px 4px 0 var(--color-fg);
+  border: 3px solid var(--color-border);
+  box-shadow: 6px 6px 0 var(--color-fg);
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
 }
 
+[data-theme="dog"] .card:hover,
+[data-theme="dog"] .timeline__item-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0 var(--color-fg);
+}
+
+/* --- Buttons: chunky comic feel --- */
 [data-theme="dog"] .button {
   border: 2px solid var(--color-fg);
   box-shadow: 3px 3px 0 var(--color-fg);
+  font-weight: 700;
 }
 
 [data-theme="dog"] .button:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--color-fg);
+  box-shadow: 5px 5px 0 var(--color-fg);
+}
+
+[data-theme="dog"] .button:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--color-fg);
+}
+
+/* --- Tags: blocky no-radius badges --- */
+[data-theme="dog"] .tag {
+  border: 2px solid var(--color-fg);
+  border-radius: 0;
+  background: #fff;
+  color: var(--color-fg);
+  font-weight: 600;
+  box-shadow: 2px 2px 0 var(--color-fg);
+}
+
+/* --- Skill bars: chunky Ben-Day-style blocks --- */
+[data-theme="dog"] .skill-bar {
+  border: 2px solid var(--color-fg);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 4px,
+      rgba(0, 0, 0, 0.06) 4px,
+      rgba(0, 0, 0, 0.06) 5px
+    ),
+    var(--color-bg-elevated);
+}
+
+[data-theme="dog"] .skill-bar__fill {
+  background: var(--color-fg);
+}
+
+/* --- Timeline: thicker spine, hollow dots --- */
+[data-theme="dog"] .timeline::before {
+  background: var(--color-fg);
+  width: 3px;
+}
+
+[data-theme="dog"] .timeline__item::before {
+  background: #fff;
+  border: 3px solid var(--color-fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="dog"] .card,
+  [data-theme="dog"] .timeline__item-card,
+  [data-theme="dog"] .button {
+    transition: none;
+  }
 }

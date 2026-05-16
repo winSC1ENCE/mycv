@@ -11,6 +11,8 @@ ENV PYTHONUNBUFFERED=1 \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 curl ca-certificates \
+    libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libfontconfig1 \
+    libcairo2 libgdk-pixbuf-2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /usr/local/bin/uv
@@ -41,6 +43,8 @@ ENV PYTHONUNBUFFERED=1 \
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 curl \
+    libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libfontconfig1 \
+    libcairo2 libgdk-pixbuf-2.0-0 \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --uid 1000 --create-home --shell /bin/bash appuser
 

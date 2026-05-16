@@ -27,6 +27,15 @@
     "delete": "Löschen",
     "confirm": "Bestätigen"
   },
+  "errors": {
+    "somethingWentWrong": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen",
+    "notFound": {
+      "title": "Seite nicht gefunden",
+      "message": "Die gesuchte Seite ist abhanden gekommen.",
+      "backHome": "Zurück zur Startseite"
+    }
+  },
   "admin": {
     "login": "Anmelden",
     "logout": "Abmelden",

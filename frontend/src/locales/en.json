@@ -27,6 +27,15 @@
     "delete": "Delete",
     "confirm": "Confirm"
   },
+  "errors": {
+    "somethingWentWrong": "Something went wrong",
+    "retry": "Try again",
+    "notFound": {
+      "title": "Page not found",
+      "message": "The page you're looking for has wandered off.",
+      "backHome": "Back to home"
+    }
+  },
   "admin": {
     "login": "Sign in",
     "logout": "Sign out",

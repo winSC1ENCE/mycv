@@ -1,0 +1,164 @@
+/* PDF stylesheet — A4, print-tuned. Not shared with the web app's CSS. */
+
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("file://__FONTS__/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: "Inter", sans-serif;
+    font-size: 9pt;
+    color: #94a3b8;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: "Inter", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.45;
+  color: #0f172a;
+  background: white;
+}
+
+h1, h2, h3 { font-weight: 700; line-height: 1.2; }
+
+/* --- Header --- */
+.cv-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1.5px solid #0f172a;
+  padding-bottom: 8mm;
+  margin-bottom: 6mm;
+  break-after: avoid;
+}
+.cv-name { font-size: 22pt; }
+.cv-title { font-size: 12pt; color: #475569; margin-top: 2mm; }
+.cv-header__contact { font-size: 9pt; color: #475569; text-align: right; }
+.cv-header__contact p { margin-bottom: 1mm; }
+
+/* --- Sections --- */
+.cv-section {
+  margin-bottom: 6mm;
+  break-inside: avoid-page;
+}
+.cv-section__title {
+  font-size: 12pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 0.5px solid #cbd5e1;
+  padding-bottom: 1.5mm;
+  margin-bottom: 3mm;
+  break-after: avoid;
+}
+.cv-summary { font-size: 10.5pt; color: #334155; }
+
+/* --- Entries --- */
+.cv-entry {
+  margin-bottom: 4mm;
+  break-inside: avoid;
+}
+.cv-entry__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.cv-entry__title { font-size: 11pt; }
+.cv-entry__dates {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9pt;
+  color: #64748b;
+  white-space: nowrap;
+  padding-left: 3mm;
+}
+.cv-entry__sub { font-size: 10pt; color: #475569; margin-top: 0.5mm; }
+.cv-entry__body { font-size: 10pt; margin-top: 1.5mm; color: #1e293b; }
+.cv-entry__tech { margin-top: 2mm; }
+.cv-entry__url { font-family: "JetBrains Mono", monospace; font-size: 8.5pt; }
+
+/* --- Tags --- */
+.cv-tag {
+  display: inline-block;
+  font-size: 8.5pt;
+  padding: 0.3mm 1.6mm;
+  border: 0.5px solid #cbd5e1;
+  border-radius: 1.5mm;
+  margin-right: 1mm;
+  margin-bottom: 1mm;
+  color: #334155;
+}
+
+/* --- Skills --- */
+.cv-skill-group { margin-bottom: 3mm; break-inside: avoid; }
+.cv-skill-group__title { font-size: 10pt; margin-bottom: 1.5mm; }
+
+/* --- Footer (QR + URL) --- */
+.cv-footer {
+  margin-top: 8mm;
+  padding-top: 4mm;
+  border-top: 0.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 6mm;
+  break-inside: avoid;
+}
+.cv-footer__qr svg { width: 18mm; height: 18mm; }
+.cv-footer__url p { font-size: 9pt; color: #64748b; }
+.cv-footer__url-text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10pt !important;
+  color: #0f172a !important;
+}
+
+/* --- Dog theme (print-tuned, B&W, comic feel) --- */
+body.theme-dog {
+  color: #000;
+  font-family: "Inter", sans-serif;
+}
+.theme-dog .cv-header { border-bottom: 2.5px solid #000; }
+.theme-dog .cv-name { letter-spacing: -0.02em; }
+.theme-dog .cv-title,
+.theme-dog .cv-entry__sub,
+.theme-dog .cv-header__contact,
+.theme-dog .cv-entry__dates,
+.theme-dog .cv-footer__url p { color: #000; }
+.theme-dog .cv-section__title {
+  border-bottom: 1.5px solid #000;
+  background: #000;
+  color: #fff;
+  padding: 1mm 2mm;
+}
+.theme-dog .cv-tag {
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  border-radius: 0;
+}
+.theme-dog .cv-entry__body { color: #000; }
+.theme-dog .cv-footer { border-top: 1.5px solid #000; }

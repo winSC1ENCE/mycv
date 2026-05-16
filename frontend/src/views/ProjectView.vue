@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import { useCvStore } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import { usePageMeta } from "@/composables/usePageMeta";
 
 const props = defineProps<{ slug: string }>();
 
@@ -14,6 +15,12 @@ const { locale } = storeToRefs(useLocaleStore());
 const project = computed(() => cv.value?.projects.find((p) => p.slug === props.slug));
 const name = computed(() => pickLocalized(project.value, "name", locale.value));
 const description = computed(() => pickLocalized(project.value, "description", locale.value));
+const summary = computed(() => pickLocalized(project.value, "summary", locale.value));
+
+usePageMeta({
+  title: () => (name.value ? `${name.value} — Project` : "Project"),
+  description: () => summary.value || description.value || "",
+});
 </script>
 
 <template>

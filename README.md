@@ -9,15 +9,15 @@ Full-stack interactive CV for Nicolas Mischler at **[cv.chlous.top](https://cv.c
 
 ## Features
 
-- 🌐 Bilingual content (EN / DE) at the data-model level
-- 🎨 Two themes: clean corporate (`normal`) and comic B&W (`dog`)
-- 📄 Server-rendered PDF export via WeasyPrint, four lang/theme combos
-- 🔐 Custom Vue admin panel (no Django admin UI for content edits)
-- 📊 Drag-and-drop reordering, image upload with crop, file validation
-- 🔍 SEO-ready: JSON-LD Person schema, OG + Twitter tags, sitemap.xml, robots.txt
-- ♿ WCAG 2 AA accessibility (enforced in CI via axe-playwright)
-- 🛰️ Optional Sentry integration (DSN-gated; no-op without)
-- 📈 `/api/health/` + `/api/ready/` probes; JSON-structured logs in prod
+- Bilingual content (EN / DE) at the data-model level
+- Two themes: clean corporate (`normal`) and comic B&W (`dog`)
+- Server-rendered PDF export via WeasyPrint, four lang/theme combos
+- Custom Vue admin panel (no Django admin UI for content edits)
+- Drag-and-drop reordering, image upload with crop, file validation
+- SEO-ready: JSON-LD Person schema, OG + Twitter tags, sitemap.xml, robots.txt
+- WCAG 2 AA accessibility (enforced in CI via axe-playwright)
+- Optional Sentry integration (DSN-gated; no-op without)
+- `/api/health/` + `/api/ready/` probes; JSON-structured logs in prod
 
 ---
 
@@ -126,14 +126,10 @@ mycv/
 
 All five planned iterations are complete:
 
-- ✅ **Phase 1** — Public read-only CV; Vue + Django + DRF; 100% coverage; CI
-- ✅ **Phase 2** — Custom Vue admin panel, session auth, `django-axes`, file upload + crop
-- ✅ **Phase 3** — PDF export (WeasyPrint + QR), SEO (`@unhead/vue`, JSON-LD, sitemap), Dog Mode polish
-- ✅ **Phase 4** — Prod stack (`docker-compose.prod.yml`, Caddy, CSP, Sentry, JSON logging, deploy workflow, nightly backups)
-- ✅ **Phase 5** — Playwright E2E + axe-playwright; full docs; expanded README
+- **Phase 1** — Public read-only CV; Vue + Django + DRF; 100% coverage; CI
+- **Phase 2** — Custom Vue admin panel, session auth, `django-axes`, file upload + crop
+- **Phase 3** — PDF export (WeasyPrint + QR), SEO (`@unhead/vue`, JSON-LD, sitemap), Dog Mode polish
+- **Phase 4** — Prod stack (`docker-compose.prod.yml`, Caddy, CSP, Sentry, JSON logging, deploy workflow, nightly backups)
+- **Phase 5** — Playwright E2E + axe-playwright; full docs; expanded README
 
 ---
-
-## License
-
-MIT.

@@ -14,8 +14,10 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
-    ports:
-      - "127.0.0.1:5432:5432"
+    # Port not exposed to host — backend connects via Docker network.
+    # Uncomment to reach DB from host tools (e.g. psql, TablePlus):
+    # ports:
+    #   - "127.0.0.1:5433:5432"
 
   backend:
     build:

@@ -7,7 +7,7 @@ defineProps<{ cv: Cv }>();
 
 const themeStore = useThemeStore();
 const profilePhoto = computed(() =>
-  themeStore.theme === "dog" ? "/profile-dog.png" : "/profile-normal.png",
+  themeStore.theme === "dog" ? "/profile-dog.png" : "/profile-normal.jpg",
 );
 const photoAlt = computed(() =>
   themeStore.theme === "dog" ? "Nicolas Mischler — comic portrait" : "Nicolas Mischler",

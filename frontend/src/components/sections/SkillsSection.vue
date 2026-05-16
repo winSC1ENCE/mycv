@@ -18,7 +18,14 @@ const { locale } = storeToRefs(useLocaleStore());
           <ul style="list-style: none; padding: 0; margin: 0">
             <li v-for="skill in cat.skills" :key="skill.id" style="margin-bottom: var(--space-3)">
               <strong>{{ pickLocalized(skill, "name", locale) }}</strong>
-              <div class="skill-bar" :aria-label="`${$t('labels.level')} ${skill.level} / 5`">
+              <div
+                class="skill-bar"
+                role="progressbar"
+                :aria-label="`${$t('labels.level')} ${skill.level} / 5`"
+                :aria-valuenow="skill.level"
+                aria-valuemin="0"
+                aria-valuemax="5"
+              >
                 <div class="skill-bar__fill" :style="{ width: `${(skill.level / 5) * 100}%` }" />
               </div>
               <div>

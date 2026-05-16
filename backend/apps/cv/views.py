@@ -22,6 +22,22 @@ def _is_staff(request: Request) -> bool:
     return bool(request.user and request.user.is_staff)
 
 
+def _default_person() -> models.Person | None:
+    """The single CV is owned by the first published person.
+
+    Admin create forms don't ask for the FK; this fills it in server-side.
+    """
+    return models.Person.objects.filter(is_published=True).order_by("order", "id").first()
+
+
+class PersonOwnedCreateMixin:
+    """Auto-fill the ``person`` FK on POST when the client omits it."""
+
+    def perform_create(self, serializer: BaseSerializer[Any]) -> None:
+        person = serializer.validated_data.get("person") or _default_person()
+        serializer.save(person=person)
+
+
 class PersonViewSet(viewsets.ModelViewSet[models.Person]):
     """The CV root resource.
 
@@ -64,7 +80,7 @@ class PersonViewSet(viewsets.ModelViewSet[models.Person]):
         return Response(self.get_serializer(person).data, status=status.HTTP_200_OK)
 
 
-class ExperienceViewSet(viewsets.ModelViewSet[models.Experience]):
+class ExperienceViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Experience]):
     queryset = models.Experience.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     filterset_fields = ["company"]
@@ -81,7 +97,7 @@ class ExperienceViewSet(viewsets.ModelViewSet[models.Experience]):
         return serializers.ExperienceSerializer
 
 
-class EducationViewSet(viewsets.ModelViewSet[models.Education]):
+class EducationViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Education]):
     queryset = models.Education.objects.all()
     permission_classes = [IsAdminOrReadOnly]
 
@@ -97,7 +113,7 @@ class EducationViewSet(viewsets.ModelViewSet[models.Education]):
         return serializers.EducationSerializer
 
 
-class CertificateViewSet(viewsets.ModelViewSet[models.Certificate]):
+class CertificateViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Certificate]):
     queryset = models.Certificate.objects.all()
     permission_classes = [IsAdminOrReadOnly]
 
@@ -113,7 +129,7 @@ class CertificateViewSet(viewsets.ModelViewSet[models.Certificate]):
         return serializers.CertificateSerializer
 
 
-class ProjectViewSet(viewsets.ModelViewSet[models.Project]):
+class ProjectViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Project]):
     queryset = models.Project.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
@@ -165,7 +181,7 @@ class SkillCategoryViewSet(viewsets.ModelViewSet[models.SkillCategory]):
         return serializers.SkillCategorySerializer
 
 
-class TimelineEntryViewSet(viewsets.ModelViewSet[models.TimelineEntry]):
+class TimelineEntryViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.TimelineEntry]):
     queryset = models.TimelineEntry.objects.all()
     permission_classes = [IsAdminOrReadOnly]
 

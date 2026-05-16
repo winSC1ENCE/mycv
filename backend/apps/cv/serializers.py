@@ -246,6 +246,10 @@ class SkillCategoryWriteSerializer(serializers.ModelSerializer[models.SkillCateg
 
 
 class ExperienceWriteSerializer(serializers.ModelSerializer[models.Experience]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
     class Meta:
         model = models.Experience
         fields = [
@@ -266,6 +270,10 @@ class ExperienceWriteSerializer(serializers.ModelSerializer[models.Experience]):
 
 
 class EducationWriteSerializer(serializers.ModelSerializer[models.Education]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
     class Meta:
         model = models.Education
         fields = [
@@ -285,6 +293,10 @@ class EducationWriteSerializer(serializers.ModelSerializer[models.Education]):
 
 
 class CertificateWriteSerializer(serializers.ModelSerializer[models.Certificate]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
     class Meta:
         model = models.Certificate
         fields = [
@@ -303,6 +315,10 @@ class CertificateWriteSerializer(serializers.ModelSerializer[models.Certificate]
 
 
 class ProjectWriteSerializer(serializers.ModelSerializer[models.Project]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
     class Meta:
         model = models.Project
         fields = [
@@ -325,6 +341,10 @@ class ProjectWriteSerializer(serializers.ModelSerializer[models.Project]):
 
 
 class TimelineEntryWriteSerializer(serializers.ModelSerializer[models.TimelineEntry]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
     class Meta:
         model = models.TimelineEntry
         fields = [

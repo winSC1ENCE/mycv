@@ -232,3 +232,10 @@ dist-ssr/
 # Django runtime artifacts (user uploads + collectstatic output)
 backend/media/
 backend/staticfiles/
+
+# Playwright (E2E tests)
+backend/db.e2e.sqlite3
+backend/db.e2e.sqlite3-journal
+frontend/playwright-report/
+frontend/test-results/
+frontend/tests/e2e/.auth.json

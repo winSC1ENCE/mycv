@@ -29,7 +29,10 @@ test-backend: ## Run backend tests with coverage.
 test-frontend: ## Run frontend unit tests.
 	cd frontend && npm test
 
-test: test-backend test-frontend ## Run all tests.
+test: test-backend test-frontend ## Run unit + backend tests.
+
+test-e2e: ## Run Playwright end-to-end tests (boots backend + frontend on dedicated ports).
+	cd frontend && npm run test:e2e:install && npm run test:e2e
 
 lint-backend: ## Lint backend (ruff + black --check + mypy + bandit).
 	cd backend && uv run ruff check . && uv run black --check . && uv run mypy . && uv run bandit -q -c pyproject.toml -r apps config
@@ -45,4 +48,4 @@ build-backend: ## Build the production backend image.
 build-frontend: ## Build the production frontend image.
 	docker build -t mycv-frontend:latest ./frontend --target runtime
 
-.PHONY: help up down logs migrate seed shell test test-backend test-frontend lint lint-backend lint-frontend build-backend build-frontend
+.PHONY: help up down logs migrate seed shell test test-backend test-frontend test-e2e lint lint-backend lint-frontend build-backend build-frontend

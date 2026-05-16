@@ -169,6 +169,21 @@ def test_admin_can_create_experience(admin_client: APIClient) -> None:
     assert models.Experience.objects.filter(role="Engineer").exists()
 
 
+def test_admin_create_experience_autofills_person_when_omitted(
+    admin_client: APIClient,
+) -> None:
+    """The admin form omits the FK; the server auto-fills from the first published person."""
+    person = PersonFactory(is_published=True)
+    resp = admin_client.post(
+        "/api/experiences/",
+        {"role": "Engineer", "company": "ACME", "start_date": "2023-01-01"},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    exp = models.Experience.objects.get(role="Engineer")
+    assert exp.person_id == person.pk
+
+
 def test_admin_can_update_experience(admin_client: APIClient) -> None:
     person = PersonFactory()
     exp = ExperienceFactory(person=person, role="Old Role")

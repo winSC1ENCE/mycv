@@ -228,3 +228,7 @@ frontend/coverage/
 # Vite
 .vite/
 dist-ssr/
+
+# Django runtime artifacts (user uploads + collectstatic output)
+backend/media/
+backend/staticfiles/

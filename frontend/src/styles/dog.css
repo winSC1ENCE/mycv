@@ -1,24 +1,26 @@
-/* "Dog Mode" — comic black-and-white inspired by Kira. Not a dark mode. */
+/* "Dog Mode" — 101 Dalmatians: pure-white page with sparse black spots,
+   timeline spine made of paw prints, every card node a random dog icon. */
 
 [data-theme="dog"] {
-  --color-bg: #f5f0e6;
+  --color-bg: #ffffff;
   --color-bg-elevated: #ffffff;
   --color-surface: #ffffff;
   --color-fg: #0a0a0a;
-  --color-fg-muted: #262626;
+  --color-fg-muted: #1a1a1a;
   --color-accent: #0a0a0a;
-  --color-accent-soft: #e7e4dc;
+  --color-accent-soft: #f0f0f0;
   --color-border: #0a0a0a;
   --color-timeline: #0a0a0a;
 
-  /* subtle dotted comic-page texture */
-  --pattern-comic: radial-gradient(circle at 1px 1px, rgba(0, 0, 0, 0.14) 1px, transparent 0);
+  --pattern-spots: url("/icons/dog/dalmatian-spots.svg");
   --font-display: "Comic Neue", "Comic Sans MS", var(--font-sans);
 }
 
 [data-theme="dog"] body {
-  background-image: var(--pattern-comic);
-  background-size: 12px 12px;
+  background-color: var(--color-bg);
+  background-image: var(--pattern-spots);
+  background-size: 400px 400px;
+  background-repeat: repeat;
 }
 
 /* --- Headings: hand-drawn rotation --- */
@@ -99,53 +101,42 @@
 
 /* --- Alt timeline (central-axis, alternating, expandable) --- */
 
+/* Spine = paw print trail */
 [data-theme="dog"] .timeline--alt::before {
-  /* Hand-drawn wavy spine via SVG mask, not a clean linear-gradient */
-  background: var(--color-fg);
-  width: 8px;
-  -webkit-mask-image: url("/icons/wavy-line.svg");
-  mask-image: url("/icons/wavy-line.svg");
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: repeat-y;
-  mask-repeat: repeat-y;
+  background:
+    url("/icons/dog/paw-trail.svg") center top / 64px auto repeat-y;
+  width: 64px;
   border-radius: 0;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
+/* Node = white circle with a random dog icon (set via inline --node-icon) */
 [data-theme="dog"] .timeline__node {
-  width: 36px;
-  height: 36px;
-  margin-top: 1rem;
-  border-radius: 0;
-  background: var(--color-fg);
-  box-shadow: none;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-size: 28px 28px;
-  mask-size: 28px 28px;
+  position: relative;
+  width: 52px;
+  height: 52px;
+  margin-top: 0.5rem;
+  background: #ffffff;
+  border: 3px solid var(--color-fg);
+  border-radius: 50%;
+  box-shadow: 3px 3px 0 var(--color-fg);
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
-[data-theme="dog"] .timeline__node[data-kind="experience"] {
-  -webkit-mask-image: url("/icons/paw.svg");
-  mask-image: url("/icons/paw.svg");
-}
-[data-theme="dog"] .timeline__node[data-kind="education"] {
-  -webkit-mask-image: url("/icons/bone.svg");
-  mask-image: url("/icons/bone.svg");
-}
-[data-theme="dog"] .timeline__node[data-kind="certificate"] {
-  -webkit-mask-image: url("/icons/medal.svg");
-  mask-image: url("/icons/medal.svg");
-}
-[data-theme="dog"] .timeline__node[data-kind="milestone"] {
-  -webkit-mask-image: url("/icons/woof-bubble.svg");
-  mask-image: url("/icons/woof-bubble.svg");
+[data-theme="dog"] .timeline__node::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background-image: var(--node-icon);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 [data-theme="dog"] .timeline__card {
-  background: var(--color-bg-elevated);
+  background: #ffffff;
   border-radius: 0;
   border: 3px solid var(--color-fg);
   box-shadow: 8px 8px 0 var(--color-fg);
@@ -157,13 +148,6 @@
 [data-theme="dog"] .timeline__card:hover {
   transform: translate(-3px, -3px);
   box-shadow: 11px 11px 0 var(--color-fg);
-}
-
-/* Every other card gets halftone fill — comic panel feel */
-[data-theme="dog"] .timeline__row:nth-child(odd) .timeline__card {
-  background-color: #fff;
-  background-image: var(--pattern-comic);
-  background-size: 8px 8px;
 }
 
 [data-theme="dog"] .timeline__date {
@@ -181,9 +165,7 @@
   transform: rotate(3deg);
 }
 
-[data-theme="dog"] .timeline__year {
-  color: var(--color-fg);
-}
+[data-theme="dog"] .timeline__year,
 [data-theme="dog"] .timeline__month {
   color: var(--color-fg);
 }

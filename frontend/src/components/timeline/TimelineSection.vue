@@ -7,6 +7,7 @@ import { useI18n } from "vue-i18n";
 import { useCvStore, type TimelineRow } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import { dogIconFor } from "@/composables/useDogIcon";
 import TimelineDetail from "./TimelineDetail.vue";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -21,6 +22,10 @@ const root = ref<HTMLElement | null>(null);
 
 function uid(row: TimelineRow): string {
   return `${row.kind}-${row.data.id}`;
+}
+
+function nodeStyle(row: TimelineRow): Record<string, string> {
+  return { "--node-icon": `url('${dogIconFor(uid(row))}')` };
 }
 
 function headline(row: TimelineRow): string {
@@ -128,7 +133,12 @@ const hasItems = computed(() => timelineItems.value.length > 0);
             i % 2 === 0 ? 'timeline__row--left' : 'timeline__row--right',
           ]"
         >
-          <span class="timeline__node" :data-kind="row.kind" aria-hidden="true" />
+          <span
+            class="timeline__node"
+            :style="nodeStyle(row)"
+            :data-kind="row.kind"
+            aria-hidden="true"
+          />
           <time class="timeline__date" :datetime="row.date">
             <span class="timeline__year">{{ formatYear(row.date) }}</span>
             <span class="timeline__month">{{ formatMonth(row.date) }}</span>

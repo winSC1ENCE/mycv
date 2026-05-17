@@ -56,3 +56,13 @@ test("home page passes axe in dog theme", async ({ page }) => {
   await page.waitForTimeout(1500);
   await expectA11yClean(page);
 });
+
+test("dog mode timeline nodes get a random dog icon via inline --node-icon", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: /Toggle theme|Theme wechseln/i }).click();
+  await page.waitForSelector(".timeline--alt");
+  const styleAttr = await page.locator(".timeline__node").first().getAttribute("style");
+  expect(styleAttr, "node must carry the --node-icon inline style").toMatch(
+    /--node-icon:\s*url\(['"]?\/icons\/dog\/[^)]+\.png['"]?\)/,
+  );
+});

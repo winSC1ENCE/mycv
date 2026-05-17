@@ -125,7 +125,7 @@ p {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 64px 1fr;
+  grid-template-columns: 1fr 72px 1fr;
   row-gap: var(--space-8);
 }
 
@@ -312,18 +312,18 @@ p {
 
 @media (max-width: 720px) {
   .timeline--alt {
-    grid-template-columns: 36px 1fr;
+    grid-template-columns: 56px 1fr;
     row-gap: var(--space-6);
   }
   .timeline--alt::before {
-    left: 18px;
+    left: 28px;
     transform: none;
   }
   .timeline__node {
     grid-column: 1;
     margin-top: 1rem;
     justify-self: start;
-    margin-left: 9px;
+    margin-left: 2px;
   }
   .timeline__row--left .timeline__date,
   .timeline__row--right .timeline__date {

@@ -36,22 +36,30 @@ describe("useDogBubbles.spawnBubble", () => {
   });
 
   it("emits a praise bubble at milestone counts", () => {
-    for (let i = 0; i < 10; i++) spawnBubble(0, 0, "/icons/dog/ball.png");
+    // First milestone is 3 — the third click triggers "GOOD DOG!"
+    for (let i = 0; i < 3; i++) spawnBubble(0, 0, "/icons/dog/ball.png");
     const last = bubbles.value[bubbles.value.length - 1];
     expect(last.text).toBe("GOOD DOG!");
     expect(last.size).toBe("big");
   });
 
   it("flags combo when ≥3 clicks fall inside a 1-second window", () => {
+    // Click 4 times: the 3rd is a praise milestone (count=3), the 4th hits combo
+    // (4 timestamps within the 1s window, no praise at count=4).
     spawnBubble(0, 0, "/icons/dog/ball.png");
     spawnBubble(0, 0, "/icons/dog/ball.png");
     spawnBubble(0, 0, "/icons/dog/ball.png");
-    const third = bubbles.value[2];
-    expect(third.size).toBe("big");
-    expect(third.text.startsWith("COMBO!")).toBe(true);
+    spawnBubble(0, 0, "/icons/dog/ball.png");
+    const fourth = bubbles.value[3];
+    expect(fourth.size).toBe("big");
+    expect(fourth.text.startsWith("COMBO!")).toBe(true);
   });
 
   it("does not flag combo when clicks are spread over time", () => {
+    // 4 clicks spread out — combo window flushes between each. Count ends at 4
+    // (no praise milestone), no timestamps remain in window, so result is normal.
+    spawnBubble(0, 0, "/icons/dog/ball.png");
+    vi.advanceTimersByTime(2000);
     spawnBubble(0, 0, "/icons/dog/ball.png");
     vi.advanceTimersByTime(2000);
     spawnBubble(0, 0, "/icons/dog/ball.png");

@@ -41,17 +41,17 @@ describe("randomPhrase", () => {
 
 describe("praiseFor", () => {
   it("returns the praise string for milestone counts", () => {
-    expect(praiseFor(10)).toBe("GOOD DOG!");
-    expect(praiseFor(25)).toBe("WHO'S A GOOD BOY?");
-    expect(praiseFor(50)).toBe("BEST FRIEND!");
-    expect(praiseFor(100)).toBe("DOG WHISPERER!");
+    expect(praiseFor(3)).toBe("GOOD DOG!");
+    expect(praiseFor(7)).toBe("WHO'S A GOOD BOY?");
+    expect(praiseFor(15)).toBe("BEST FRIEND!");
+    expect(praiseFor(30)).toBe("DOG WHISPERER!");
   });
 
   it("returns null for non-milestone counts", () => {
     expect(praiseFor(0)).toBeNull();
-    expect(praiseFor(9)).toBeNull();
-    expect(praiseFor(11)).toBeNull();
-    expect(praiseFor(99)).toBeNull();
-    expect(praiseFor(101)).toBeNull();
+    expect(praiseFor(2)).toBeNull();
+    expect(praiseFor(4)).toBeNull();
+    expect(praiseFor(10)).toBeNull();
+    expect(praiseFor(31)).toBeNull();
   });
 });

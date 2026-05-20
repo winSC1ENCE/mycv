@@ -268,11 +268,13 @@
   border: 3px solid var(--color-fg);
 }
 
-/* Pet counter chip — bottom-right of the timeline page panel */
+/* Pet counter chip — fixed at bottom-center of the viewport, visible while scrolling */
 [data-theme="dog"] .dog-pet-counter {
-  position: absolute;
+  position: fixed;
   bottom: var(--space-3);
-  right: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
   background: #ffffff;
   color: var(--color-fg);
   border: 2px solid var(--color-fg);

@@ -19,10 +19,10 @@ const PHRASES: Record<string, string[]> = {
 const DEFAULT_PHRASES = ["WUFF!", "BARK!", "WOOF!", "BORK!", "AWOOO!"];
 
 const PRAISE: Record<number, string> = {
-  10: "GOOD DOG!",
-  25: "WHO'S A GOOD BOY?",
-  50: "BEST FRIEND!",
-  100: "DOG WHISPERER!",
+  3: "GOOD DOG!",
+  7: "WHO'S A GOOD BOY?",
+  15: "BEST FRIEND!",
+  30: "DOG WHISPERER!",
 };
 
 export function phrasesForIcon(url: string): string[] {

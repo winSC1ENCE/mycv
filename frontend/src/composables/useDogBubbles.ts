@@ -6,7 +6,7 @@
  * and auto-cleans up the bubble after a short timeout.
  */
 
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { praiseFor, randomPhrase } from "./dogPhrases";
 
 export interface Bubble {
@@ -18,32 +18,14 @@ export interface Bubble {
   rotate: number;
 }
 
-const STORAGE_KEY = "mycv:pets";
 const MAX_BUBBLES = 12;
 const COMBO_WINDOW_MS = 1000;
 const COMBO_THRESHOLD = 3;
 const BUBBLE_TTL_MS = 1500;
 const BIG_BUBBLE_TTL_MS = 2000;
 
-function readInitial(): number {
-  if (typeof window === "undefined") return 0;
-  const raw = window.localStorage.getItem(STORAGE_KEY);
-  const n = raw ? parseInt(raw, 10) : 0;
-  return Number.isFinite(n) ? n : 0;
-}
-
 export const bubbles = ref<Bubble[]>([]);
-export const petCount = ref<number>(readInitial());
-
-watch(
-  petCount,
-  (value) => {
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, String(value));
-    }
-  },
-  { flush: "sync" },
-);
+export const petCount = ref<number>(0);
 
 let nextId = 1;
 const recentClickTimestamps: number[] = [];

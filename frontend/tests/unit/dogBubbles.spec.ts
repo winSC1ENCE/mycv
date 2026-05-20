@@ -28,11 +28,10 @@ describe("useDogBubbles.spawnBubble", () => {
     expect(["YUM!", "CRUNCH!", "TASTY!", "MINE!"]).toContain(b.text);
   });
 
-  it("increments and persists the pet counter", () => {
+  it("increments the pet counter", () => {
     spawnBubble(0, 0, "/icons/dog/ball.png");
     spawnBubble(0, 0, "/icons/dog/ball.png");
     expect(petCount.value).toBe(2);
-    expect(localStorage.getItem("mycv:pets")).toBe("2");
   });
 
   it("emits a praise bubble at milestone counts", () => {
@@ -82,9 +81,9 @@ describe("useDogBubbles.spawnBubble", () => {
     expect(bubbles.value).toHaveLength(0);
   });
 
-  it("restores petCount from localStorage on import (smoke)", () => {
-    // resetPetCount cleared it; just verify the watcher persists subsequent writes
+  it("starts each session at zero (no localStorage persistence)", () => {
     spawnBubble(0, 0, "/icons/dog/ball.png");
-    expect(localStorage.getItem("mycv:pets")).toBe("1");
+    resetPetCount();
+    expect(petCount.value).toBe(0);
   });
 });

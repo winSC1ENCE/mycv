@@ -3,9 +3,9 @@ import { createPinia, setActivePinia } from "pinia";
 
 // Mock vue-router before any imports that use it
 const replaceMock = vi.fn();
+const isReadyMock = vi.fn(() => Promise.resolve());
 vi.mock("vue-router", () => ({
-  useRoute: () => ({ query: routeQuery }),
-  useRouter: () => ({ replace: replaceMock }),
+  useRouter: () => ({ replace: replaceMock, isReady: isReadyMock }),
 }));
 
 // Mock the cv store
@@ -22,7 +22,13 @@ vi.mock("@/api/client", () => ({
 
 import { useAccessKey } from "@/composables/useAccessKey";
 
-let routeQuery: Record<string, string> = {};
+function setLocationSearch(search: string): void {
+  // jsdom exposes window.location.search as writable via Object.defineProperty
+  Object.defineProperty(window, "location", {
+    writable: true,
+    value: { ...window.location, search },
+  });
+}
 
 describe("useAccessKey", () => {
   beforeEach(() => {
@@ -30,25 +36,28 @@ describe("useAccessKey", () => {
     localStorage.clear();
     replaceMock.mockReset();
     loadMock.mockReset();
-    routeQuery = {};
+    isReadyMock.mockClear();
+    setLocationSearch("");
   });
 
-  it("stores the key and reloads cv when ?key is present", () => {
-    routeQuery = { key: "TOKEN_ABC" };
+  it("stores the key and reloads cv when ?key is present", async () => {
+    setLocationSearch("?key=TOKEN_ABC");
     useAccessKey();
     expect(localStorage.getItem("mycv:access_key")).toBe("TOKEN_ABC");
     expect(loadMock).toHaveBeenCalledOnce();
+    await isReadyMock.mock.results[0]?.value;
     expect(replaceMock).toHaveBeenCalledWith({ query: {} });
   });
 
-  it("strips the key from the URL but preserves other query params", () => {
-    routeQuery = { key: "XYZ", foo: "bar" };
+  it("strips the key from the URL but preserves other query params", async () => {
+    setLocationSearch("?key=XYZ&foo=bar");
     useAccessKey();
+    await isReadyMock.mock.results[0]?.value;
     expect(replaceMock).toHaveBeenCalledWith({ query: { foo: "bar" } });
   });
 
   it("does nothing when there is no key in the query", () => {
-    routeQuery = {};
+    setLocationSearch("");
     useAccessKey();
     expect(loadMock).not.toHaveBeenCalled();
     expect(replaceMock).not.toHaveBeenCalled();
@@ -56,7 +65,7 @@ describe("useAccessKey", () => {
   });
 
   it("does nothing when key is an empty string", () => {
-    routeQuery = { key: "" };
+    setLocationSearch("?key=");
     useAccessKey();
     expect(loadMock).not.toHaveBeenCalled();
   });

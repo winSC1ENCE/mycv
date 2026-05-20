@@ -24,8 +24,6 @@ def _is_staff(request: Request) -> bool:
 
 
 def _resolve_access(request: Request) -> bool:
-    if _is_staff(request):
-        return True
     token = request.query_params.get("key")
     if not token:
         return False

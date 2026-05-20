@@ -32,9 +32,11 @@ const photoAlt = computed(() =>
             <strong>{{ cv.full_name }}</strong> · {{ cv.title }}
           </p>
           <p v-if="cv.location">📍 {{ cv.location }}</p>
-          <p v-if="cv.email">
-            <a v-if="cv.access_granted" :href="`mailto:${cv.email}`">{{ cv.email }}</a>
-            <Sensitive v-else :blurred="true">{{ cv.email }}</Sensitive>
+          <p v-if="cv.zivilstand">
+            💍 <Sensitive :blurred="!cv.access_granted">{{ cv.zivilstand }}</Sensitive>
+          </p>
+          <p v-if="cv.date_of_birth">
+            🎂 <Sensitive :blurred="!cv.access_granted">{{ cv.date_of_birth }}</Sensitive>
           </p>
         </div>
       </div>

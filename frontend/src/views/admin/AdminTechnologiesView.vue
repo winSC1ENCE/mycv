@@ -25,10 +25,16 @@
       <div class="form-panel__inner">
         <h2 class="form-panel__title">{{ editing.id ? $t("admin.edit") : $t("admin.add") }}</h2>
         <form class="entity-form" @submit.prevent="save">
-          <label>{{ $t("admin.fields.name") }}<input v-model="editing.name" required /></label>
-          <label>{{ $t("admin.fields.slug") }}<input v-model="editing.slug" required /></label>
-          <label>{{ $t("admin.fields.category") }}<input v-model="editing.category" /></label>
-          <label>{{ $t("admin.fields.icon") }}<input v-model="editing.icon" /></label>
+          <label>
+            {{ $t("admin.fields.name") }}
+            <input v-model="editing.name" required />
+            <small class="form-help">{{ $t("admin.fields.nameHelp") }}</small>
+          </label>
+          <label>
+            {{ $t("admin.fields.category") }}
+            <input v-model="editing.category" />
+            <small class="form-help">{{ $t("admin.fields.categoryHelp") }}</small>
+          </label>
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -49,6 +55,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { technologyApi } from "@/api/admin";
+import { extractApiError } from "@/api/errors";
 import type { Technology, TechnologyWrite } from "@/api/types";
 
 type Draft = Partial<TechnologyWrite> & { id?: number };
@@ -74,27 +81,36 @@ async function load(): Promise<void> {
 }
 
 function openNew(): void {
-  editing.value = { name: "", slug: "", is_published: true };
+  editing.value = { name: "", slug: "", category: "", is_published: true };
 }
 
 function openEdit(item: Technology): void {
-  editing.value = { ...item };
+  editing.value = { ...item, is_published: true };
+}
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 async function save(): Promise<void> {
   saveError.value = null;
   if (!editing.value) return;
+  const { id, ...payload } = editing.value;
+  if (!id && payload.name && !payload.slug) {
+    payload.slug = slugify(payload.name);
+  }
   try {
-    const { id, ...payload } = editing.value;
-    if (id) {
-      await technologyApi.update(id, payload);
-    } else {
-      await technologyApi.create(payload);
-    }
+    if (id) await technologyApi.update(id, payload);
+    else await technologyApi.create(payload);
     editing.value = null;
     await load();
-  } catch {
-    saveError.value = "Save failed.";
+  } catch (err) {
+    saveError.value = extractApiError(err);
   }
 }
 
@@ -106,3 +122,11 @@ async function remove(id: number): Promise<void> {
 </script>
 
 <style scoped src="./admin-shared.css"></style>
+<style scoped>
+.form-help {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-fg-muted);
+  font-size: 0.8rem;
+}
+</style>

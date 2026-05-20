@@ -111,7 +111,8 @@
       "date": "Date",
       "kind": "Kind",
       "category": "Category",
-      "icon": "Icon",
+      "nameHelp": "Shown as a chip on the public page.",
+      "categoryHelp": "Optional grouping (e.g. Language, Framework). Not shown publicly.",
       "summary": "Summary",
       "summary_de": "Summary (DE)",
       "url": "URL",
@@ -127,12 +128,22 @@
       "zivilstand": "Marital status",
       "date_of_birth": "Date of birth",
       "expires_at": "Expires at",
-      "is_active": "Active"
+      "is_active": "Active",
+      "status": "Status"
     },
     "accessKeys": {
       "copyUrl": "Copy URL",
+      "copied": "Copied!",
       "revoke": "Revoke",
-      "urlReady": "Share this URL"
+      "urlReady": "Share this URL",
+      "status": {
+        "active": "Active",
+        "expired": "Expired",
+        "revoked": "Revoked"
+      },
+      "errors": {
+        "pastExpiry": "Expiry date must be in the future."
+      }
     }
   }
 }

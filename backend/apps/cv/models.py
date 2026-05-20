@@ -50,9 +50,6 @@ class Technology(Orderable):
     name = models.CharField(max_length=80, unique=True, db_index=True)
     slug = models.SlugField(max_length=80, unique=True, db_index=True)
     category = models.CharField(max_length=64, blank=True)
-    icon = models.CharField(
-        max_length=64, blank=True, help_text="Icon identifier (e.g. devicon name)"
-    )
 
     class Meta(Orderable.Meta):
         verbose_name_plural = "technologies"

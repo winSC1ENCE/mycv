@@ -12,13 +12,14 @@
       </label>
       <label>
         {{ $t("admin.fields.expires_at") }}
-        <input v-model="newExpiry" type="datetime-local" required />
+        <input v-model="newExpiry" type="datetime-local" :min="minExpiry" required />
       </label>
       <div class="form-panel__footer">
         <button class="btn btn--primary" type="submit" :disabled="creating">
           {{ creating ? $t("common.loading") : $t("admin.add") }}
         </button>
       </div>
+      <p v-if="formError" class="form-error">{{ formError }}</p>
     </form>
 
     <!-- Created URL -->
@@ -26,6 +27,9 @@
       <p><strong>{{ $t("admin.accessKeys.urlReady") }}</strong></p>
       <code class="access-key-url__code">{{ createdUrl }}</code>
       <button class="btn btn--ghost" @click="copyUrl">{{ $t("admin.accessKeys.copyUrl") }}</button>
+      <span v-if="copied" class="access-key-url__copied">
+        {{ $t("admin.accessKeys.copied") }}
+      </span>
     </div>
 
     <!-- List -->
@@ -35,18 +39,26 @@
         <tr>
           <th>{{ $t("admin.fields.label") }}</th>
           <th>{{ $t("admin.fields.expires_at") }}</th>
-          <th>{{ $t("admin.fields.is_active") }}</th>
+          <th>{{ $t("admin.fields.status") }}</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="key in keys" :key="key.id" :class="{ 'access-key-table__row--inactive': !key.is_active }">
+        <tr
+          v-for="key in keys"
+          :key="key.id"
+          :class="{ 'access-key-table__row--inactive': keyStatus(key) !== 'active' }"
+        >
           <td>{{ key.label || "—" }}</td>
-          <td>{{ key.expires_at }}</td>
-          <td>{{ key.is_active ? "✓" : "✗" }}</td>
+          <td>{{ formatExpiry(key.expires_at) }}</td>
+          <td>
+            <span class="access-key-status" :class="`access-key-status--${keyStatus(key)}`">
+              {{ $t(`admin.accessKeys.status.${keyStatus(key)}`) }}
+            </span>
+          </td>
           <td>
             <button
-              v-if="key.is_active"
+              v-if="keyStatus(key) !== 'revoked'"
               class="btn btn--danger btn--sm"
               @click="revoke(key.id)"
             >
@@ -60,10 +72,13 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { useI18n } from "vue-i18n";
 import { accessKeyApi } from "@/api/admin";
 import { personApi } from "@/api/admin";
 import type { AccessKey } from "@/api/types";
+
+const { t } = useI18n();
 
 const keys = ref<AccessKey[]>([]);
 const loading = ref(false);
@@ -71,7 +86,28 @@ const creating = ref(false);
 const newLabel = ref("");
 const newExpiry = ref("");
 const createdUrl = ref("");
+const copied = ref(false);
+const formError = ref<string | null>(null);
 let personId = 0;
+
+function toLocalDatetimeInput(d: Date): string {
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+const minExpiry = computed(() => toLocalDatetimeInput(new Date(Date.now() + 60_000)));
+
+function keyStatus(key: AccessKey): "active" | "expired" | "revoked" {
+  if (!key.is_active) return "revoked";
+  if (new Date(key.expires_at).getTime() <= Date.now()) return "expired";
+  return "active";
+}
+
+function formatExpiry(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleString();
+}
 
 onMounted(async () => {
   loading.value = true;
@@ -85,13 +121,19 @@ onMounted(async () => {
 });
 
 async function create(): Promise<void> {
+  formError.value = null;
+  const expiryDate = new Date(newExpiry.value);
+  if (Number.isNaN(expiryDate.getTime()) || expiryDate.getTime() <= Date.now()) {
+    formError.value = t("admin.accessKeys.errors.pastExpiry");
+    return;
+  }
   creating.value = true;
   createdUrl.value = "";
   try {
     const key = await accessKeyApi.create({
       person: personId,
       label: newLabel.value,
-      expires_at: new Date(newExpiry.value).toISOString(),
+      expires_at: expiryDate.toISOString(),
       is_active: true,
     });
     keys.value.unshift(key);
@@ -109,8 +151,14 @@ async function revoke(id: number): Promise<void> {
   if (found) found.is_active = false;
 }
 
-function copyUrl(): void {
-  navigator.clipboard.writeText(createdUrl.value);
+async function copyUrl(): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(createdUrl.value);
+    copied.value = true;
+    setTimeout(() => (copied.value = false), 2000);
+  } catch {
+    // clipboard unavailable — leave the URL <code> selectable so the user can copy manually
+  }
 }
 </script>
 
@@ -134,6 +182,12 @@ function copyUrl(): void {
   word-break: break-all;
 }
 
+.access-key-url__copied {
+  font-size: 0.85rem;
+  color: var(--color-success, #16a34a);
+  font-weight: 600;
+}
+
 .access-key-table {
   width: 100%;
   border-collapse: collapse;
@@ -153,7 +207,32 @@ function copyUrl(): void {
 }
 
 .access-key-table__row--inactive {
-  opacity: 0.45;
+  opacity: 0.55;
+}
+
+.access-key-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.access-key-status--active {
+  background: rgba(22, 163, 74, 0.15);
+  color: #16a34a;
+}
+
+.access-key-status--expired {
+  background: rgba(234, 88, 12, 0.15);
+  color: #ea580c;
+}
+
+.access-key-status--revoked {
+  background: rgba(220, 38, 38, 0.15);
+  color: #dc2626;
 }
 
 .btn--danger {

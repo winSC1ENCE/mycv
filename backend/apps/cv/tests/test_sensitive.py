@@ -132,7 +132,7 @@ class TestValidKeyUnlock:
 
 @pytest.mark.django_db
 class TestStaffAccess:
-    def test_staff_user_always_sees_real_values(
+    def test_staff_user_sees_redacted_by_default(
         self, person: models.Person, django_user_model: type
     ) -> None:
         staff = django_user_model.objects.create_user(
@@ -141,6 +141,46 @@ class TestStaffAccess:
         client = APIClient()
         client.force_authenticate(user=staff)
         data = client.get("/api/cv/").json()
+        assert data["access_granted"] is False
+        assert data["email"] == "***@***.***"
+
+    def test_staff_user_with_valid_key_sees_real_values(
+        self,
+        person: models.Person,
+        valid_key: models.AccessKey,
+        django_user_model: type,
+    ) -> None:
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        data = client.get(f"/api/cv/?key={valid_key.token}").json()
         assert data["access_granted"] is True
         assert data["email"] == "nicolas@example.com"
-        assert data["phone"] == "+41 79 123 45 67"
+
+
+@pytest.mark.django_db
+class TestAccessKeyWriteSerializer:
+    def test_create_response_returns_token(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        response = client.post(
+            "/api/access-keys/",
+            {
+                "person": person.id,
+                "label": "recruiter",
+                "expires_at": (timezone.now() + dt.timedelta(hours=1)).isoformat(),
+                "is_active": True,
+            },
+            format="json",
+        )
+        assert response.status_code == 201
+        body = response.json()
+        assert isinstance(body.get("token"), str)
+        assert len(body["token"]) > 10

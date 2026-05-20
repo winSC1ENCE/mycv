@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import type { Cv } from "@/api/types";
 import Sensitive from "@/components/base/Sensitive.vue";
 
-defineProps<{ cv: Cv }>();
+const props = defineProps<{ cv: Cv }>();
+
+const mapsUrl = computed(
+  () => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.cv.address)}`,
+);
 </script>
 
 <template>
@@ -13,18 +18,16 @@ defineProps<{ cv: Cv }>();
         <p>
           <a v-if="cv.access_granted" :href="`mailto:${cv.email}`">{{ cv.email }}</a>
           <Sensitive v-else :blurred="true">{{ cv.email }}</Sensitive>
-          <span v-if="cv.phone"> · <Sensitive :blurred="!cv.access_granted">{{ cv.phone }}</Sensitive></span>
+          <span v-if="cv.phone">
+            · <Sensitive :blurred="!cv.access_granted">{{ cv.phone }}</Sensitive>
+          </span>
         </p>
-        <p v-if="cv.address || cv.zivilstand || cv.date_of_birth" class="contact-meta">
-          <span v-if="cv.address">
-            📍 <Sensitive :blurred="!cv.access_granted">{{ cv.address }}</Sensitive>
-          </span>
-          <span v-if="cv.zivilstand">
-            · <Sensitive :blurred="!cv.access_granted">{{ cv.zivilstand }}</Sensitive>
-          </span>
-          <span v-if="cv.date_of_birth">
-            · <Sensitive :blurred="!cv.access_granted">{{ cv.date_of_birth }}</Sensitive>
-          </span>
+        <p v-if="cv.address" class="contact-meta">
+          📍
+          <a v-if="cv.access_granted" :href="mapsUrl" target="_blank" rel="noopener">
+            {{ cv.address }}
+          </a>
+          <Sensitive v-else :blurred="true">{{ cv.address }}</Sensitive>
         </p>
         <p>
           <a

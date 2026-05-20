@@ -111,7 +111,8 @@
       "date": "Datum",
       "kind": "Art",
       "category": "Kategorie",
-      "icon": "Symbol",
+      "nameHelp": "Wird als Chip auf der öffentlichen Seite angezeigt.",
+      "categoryHelp": "Optionale Gruppierung (z. B. Sprache, Framework). Wird nicht öffentlich angezeigt.",
       "summary": "Zusammenfassung",
       "summary_de": "Zusammenfassung (DE)",
       "url": "URL",
@@ -127,12 +128,22 @@
       "zivilstand": "Zivilstand",
       "date_of_birth": "Geburtsdatum",
       "expires_at": "Läuft ab am",
-      "is_active": "Aktiv"
+      "is_active": "Aktiv",
+      "status": "Status"
     },
     "accessKeys": {
       "copyUrl": "URL kopieren",
+      "copied": "Kopiert!",
       "revoke": "Widerrufen",
-      "urlReady": "Diese URL teilen"
+      "urlReady": "Diese URL teilen",
+      "status": {
+        "active": "Aktiv",
+        "expired": "Abgelaufen",
+        "revoked": "Widerrufen"
+      },
+      "errors": {
+        "pastExpiry": "Das Ablaufdatum muss in der Zukunft liegen."
+      }
     }
   }
 }

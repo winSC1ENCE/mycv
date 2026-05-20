@@ -12,36 +12,148 @@
     "summary_de": "Senior Data Engineer und Data Scientist mit über 10 Jahren Erfahrung im Aufbau von Datenplattformen für Spitäler und Bundesstellen in der Schweiz. Apache NiFi, Airflow, PySpark, Iceberg. Hands-on und exakt — coacht Junior-Ingenieure und liefert im Scrum / SAFe-Team."
   },
   "social_links": [
-    {"platform": "email", "label": "Email", "url": "mailto:nicolas.mischler@pm.me"},
-    {"platform": "github", "label": "GitHub", "url": "https://github.com/winSC1ENCE"}
+    {
+      "platform": "email",
+      "label": "Email",
+      "url": "mailto:nicolas.mischler@pm.me"
+    },
+    {
+      "platform": "github",
+      "label": "GitHub",
+      "url": "https://github.com/winSC1ENCE"
+    }
   ],
   "technologies": [
-    {"name": "Python", "slug": "python", "category": "Language", "icon": "devicon-python-plain"},
-    {"name": "PySpark", "slug": "pyspark", "category": "Framework", "icon": ""},
-    {"name": "T-SQL", "slug": "t-sql", "category": "Language", "icon": ""},
-    {"name": "C# / .NET", "slug": "csharp", "category": "Language", "icon": "devicon-csharp-plain"},
-    {"name": "PHP", "slug": "php", "category": "Language", "icon": "devicon-php-plain"},
-    {"name": "Delphi", "slug": "delphi", "category": "Language", "icon": ""},
-    {"name": "JavaScript", "slug": "javascript", "category": "Language", "icon": "devicon-javascript-plain"},
-    {"name": "HTML / CSS", "slug": "html-css", "category": "Language", "icon": ""},
-    {"name": "Apache NiFi", "slug": "nifi", "category": "Data", "icon": ""},
-    {"name": "Apache Airflow", "slug": "airflow", "category": "Data", "icon": ""},
-    {"name": "Apache Spark", "slug": "spark", "category": "Data", "icon": ""},
-    {"name": "Apache Iceberg", "slug": "iceberg", "category": "Data", "icon": ""},
-    {"name": "Apache Kafka", "slug": "kafka", "category": "Data", "icon": ""},
-    {"name": "Dremio", "slug": "dremio", "category": "Data", "icon": ""},
-    {"name": "dbt", "slug": "dbt", "category": "Data", "icon": ""},
-    {"name": "PostgreSQL", "slug": "postgresql", "category": "Database", "icon": "devicon-postgresql-plain"},
-    {"name": "MS SQL Server", "slug": "mssql", "category": "Database", "icon": ""},
-    {"name": "Snowflake", "slug": "snowflake", "category": "Database", "icon": ""},
-    {"name": "Docker", "slug": "docker", "category": "Infra", "icon": "devicon-docker-plain"},
-    {"name": "Kubernetes", "slug": "kubernetes", "category": "Infra", "icon": "devicon-kubernetes-plain"},
-    {"name": "AWS S3", "slug": "s3", "category": "Infra", "icon": ""},
-    {"name": "Git", "slug": "git", "category": "DevOps", "icon": "devicon-git-plain"},
-    {"name": "Jenkins", "slug": "jenkins", "category": "DevOps", "icon": ""},
-    {"name": "MLflow", "slug": "mlflow", "category": "ML", "icon": ""},
-    {"name": "Qlik Sense", "slug": "qlik", "category": "BI", "icon": ""},
-    {"name": "Prometheus / Grafana", "slug": "prometheus-grafana", "category": "Observability", "icon": ""}
+    {
+      "name": "Python",
+      "slug": "python",
+      "category": "Language"
+    },
+    {
+      "name": "PySpark",
+      "slug": "pyspark",
+      "category": "Framework"
+    },
+    {
+      "name": "T-SQL",
+      "slug": "t-sql",
+      "category": "Language"
+    },
+    {
+      "name": "C# / .NET",
+      "slug": "csharp",
+      "category": "Language"
+    },
+    {
+      "name": "PHP",
+      "slug": "php",
+      "category": "Language"
+    },
+    {
+      "name": "Delphi",
+      "slug": "delphi",
+      "category": "Language"
+    },
+    {
+      "name": "JavaScript",
+      "slug": "javascript",
+      "category": "Language"
+    },
+    {
+      "name": "HTML / CSS",
+      "slug": "html-css",
+      "category": "Language"
+    },
+    {
+      "name": "Apache NiFi",
+      "slug": "nifi",
+      "category": "Data"
+    },
+    {
+      "name": "Apache Airflow",
+      "slug": "airflow",
+      "category": "Data"
+    },
+    {
+      "name": "Apache Spark",
+      "slug": "spark",
+      "category": "Data"
+    },
+    {
+      "name": "Apache Iceberg",
+      "slug": "iceberg",
+      "category": "Data"
+    },
+    {
+      "name": "Apache Kafka",
+      "slug": "kafka",
+      "category": "Data"
+    },
+    {
+      "name": "Dremio",
+      "slug": "dremio",
+      "category": "Data"
+    },
+    {
+      "name": "dbt",
+      "slug": "dbt",
+      "category": "Data"
+    },
+    {
+      "name": "PostgreSQL",
+      "slug": "postgresql",
+      "category": "Database"
+    },
+    {
+      "name": "MS SQL Server",
+      "slug": "mssql",
+      "category": "Database"
+    },
+    {
+      "name": "Snowflake",
+      "slug": "snowflake",
+      "category": "Database"
+    },
+    {
+      "name": "Docker",
+      "slug": "docker",
+      "category": "Infra"
+    },
+    {
+      "name": "Kubernetes",
+      "slug": "kubernetes",
+      "category": "Infra"
+    },
+    {
+      "name": "AWS S3",
+      "slug": "s3",
+      "category": "Infra"
+    },
+    {
+      "name": "Git",
+      "slug": "git",
+      "category": "DevOps"
+    },
+    {
+      "name": "Jenkins",
+      "slug": "jenkins",
+      "category": "DevOps"
+    },
+    {
+      "name": "MLflow",
+      "slug": "mlflow",
+      "category": "ML"
+    },
+    {
+      "name": "Qlik Sense",
+      "slug": "qlik",
+      "category": "BI"
+    },
+    {
+      "name": "Prometheus / Grafana",
+      "slug": "prometheus-grafana",
+      "category": "Observability"
+    }
   ],
   "skill_categories": [
     {
@@ -49,11 +161,47 @@
       "name_de": "Programmieren",
       "slug": "programming",
       "skills": [
-        {"name": "Python, PySpark, T-SQL", "name_de": "Python, PySpark, T-SQL", "level": 5, "technologies": ["python", "pyspark", "t-sql"]},
-        {"name": ".NET, C#, PHP, HTML, CSS, JavaScript", "name_de": ".NET, C#, PHP, HTML, CSS, JavaScript", "level": 4, "technologies": ["csharp", "php", "html-css", "javascript"]},
-        {"name": "VB, Jinja", "name_de": "VB, Jinja", "level": 3, "technologies": []},
-        {"name": "Java", "name_de": "Java", "level": 2, "technologies": []},
-        {"name": "Delphi, Scala", "name_de": "Delphi, Scala", "level": 1, "technologies": ["delphi"]}
+        {
+          "name": "Python, PySpark, T-SQL",
+          "name_de": "Python, PySpark, T-SQL",
+          "level": 5,
+          "technologies": [
+            "python",
+            "pyspark",
+            "t-sql"
+          ]
+        },
+        {
+          "name": ".NET, C#, PHP, HTML, CSS, JavaScript",
+          "name_de": ".NET, C#, PHP, HTML, CSS, JavaScript",
+          "level": 4,
+          "technologies": [
+            "csharp",
+            "php",
+            "html-css",
+            "javascript"
+          ]
+        },
+        {
+          "name": "VB, Jinja",
+          "name_de": "VB, Jinja",
+          "level": 3,
+          "technologies": []
+        },
+        {
+          "name": "Java",
+          "name_de": "Java",
+          "level": 2,
+          "technologies": []
+        },
+        {
+          "name": "Delphi, Scala",
+          "name_de": "Delphi, Scala",
+          "level": 1,
+          "technologies": [
+            "delphi"
+          ]
+        }
       ]
     },
     {
@@ -61,11 +209,56 @@
       "name_de": "Tools & Konzepte",
       "slug": "tools-concepts",
       "skills": [
-        {"name": "NiFi, Airflow, Spark, Git, Jira, Confluence", "name_de": "NiFi, Airflow, Spark, Git, Jira, Confluence", "level": 5, "technologies": ["nifi", "airflow", "spark", "git"]},
-        {"name": "Dremio, Docker, Qlik, S3, Postgres, CI/CD", "name_de": "Dremio, Docker, Qlik, S3, Postgres, CI/CD", "level": 4, "technologies": ["dremio", "docker", "qlik", "s3", "postgresql"]},
-        {"name": "dbt, Cloud, Jenkins, Kafka, Data Science, Kubernetes", "name_de": "dbt, Cloud, Jenkins, Kafka, Data Science, Kubernetes", "level": 3, "technologies": ["dbt", "jenkins", "kafka", "kubernetes"]},
-        {"name": "MLflow, MLOps", "name_de": "MLflow, MLOps", "level": 2, "technologies": ["mlflow"]},
-        {"name": "Snowflake", "name_de": "Snowflake", "level": 1, "technologies": ["snowflake"]}
+        {
+          "name": "NiFi, Airflow, Spark, Git, Jira, Confluence",
+          "name_de": "NiFi, Airflow, Spark, Git, Jira, Confluence",
+          "level": 5,
+          "technologies": [
+            "nifi",
+            "airflow",
+            "spark",
+            "git"
+          ]
+        },
+        {
+          "name": "Dremio, Docker, Qlik, S3, Postgres, CI/CD",
+          "name_de": "Dremio, Docker, Qlik, S3, Postgres, CI/CD",
+          "level": 4,
+          "technologies": [
+            "dremio",
+            "docker",
+            "qlik",
+            "s3",
+            "postgresql"
+          ]
+        },
+        {
+          "name": "dbt, Cloud, Jenkins, Kafka, Data Science, Kubernetes",
+          "name_de": "dbt, Cloud, Jenkins, Kafka, Data Science, Kubernetes",
+          "level": 3,
+          "technologies": [
+            "dbt",
+            "jenkins",
+            "kafka",
+            "kubernetes"
+          ]
+        },
+        {
+          "name": "MLflow, MLOps",
+          "name_de": "MLflow, MLOps",
+          "level": 2,
+          "technologies": [
+            "mlflow"
+          ]
+        },
+        {
+          "name": "Snowflake",
+          "name_de": "Snowflake",
+          "level": 1,
+          "technologies": [
+            "snowflake"
+          ]
+        }
       ]
     },
     {
@@ -73,9 +266,24 @@
       "name_de": "Sprachen",
       "slug": "languages",
       "skills": [
-        {"name": "German — native (C2)", "name_de": "Deutsch — Muttersprache (C2)", "level": 5, "technologies": []},
-        {"name": "English — upper intermediate (B2)", "name_de": "Englisch — gut (B2)", "level": 4, "technologies": []},
-        {"name": "French — intermediate (B1)", "name_de": "Französisch — Mittelstufe (B1)", "level": 3, "technologies": []}
+        {
+          "name": "German — native (C2)",
+          "name_de": "Deutsch — Muttersprache (C2)",
+          "level": 5,
+          "technologies": []
+        },
+        {
+          "name": "English — upper intermediate (B2)",
+          "name_de": "Englisch — gut (B2)",
+          "level": 4,
+          "technologies": []
+        },
+        {
+          "name": "French — intermediate (B1)",
+          "name_de": "Französisch — Mittelstufe (B1)",
+          "level": 3,
+          "technologies": []
+        }
       ]
     }
   ],
@@ -90,7 +298,15 @@
       "end_date": null,
       "description": "Develop and operate the existing clinical data platform (.NET C#) including Prometheus/Grafana monitoring. Build a modern Kubernetes-based data platform on open-source tools.",
       "description_de": "Entwicklung & Betreuung der bestehenden Clinical Data Platform (.NET C#) inkl. Monitoring (Prometheus/Grafana). Aufbau einer modernen Data-Platform auf Kubernetes mit Open-Source-Tools.",
-      "technologies": ["csharp", "python", "kubernetes", "docker", "postgresql", "prometheus-grafana", "git"]
+      "technologies": [
+        "csharp",
+        "python",
+        "kubernetes",
+        "docker",
+        "postgresql",
+        "prometheus-grafana",
+        "git"
+      ]
     },
     {
       "link_key": "bazg",
@@ -102,7 +318,20 @@
       "end_date": "2023-11-30",
       "description": "Operated and extended the data analytics platform and the data lake. Built pipelines in Python and PySpark using Apache NiFi, Airflow, Spark, Iceberg, Dremio, S3, Postgres, Git, Kafka, Docker and Linux. Worked in a Scrum / SAFe / DevOps setup.",
       "description_de": "Betreuung und Entwicklung der Data-Analytics-Plattform und des Datalakes. Entwicklung in Python und PySpark. Tools: Apache NiFi, Airflow, Spark, Iceberg, Dremio, S3, Postgres, Git, Kafka, Docker, Linux. Arbeitsmethodik: Scrum / SAFe / DevOps.",
-      "technologies": ["python", "pyspark", "nifi", "airflow", "spark", "iceberg", "dremio", "s3", "postgresql", "git", "kafka", "docker"]
+      "technologies": [
+        "python",
+        "pyspark",
+        "nifi",
+        "airflow",
+        "spark",
+        "iceberg",
+        "dremio",
+        "s3",
+        "postgresql",
+        "git",
+        "kafka",
+        "docker"
+      ]
     },
     {
       "link_key": "spital-thun",
@@ -114,7 +343,13 @@
       "end_date": "2021-08-31",
       "description": "Maintained the hospital information system CGM Clinical (Delphi scripting, MS SQL, Crystal Reports). Built applications in PHP, JavaScript, CSS and HTML.",
       "description_de": "Betreuung des Klinikinformationssystems CGM Clinical (Skriptsprache Delphi, MS SQL, Crystal Reports). Applikationsentwicklung in PHP, JS, CSS und HTML.",
-      "technologies": ["delphi", "mssql", "php", "javascript", "html-css"]
+      "technologies": [
+        "delphi",
+        "mssql",
+        "php",
+        "javascript",
+        "html-css"
+      ]
     },
     {
       "link_key": "kpt",
@@ -126,7 +361,11 @@
       "end_date": "2021-04-30",
       "description": "Full-stack software developer in C# (ASP.NET, .NET Core, JavaScript, CSS, HTML).",
       "description_de": "Fullstack Software Developer in C# (ASP.NET, .NET Core, JS, CSS, HTML).",
-      "technologies": ["csharp", "javascript", "html-css"]
+      "technologies": [
+        "csharp",
+        "javascript",
+        "html-css"
+      ]
     },
     {
       "link_key": "compugroup",
@@ -138,7 +377,10 @@
       "end_date": "2016-12-31",
       "description": "Further development of the hospital information system CGM Clinical. Sub-project lead of the Siloah rollout in Gümligen (Hermes, Scrum, Jira, Confluence).",
       "description_de": "Weiterentwicklung des Klinikinformationssystems CGM Clinical. Teilprojektleiter der Einführung Spital Siloah in Gümligen (Hermes, Scrum, Jira, Confluence).",
-      "technologies": ["delphi", "mssql"]
+      "technologies": [
+        "delphi",
+        "mssql"
+      ]
     },
     {
       "link_key": "abb",
@@ -209,7 +451,11 @@
       "description_de": "Diese Seite. Demonstriert saubere Architektur, typisierte APIs, 100 % Backend-Coverage und ein poliertes UI.",
       "url": "https://cv.chlous.top",
       "repo_url": "",
-      "technologies": ["python", "postgresql", "docker"]
+      "technologies": [
+        "python",
+        "postgresql",
+        "docker"
+      ]
     }
   ],
   "timeline_entries": [

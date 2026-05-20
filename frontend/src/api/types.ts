@@ -23,7 +23,6 @@ export interface Technology {
   name: string;
   slug: string;
   category: string;
-  icon: string;
   order: number;
 }
 

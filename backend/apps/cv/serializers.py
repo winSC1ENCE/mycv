@@ -37,7 +37,7 @@ class MediaAssetWriteSerializer(serializers.ModelSerializer[models.MediaAsset]):
 class TechnologySerializer(serializers.ModelSerializer[models.Technology]):
     class Meta:
         model = models.Technology
-        fields = ["id", "name", "slug", "category", "icon", "order"]
+        fields = ["id", "name", "slug", "category", "order"]
 
 
 class SkillSerializer(serializers.ModelSerializer[models.Skill]):
@@ -273,13 +273,14 @@ class AccessKeySerializer(serializers.ModelSerializer[models.AccessKey]):
 class AccessKeyWriteSerializer(serializers.ModelSerializer[models.AccessKey]):
     class Meta:
         model = models.AccessKey
-        fields = ["id", "person", "label", "expires_at", "is_active"]
+        fields = ["id", "person", "token", "label", "expires_at", "is_active"]
+        read_only_fields = ["token"]
 
 
 class TechnologyWriteSerializer(serializers.ModelSerializer[models.Technology]):
     class Meta:
         model = models.Technology
-        fields = ["id", "name", "slug", "category", "icon", "order", "is_published"]
+        fields = ["id", "name", "slug", "category", "order", "is_published"]
 
 
 class SkillCategoryWriteSerializer(serializers.ModelSerializer[models.SkillCategory]):

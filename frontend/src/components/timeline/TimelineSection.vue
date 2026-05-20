@@ -162,6 +162,7 @@ const hasItems = computed(() => timelineItems.value.length > 0);
               @click="(ev) => toggle(uid(row), ev)"
             >
               <span class="timeline__card-text">
+                <span class="timeline__kind">{{ t(`timeline.kind.${row.kind}`) }}</span>
                 <h3 class="timeline__card-title">{{ headline(row) }}</h3>
                 <p class="timeline__card-sub">{{ subline(row) }}</p>
               </span>

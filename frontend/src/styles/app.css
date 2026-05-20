@@ -167,15 +167,19 @@ p {
   padding-left: var(--space-3);
 }
 
+.timeline__row--experience  { --kind-accent: #2563eb; }
+.timeline__row--education   { --kind-accent: #16a34a; }
+.timeline__row--certificate { --kind-accent: #d97706; }
+.timeline__row--milestone   { --kind-accent: #7c3aed; }
+
 .timeline__node {
   grid-column: 2;
-  align-self: start;
+  align-self: center;
   justify-self: center;
   width: 18px;
   height: 18px;
-  margin-top: 1.5rem;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--kind-accent, var(--color-accent));
   box-shadow:
     0 0 0 4px var(--color-bg),
     0 0 0 6px var(--color-accent-soft);
@@ -185,12 +189,11 @@ p {
 .timeline__date {
   font-family: var(--font-mono);
   font-size: 0.95rem;
-  color: var(--color-accent);
+  color: var(--kind-accent, var(--color-accent));
   display: flex;
   flex-direction: column;
   gap: 2px;
-  align-self: start;
-  margin-top: 1rem;
+  align-self: center;
 }
 .timeline__year {
   font-size: 1.25rem;
@@ -209,6 +212,7 @@ p {
   background: var(--color-bg-elevated);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
+  border-left: 4px solid var(--kind-accent, var(--color-accent));
   box-shadow: var(
     --shadow-card-rest,
     0 2px 4px rgba(15, 23, 42, 0.06),
@@ -220,6 +224,26 @@ p {
   transition:
     transform var(--motion-medium) var(--easing-out),
     box-shadow var(--motion-medium) var(--easing-out);
+}
+
+.timeline__row--left .timeline__card {
+  border-left: 1px solid var(--color-border);
+  border-right: 4px solid var(--kind-accent, var(--color-accent));
+}
+
+.timeline__kind {
+  display: inline-block;
+  padding: 2px 8px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  color: var(--kind-accent, var(--color-accent));
+  border: 1px solid var(--kind-accent, var(--color-accent));
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
 }
 
 .timeline__card:hover {
@@ -322,12 +346,14 @@ p {
   .timeline__node {
     grid-column: 1;
     margin-top: 1rem;
+    align-self: start;
     justify-self: start;
     margin-left: 10px;
   }
   .timeline__row--left .timeline__date,
   .timeline__row--right .timeline__date {
     grid-column: 2;
+    align-self: start;
     justify-self: start;
     text-align: left;
     padding: 0;
@@ -339,6 +365,8 @@ p {
     justify-self: stretch;
     text-align: left;
     max-width: none;
+    border-left: 4px solid var(--kind-accent, var(--color-accent));
+    border-right: 1px solid var(--color-border);
   }
   .timeline__row--left .timeline__card-toggle {
     flex-direction: row;

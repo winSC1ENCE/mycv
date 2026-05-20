@@ -22,58 +22,27 @@
   background-image: none;
 }
 
-/* Fur-frame: spots at the edges, clear lane down the middle where content lives. */
-[data-theme="dog"] body::before {
+/* Fur-frame: two gutter strips painted with spots, content lane stays spotless. */
+[data-theme="dog"] body::before,
+[data-theme="dog"] body::after {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  bottom: 0;
+  width: calc((100vw - var(--content-max, 1100px)) / 2);
   z-index: -1;
   pointer-events: none;
   background-image: var(--pattern-spots);
   background-size: 600px 600px;
   background-repeat: repeat;
-  -webkit-mask-image: linear-gradient(
-    to right,
-    #000 0%,
-    #000 18%,
-    transparent 38%,
-    transparent 62%,
-    #000 82%,
-    #000 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    #000 0%,
-    #000 18%,
-    transparent 38%,
-    transparent 62%,
-    #000 82%,
-    #000 100%
-  );
 }
 
-/* On narrow viewports, flip to a vertical fade so the full width is reading area. */
+[data-theme="dog"] body::before { left: 0; }
+[data-theme="dog"] body::after  { right: 0; }
+
 @media (max-width: 720px) {
-  [data-theme="dog"] body::before {
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 12%,
-      transparent 28%,
-      transparent 72%,
-      #000 88%,
-      #000 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      #000 0%,
-      #000 12%,
-      transparent 28%,
-      transparent 72%,
-      #000 88%,
-      #000 100%
-    );
-  }
+  [data-theme="dog"] body::before,
+  [data-theme="dog"] body::after { display: none; }
 }
 
 /* --- Headings: hand-drawn rotation --- */
@@ -195,7 +164,6 @@
   position: relative;
   width: 52px;
   height: 52px;
-  margin-top: 0.5rem;
   background: #ffffff;
   border: 3px solid var(--color-fg);
   border-radius: 50%;
@@ -249,7 +217,6 @@
   background: #fff;
   border: 2px solid var(--color-fg);
   padding: 6px 12px;
-  margin-top: 1rem;
   box-shadow: 3px 3px 0 var(--color-fg);
   transform: rotate(-3deg);
 }
@@ -285,12 +252,20 @@
   border-top: 3px solid var(--color-fg);
 }
 
-[data-theme="dog"] .kind-badge {
+[data-theme="dog"] .kind-badge,
+[data-theme="dog"] .timeline__kind {
   border: 2px solid var(--color-fg);
   border-radius: 0;
   background: var(--color-fg);
   color: #fff;
   box-shadow: 2px 2px 0 var(--color-fg);
+}
+
+/* Dog mode is B/W — keep the card border uniform black, drop kind-color accent. */
+[data-theme="dog"] .timeline__card,
+[data-theme="dog"] .timeline__row--left .timeline__card,
+[data-theme="dog"] .timeline__row--right .timeline__card {
+  border: 3px solid var(--color-fg);
 }
 
 /* Pet counter chip — bottom-right of the timeline page panel */

@@ -15,7 +15,13 @@
     "lead": "Klick einen Eintrag, um Details zu sehen.",
     "linked_certificates": "Erworbene Zertifikate",
     "empty": "Noch keine Einträge.",
-    "pet_counter": "{n} mal gestreichelt"
+    "pet_counter": "{n} mal gestreichelt",
+    "kind": {
+      "experience": "Beruf",
+      "education": "Ausbildung",
+      "certificate": "Zertifikat",
+      "milestone": "Meilenstein"
+    }
   },
   "actions": {
     "toggle_theme": "Theme wechseln",

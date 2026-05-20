@@ -15,7 +15,13 @@
     "lead": "Click any entry to expand details.",
     "linked_certificates": "Certificates earned",
     "empty": "No timeline entries yet.",
-    "pet_counter": "{n} pets"
+    "pet_counter": "{n} pets",
+    "kind": {
+      "experience": "Work",
+      "education": "Education",
+      "certificate": "Certificate",
+      "milestone": "Milestone"
+    }
   },
   "actions": {
     "toggle_theme": "Toggle theme",

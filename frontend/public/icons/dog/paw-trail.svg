@@ -1,18 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 320" preserveAspectRatio="xMidYMid">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 360" preserveAspectRatio="xMidYMid">
   <defs>
     <g id="paw">
-      <ellipse cx="0" cy="6" rx="10" ry="7"/>
-      <ellipse cx="-9" cy="-6" rx="4" ry="6"/>
-      <ellipse cx="-3" cy="-12" rx="4" ry="5"/>
-      <ellipse cx="3" cy="-12" rx="4" ry="5"/>
-      <ellipse cx="9" cy="-6" rx="4" ry="6"/>
+      <ellipse cx="0"   cy="8"   rx="14" ry="10"/>
+      <ellipse cx="-12" cy="-8"  rx="5"  ry="8"/>
+      <ellipse cx="-4"  cy="-16" rx="5"  ry="7"/>
+      <ellipse cx="4"   cy="-16" rx="5"  ry="7"/>
+      <ellipse cx="12"  cy="-8"  rx="5"  ry="8"/>
     </g>
   </defs>
   <g fill="#0a0a0a">
-    <use href="#paw" transform="translate(20 32) rotate(-12)"/>
-    <use href="#paw" transform="translate(46 96) rotate(15)"/>
-    <use href="#paw" transform="translate(18 160) rotate(-8)"/>
-    <use href="#paw" transform="translate(44 224) rotate(12)"/>
-    <use href="#paw" transform="translate(22 288) rotate(-10)"/>
+    <use href="#paw" transform="translate(20 36)  rotate(-14)"/>
+    <use href="#paw" transform="translate(76 108) rotate(18)"/>
+    <use href="#paw" transform="translate(18 180) rotate(-10)"/>
+    <use href="#paw" transform="translate(78 252) rotate(14)"/>
+    <use href="#paw" transform="translate(22 324) rotate(-12)"/>
   </g>
 </svg>

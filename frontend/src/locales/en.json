@@ -14,7 +14,8 @@
     "title": "Career Timeline",
     "lead": "Click any entry to expand details.",
     "linked_certificates": "Certificates earned",
-    "empty": "No timeline entries yet."
+    "empty": "No timeline entries yet.",
+    "pet_counter": "{n} pets"
   },
   "actions": {
     "toggle_theme": "Toggle theme",

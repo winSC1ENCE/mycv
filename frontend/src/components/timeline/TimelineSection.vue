@@ -8,13 +8,17 @@ import { useCvStore, type TimelineRow } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
 import { dogIconFor } from "@/composables/useDogIcon";
+import { petCount, spawnBubble } from "@/composables/useDogBubbles";
+import { useThemeStore } from "@/stores/theme";
 import TimelineDetail from "./TimelineDetail.vue";
+import DogBubbles from "./DogBubbles.vue";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const cvStore = useCvStore();
 const { timelineItems } = storeToRefs(cvStore);
 const { locale } = storeToRefs(useLocaleStore());
+const { theme } = storeToRefs(useThemeStore());
 const { t } = useI18n();
 
 const openId = ref<string | null>(null);
@@ -26,6 +30,11 @@ function uid(row: TimelineRow): string {
 
 function nodeStyle(row: TimelineRow): Record<string, string> {
   return { "--node-icon": `url('${dogIconFor(uid(row))}')` };
+}
+
+function onNodeClick(ev: MouseEvent, row: TimelineRow): void {
+  if (theme.value !== "dog") return;
+  spawnBubble(ev.clientX, ev.clientY, dogIconFor(uid(row)));
 }
 
 function headline(row: TimelineRow): string {
@@ -138,6 +147,7 @@ const hasItems = computed(() => timelineItems.value.length > 0);
             :style="nodeStyle(row)"
             :data-kind="row.kind"
             aria-hidden="true"
+            @click="(ev) => onNodeClick(ev, row)"
           />
           <time class="timeline__date" :datetime="row.date">
             <span class="timeline__year">{{ formatYear(row.date) }}</span>
@@ -164,6 +174,10 @@ const hasItems = computed(() => timelineItems.value.length > 0);
         </li>
       </ol>
       <p v-else class="timeline__empty">{{ t("timeline.empty") }}</p>
+      <div v-if="theme === 'dog' && petCount > 0" class="dog-pet-counter" aria-hidden="true">
+        🐾 {{ t("timeline.pet_counter", { n: petCount }) }}
+      </div>
     </div>
+    <DogBubbles v-if="theme === 'dog'" />
   </section>
 </template>

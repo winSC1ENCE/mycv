@@ -16,11 +16,64 @@
   --font-display: "Comic Neue", "Comic Sans MS", var(--font-sans);
 }
 
+/* Body stays pure white; spots live on a fixed overlay so we can mask them. */
 [data-theme="dog"] body {
   background-color: var(--color-bg);
+  background-image: none;
+}
+
+/* Fur-frame: spots at the edges, clear lane down the middle where content lives. */
+[data-theme="dog"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background-image: var(--pattern-spots);
-  background-size: 400px 400px;
+  background-size: 600px 600px;
   background-repeat: repeat;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 0%,
+    #000 18%,
+    transparent 38%,
+    transparent 62%,
+    #000 82%,
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 0%,
+    #000 18%,
+    transparent 38%,
+    transparent 62%,
+    #000 82%,
+    #000 100%
+  );
+}
+
+/* On narrow viewports, flip to a vertical fade so the full width is reading area. */
+@media (max-width: 720px) {
+  [data-theme="dog"] body::before {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 12%,
+      transparent 28%,
+      transparent 72%,
+      #000 88%,
+      #000 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      #000 0%,
+      #000 12%,
+      transparent 28%,
+      transparent 72%,
+      #000 88%,
+      #000 100%
+    );
+  }
 }
 
 /* --- Headings: hand-drawn rotation --- */
@@ -101,11 +154,37 @@
 
 /* --- Alt timeline (central-axis, alternating, expandable) --- */
 
+/* The timeline reads as one comic-book "page" sitting on the fur frame. */
+[data-theme="dog"] .timeline--alt {
+  background: rgba(255, 255, 255, 0.82);
+  border: 3px solid var(--color-fg);
+  box-shadow: 10px 10px 0 var(--color-fg);
+  padding: var(--space-8) var(--space-5);
+  position: relative;
+}
+
+[data-theme="dog"] .section .container:has(> .timeline--alt) {
+  /* tiny extra breathing room around the page panel */
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+/* Title chip overlaps the top edge of the page panel — comic title-card feel. */
+[data-theme="dog"] .section[aria-labelledby="timeline-title"] {
+  position: relative;
+}
+[data-theme="dog"] .section[aria-labelledby="timeline-title"] .section__title {
+  position: relative;
+  z-index: 1;
+  font-size: 1.6em;
+  margin-bottom: calc(-1 * var(--space-3));
+}
+
 /* Spine = paw print trail */
 [data-theme="dog"] .timeline--alt::before {
   background:
-    url("/icons/dog/paw-trail.svg") center top / 64px auto repeat-y;
-  width: 64px;
+    url("/icons/dog/paw-trail.svg") center top / 96px auto repeat-y;
+  width: 96px;
   border-radius: 0;
   -webkit-mask-image: none;
   mask-image: none;
@@ -123,6 +202,20 @@
   box-shadow: 3px 3px 0 var(--color-fg);
   -webkit-mask-image: none;
   mask-image: none;
+  cursor: pointer;
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
+}
+
+[data-theme="dog"] .timeline__node:hover {
+  transform: translate(-1px, -1px) scale(1.05);
+  box-shadow: 5px 5px 0 var(--color-fg);
+}
+
+[data-theme="dog"] .timeline__node:active {
+  transform: translate(1px, 1px) scale(0.95);
+  box-shadow: 1px 1px 0 var(--color-fg);
 }
 
 [data-theme="dog"] .timeline__node::before {
@@ -200,9 +293,28 @@
   box-shadow: 2px 2px 0 var(--color-fg);
 }
 
+/* Pet counter chip — bottom-right of the timeline page panel */
+[data-theme="dog"] .dog-pet-counter {
+  position: absolute;
+  bottom: var(--space-3);
+  right: var(--space-4);
+  background: #ffffff;
+  color: var(--color-fg);
+  border: 2px solid var(--color-fg);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 2px 2px 0 var(--color-fg);
+  pointer-events: none;
+  user-select: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   [data-theme="dog"] .card,
   [data-theme="dog"] .timeline__card,
+  [data-theme="dog"] .timeline__node,
   [data-theme="dog"] .button {
     transition: none;
   }

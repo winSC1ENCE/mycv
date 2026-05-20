@@ -1,19 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid">
   <g fill="#0a0a0a">
-    <ellipse cx="60" cy="50" rx="22" ry="16" transform="rotate(20 60 50)"/>
-    <ellipse cx="180" cy="80" rx="14" ry="10" transform="rotate(-30 180 80)"/>
-    <ellipse cx="310" cy="60" rx="28" ry="20" transform="rotate(15 310 60)"/>
-    <ellipse cx="120" cy="160" rx="18" ry="12" transform="rotate(-15 120 160)"/>
-    <ellipse cx="250" cy="180" rx="24" ry="17" transform="rotate(40 250 180)"/>
-    <ellipse cx="50" cy="240" rx="12" ry="9" transform="rotate(10 50 240)"/>
-    <ellipse cx="170" cy="260" rx="20" ry="14" transform="rotate(-25 170 260)"/>
-    <ellipse cx="340" cy="240" rx="16" ry="11" transform="rotate(35 340 240)"/>
-    <ellipse cx="90" cy="340" rx="26" ry="18" transform="rotate(-10 90 340)"/>
-    <ellipse cx="220" cy="350" rx="14" ry="10" transform="rotate(25 220 350)"/>
-    <ellipse cx="320" cy="330" rx="20" ry="14" transform="rotate(-20 320 330)"/>
-    <ellipse cx="200" cy="20" rx="10" ry="7" transform="rotate(60 200 20)"/>
-    <ellipse cx="380" cy="120" rx="13" ry="9" transform="rotate(15 380 120)"/>
-    <ellipse cx="20" cy="120" rx="11" ry="8" transform="rotate(-40 20 120)"/>
-    <ellipse cx="280" cy="300" rx="9" ry="7" transform="rotate(50 280 300)"/>
+    <!-- Big signature spots: scale anchors -->
+    <ellipse cx="90"  cy="110" rx="48" ry="34" transform="rotate(18 90 110)"/>
+    <ellipse cx="430" cy="220" rx="56" ry="38" transform="rotate(-22 430 220)"/>
+    <ellipse cx="190" cy="430" rx="44" ry="32" transform="rotate(35 190 430)"/>
+
+    <!-- Medium spots -->
+    <ellipse cx="300" cy="60"  rx="22" ry="16" transform="rotate(-15 300 60)"/>
+    <ellipse cx="520" cy="430" rx="28" ry="20" transform="rotate(12 520 430)"/>
+    <ellipse cx="60"  cy="320" rx="20" ry="14" transform="rotate(-40 60 320)"/>
+    <ellipse cx="380" cy="510" rx="24" ry="17" transform="rotate(20 380 510)"/>
+
+    <!-- Small confetti spots -->
+    <ellipse cx="540" cy="90"  rx="8"  ry="6"  transform="rotate(40 540 90)"/>
+    <ellipse cx="270" cy="280" rx="10" ry="7"  transform="rotate(-30 270 280)"/>
   </g>
 </svg>

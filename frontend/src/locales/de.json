@@ -14,7 +14,8 @@
     "title": "Werdegang",
     "lead": "Klick einen Eintrag, um Details zu sehen.",
     "linked_certificates": "Erworbene Zertifikate",
-    "empty": "Noch keine Einträge."
+    "empty": "Noch keine Einträge.",
+    "pet_counter": "{n} mal gestreichelt"
   },
   "actions": {
     "toggle_theme": "Theme wechseln",

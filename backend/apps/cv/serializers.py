@@ -162,6 +162,15 @@ class TimelineEntrySerializer(serializers.ModelSerializer[models.TimelineEntry])
         ]
 
 
+_REDACTED: dict[str, Any] = {
+    "email": "***@***.***",
+    "phone": "••• ••• ••••",
+    "address": "••• ••• ••• •••",
+    "zivilstand": "•••••",
+    "date_of_birth": None,
+}
+
+
 class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
     """Full CV payload returned by ``GET /api/cv/``."""
 
@@ -188,6 +197,9 @@ class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
             "email",
             "phone",
             "location",
+            "address",
+            "zivilstand",
+            "date_of_birth",
             "summary",
             "summary_de",
             "photo",
@@ -208,6 +220,15 @@ class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
         )
         return SkillCategorySerializer(qs, many=True).data  # type: ignore[return-value]
 
+    def to_representation(self, instance: models.Person) -> Any:
+        data = super().to_representation(instance)
+        granted: bool = self.context.get("access_granted", False)
+        data["access_granted"] = granted
+        if not granted:
+            for key, placeholder in _REDACTED.items():
+                data[key] = placeholder
+        return data
+
 
 # ---------------------------------------------------------------------------
 # Write serializers — flat, FK fields as IDs, used for admin mutations
@@ -227,12 +248,32 @@ class PersonWriteSerializer(serializers.ModelSerializer[models.Person]):
             "email",
             "phone",
             "location",
+            "address",
+            "zivilstand",
+            "date_of_birth",
             "summary",
             "summary_de",
             "photo",
             "order",
             "is_published",
         ]
+
+
+class AccessKeySerializer(serializers.ModelSerializer[models.AccessKey]):
+    is_valid = serializers.BooleanField(read_only=True)  # type: ignore[assignment]
+
+    class Meta:
+        model = models.AccessKey
+        fields = [
+            "id", "person", "token", "label", "expires_at", "is_active", "created_at", "is_valid"
+        ]
+        read_only_fields = ["token", "created_at", "is_valid"]
+
+
+class AccessKeyWriteSerializer(serializers.ModelSerializer[models.AccessKey]):
+    class Meta:
+        model = models.AccessKey
+        fields = ["id", "person", "label", "expires_at", "is_active"]
 
 
 class TechnologyWriteSerializer(serializers.ModelSerializer[models.Technology]):

@@ -174,6 +174,9 @@ export interface PersonWrite {
   email: string;
   phone: string;
   location: string;
+  address: string;
+  zivilstand: string;
+  date_of_birth: string | null;
   summary: string;
   summary_de: string;
   photo: number | null;
@@ -192,6 +195,10 @@ export interface Cv {
   email: string;
   phone: string;
   location: string;
+  address: string;
+  zivilstand: string;
+  date_of_birth: string | null;
+  access_granted: boolean;
   summary: string;
   summary_de: string;
   photo: MediaAsset | null;
@@ -202,4 +209,22 @@ export interface Cv {
   social_links: SocialLink[];
   timeline_entries: TimelineEntry[];
   skill_categories: SkillCategory[];
+}
+
+export interface AccessKey {
+  id: number;
+  person: number;
+  token: string;
+  label: string;
+  expires_at: string;
+  is_active: boolean;
+  created_at: string;
+  is_valid: boolean;
+}
+
+export interface AccessKeyWrite {
+  person: number;
+  label: string;
+  expires_at: string;
+  is_active: boolean;
 }

@@ -16,5 +16,6 @@ router.register("skills", views.SkillViewSet, basename="skill")
 router.register("social-links", views.SocialLinkViewSet, basename="social-link")
 router.register("timeline", views.TimelineEntryViewSet, basename="timeline")
 router.register("media-assets", views.MediaAssetViewSet, basename="media-asset")
+router.register("access-keys", views.AccessKeyViewSet, basename="access-key")
 
 urlpatterns = router.urls

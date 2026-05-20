@@ -1,5 +1,7 @@
 import { http } from "./client";
 import type {
+  AccessKey,
+  AccessKeyWrite,
   Certificate,
   CertificateWrite,
   Cv,
@@ -74,6 +76,8 @@ export const personApi = {
     return data;
   },
 };
+
+export const accessKeyApi = crud<AccessKey, AccessKeyWrite>("/access-keys");
 
 export async function uploadMedia(file: File): Promise<MediaAsset> {
   const form = new FormData();

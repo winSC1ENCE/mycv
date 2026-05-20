@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import type { Cv } from "@/api/types";
 import { useThemeStore } from "@/stores/theme";
+import Sensitive from "@/components/base/Sensitive.vue";
 
 defineProps<{ cv: Cv }>();
 
@@ -32,7 +33,8 @@ const photoAlt = computed(() =>
           </p>
           <p v-if="cv.location">📍 {{ cv.location }}</p>
           <p v-if="cv.email">
-            <a :href="`mailto:${cv.email}`">{{ cv.email }}</a>
+            <a v-if="cv.access_granted" :href="`mailto:${cv.email}`">{{ cv.email }}</a>
+            <Sensitive v-else :blurred="true">{{ cv.email }}</Sensitive>
           </p>
         </div>
       </div>

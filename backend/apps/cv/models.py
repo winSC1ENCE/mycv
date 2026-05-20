@@ -11,7 +11,14 @@ Conventions enforced via the :class:`Orderable` abstract base:
 
 from __future__ import annotations
 
+import secrets
+
 from django.db import models
+from django.utils import timezone
+
+
+def _generate_access_token() -> str:
+    return secrets.token_urlsafe(24)
 
 
 class Orderable(models.Model):
@@ -63,6 +70,9 @@ class Person(Orderable):
     email = models.EmailField()
     phone = models.CharField(max_length=40, blank=True)
     location = models.CharField(max_length=160, blank=True)
+    address = models.CharField(max_length=200, blank=True)
+    zivilstand = models.CharField(max_length=40, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
     summary = models.TextField(blank=True)
     summary_de = models.TextField(blank=True)
     photo = models.ForeignKey(
@@ -75,6 +85,34 @@ class Person(Orderable):
     @property
     def full_name(self) -> str:
         return f"{self.first_name} {self.last_name}"
+
+
+class AccessKey(models.Model):
+    """Time-limited access token that unblurs the public CV's sensitive fields.
+
+    Admins generate a key with an ``expires_at`` date and share the URL
+    ``https://<host>/?key=<token>`` with the requester. The frontend stores
+    the token in localStorage and forwards it on each ``GET /api/cv/`` call.
+    """
+
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="access_keys")
+    token = models.CharField(
+        max_length=64, unique=True, db_index=True, default=_generate_access_token
+    )
+    label = models.CharField(max_length=120, blank=True)
+    expires_at = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"AccessKey<{self.label or self.token[:8]} expires={self.expires_at.isoformat()}>"
+
+    @property
+    def is_valid(self) -> bool:
+        return self.is_active and self.expires_at > timezone.now()
 
 
 class SkillCategory(Orderable):

@@ -5,8 +5,9 @@ from __future__ import annotations
 from typing import Any
 
 from django.db.models import QuerySet
+from django.utils import timezone
 from drf_spectacular.utils import extend_schema
-from rest_framework import parsers, status, viewsets
+from rest_framework import parsers, permissions, status, viewsets
 from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -20,6 +21,17 @@ _SerializerClass = type[BaseSerializer[Any]]
 
 def _is_staff(request: Request) -> bool:
     return bool(request.user and request.user.is_staff)
+
+
+def _resolve_access(request: Request) -> bool:
+    if _is_staff(request):
+        return True
+    token = request.query_params.get("key")
+    if not token:
+        return False
+    return models.AccessKey.objects.filter(
+        token=token, is_active=True, expires_at__gt=timezone.now()
+    ).exists()
 
 
 def _default_person() -> models.Person | None:
@@ -77,7 +89,17 @@ class PersonViewSet(viewsets.ModelViewSet[models.Person]):
         person = self.get_queryset().first()
         if person is None:
             raise NotFound("No published Person record exists.")
-        return Response(self.get_serializer(person).data, status=status.HTTP_200_OK)
+        ctx = {**self.get_serializer_context(), "access_granted": _resolve_access(request)}
+        return Response(
+            self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK
+        )
+
+    def retrieve(self, request: Request, *args: object, **kwargs: object) -> Response:
+        person = self.get_object()
+        ctx = {**self.get_serializer_context(), "access_granted": _resolve_access(request)}
+        return Response(
+            self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK
+        )
 
 
 class ExperienceViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Experience]):
@@ -245,3 +267,15 @@ class MediaAssetViewSet(viewsets.ModelViewSet[models.MediaAsset]):
         if self.action in ("create", "update", "partial_update"):
             return serializers.MediaAssetWriteSerializer
         return serializers.MediaAssetSerializer
+
+
+class AccessKeyViewSet(viewsets.ModelViewSet[models.AccessKey]):
+    """Staff-only CRUD for access tokens that unlock sensitive CV fields."""
+
+    queryset = models.AccessKey.objects.select_related("person").all()
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_serializer_class(self) -> _SerializerClass:
+        if self.action in ("create", "update", "partial_update"):
+            return serializers.AccessKeyWriteSerializer
+        return serializers.AccessKeySerializer

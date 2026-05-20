@@ -1,4 +1,8 @@
 {
+  "sensitive": {
+    "tooltip": "Zugang per Mail an cv{'@'}chlous.top anfragen",
+    "ariaLabel": "Vertraulich — Zugang per Mail an cv{'@'}chlous.top anfragen"
+  },
   "nav": {
     "brand": "Nicolas Mischler",
     "summary": "Profil",
@@ -80,7 +84,8 @@
       "person": "Profil",
       "timeline": "Zeitleiste",
       "technologies": "Technologien",
-      "socialLinks": "Social-Links"
+      "socialLinks": "Social-Links",
+      "accessKeys": "Zugriffsschlüssel"
     },
     "fields": {
       "name": "Name",
@@ -117,7 +122,17 @@
       "phone": "Telefon",
       "platform": "Plattform",
       "label": "Bezeichnung",
-      "level": "Niveau"
+      "level": "Niveau",
+      "address": "Adresse",
+      "zivilstand": "Zivilstand",
+      "date_of_birth": "Geburtsdatum",
+      "expires_at": "Läuft ab am",
+      "is_active": "Aktiv"
+    },
+    "accessKeys": {
+      "copyUrl": "URL kopieren",
+      "revoke": "Widerrufen",
+      "urlReady": "Diese URL teilen"
     }
   }
 }

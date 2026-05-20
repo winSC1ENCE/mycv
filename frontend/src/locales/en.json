@@ -1,4 +1,8 @@
 {
+  "sensitive": {
+    "tooltip": "Order access via cv{'@'}chlous.top",
+    "ariaLabel": "Sensitive — request access via cv{'@'}chlous.top"
+  },
   "nav": {
     "brand": "Nicolas Mischler",
     "summary": "Profile",
@@ -80,7 +84,8 @@
       "person": "Profile",
       "timeline": "Timeline",
       "technologies": "Technologies",
-      "socialLinks": "Social links"
+      "socialLinks": "Social links",
+      "accessKeys": "Access keys"
     },
     "fields": {
       "name": "Name",
@@ -117,7 +122,17 @@
       "phone": "Phone",
       "platform": "Platform",
       "label": "Label",
-      "level": "Level"
+      "level": "Level",
+      "address": "Address",
+      "zivilstand": "Marital status",
+      "date_of_birth": "Date of birth",
+      "expires_at": "Expires at",
+      "is_active": "Active"
+    },
+    "accessKeys": {
+      "copyUrl": "Copy URL",
+      "revoke": "Revoke",
+      "urlReady": "Share this URL"
     }
   }
 }

@@ -125,6 +125,20 @@
   background: transparent;
 }
 
+/* --- Sensitive fields: censor bar instead of blur --- */
+[data-theme="dog"] .sensitive--blurred {
+  filter: none;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--color-fg) 0 6px,
+    transparent 6px 9px
+  );
+  color: transparent;
+}
+[data-theme="dog"] .sensitive--blurred:hover {
+  filter: none;
+}
+
 /* --- Alt timeline (central-axis, alternating, expandable) --- */
 
 /* The timeline reads as one comic-book "page" sitting on the fur frame. */

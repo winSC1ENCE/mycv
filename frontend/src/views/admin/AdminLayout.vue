@@ -37,6 +37,9 @@
         <RouterLink class="admin-nav__link" :to="{ name: 'admin-social-links' }">
           {{ $t("admin.nav.socialLinks") }}
         </RouterLink>
+        <RouterLink class="admin-nav__link" :to="{ name: 'admin-access-keys' }">
+          {{ $t("admin.nav.accessKeys") }}
+        </RouterLink>
       </nav>
 
       <div class="admin-sidebar__footer">

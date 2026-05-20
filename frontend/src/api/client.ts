@@ -15,7 +15,19 @@ http.interceptors.request.use((config) => {
   return config;
 });
 
+const ACCESS_KEY_STORAGE = "mycv:access_key";
+
+export function getStoredAccessKey(): string | null {
+  return localStorage.getItem(ACCESS_KEY_STORAGE);
+}
+
+export function storeAccessKey(token: string): void {
+  localStorage.setItem(ACCESS_KEY_STORAGE, token);
+}
+
 export async function fetchCv(): Promise<Cv> {
-  const { data } = await http.get<Cv>("/cv/");
+  const key = getStoredAccessKey();
+  const url = key ? `/cv/?key=${encodeURIComponent(key)}` : "/cv/";
+  const { data } = await http.get<Cv>(url);
   return data;
 }

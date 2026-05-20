@@ -72,6 +72,11 @@ const router = createRouter({
           name: "admin-social-links",
           component: () => import("@/views/admin/AdminSocialLinksView.vue"),
         },
+        {
+          path: "access-keys",
+          name: "admin-access-keys",
+          component: () => import("@/views/admin/AdminAccessKeysView.vue"),
+        },
       ],
     },
     {

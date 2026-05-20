@@ -23,6 +23,7 @@ const levelLabel = useLevelLabel();
             <li v-for="skill in cat.skills" :key="skill.id" class="skill-row">
               <strong class="skill-row__name">{{ pickLocalized(skill, "name", locale) }}</strong>
               <div
+                v-if="cat.slug === 'languages'"
                 class="skill-rating"
                 role="img"
                 :aria-label="`${t('labels.level')}: ${levelLabel(skill.level)} (${skill.level} / 5)`"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useCvStore } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
@@ -17,6 +17,9 @@ const name = computed(() => pickLocalized(project.value, "name", locale.value));
 const description = computed(() => pickLocalized(project.value, "description", locale.value));
 const summary = computed(() => pickLocalized(project.value, "summary", locale.value));
 
+const activeIdx = ref(0);
+const activeImage = computed(() => project.value?.media[activeIdx.value] ?? null);
+
 usePageMeta({
   title: () => (name.value ? `${name.value} — Project` : "Project"),
   description: () => summary.value || description.value || "",
@@ -25,15 +28,43 @@ usePageMeta({
 
 <template>
   <section class="section">
-    <div class="container">
-      <router-link to="/">← Back</router-link>
+    <div class="container project-detail">
+      <router-link to="/" class="project-detail__back">← Back</router-link>
+
       <template v-if="project">
-        <h1>{{ name }}</h1>
-        <p>{{ description }}</p>
+        <h1 class="project-detail__title">{{ name }}</h1>
+
+        <!-- Image gallery -->
+        <div v-if="project.media.length" class="project-gallery">
+          <div class="project-gallery__main">
+            <img
+              :src="activeImage!.url"
+              :alt="activeImage!.alt_text || name"
+              class="project-gallery__hero"
+            />
+          </div>
+          <div v-if="project.media.length > 1" class="project-gallery__thumbs">
+            <button
+              v-for="(asset, i) in project.media"
+              :key="asset.id"
+              class="project-gallery__thumb-btn"
+              :class="{ 'project-gallery__thumb-btn--active': i === activeIdx }"
+              @click="activeIdx = i"
+            >
+              <img
+                :src="asset.url"
+                :alt="asset.alt_text || `${name} ${i + 1}`"
+                class="project-gallery__thumb-img"
+              />
+            </button>
+          </div>
+        </div>
+
+        <p v-if="description" class="project-detail__desc">{{ description }}</p>
         <p v-if="project.url">
           <a :href="project.url" target="_blank" rel="noopener">{{ project.url }}</a>
         </p>
-        <div>
+        <div class="project-detail__tags">
           <span v-for="tech in project.technologies" :key="tech.id" class="tag">{{
             tech.name
           }}</span>
@@ -43,3 +74,106 @@ usePageMeta({
     </div>
   </section>
 </template>
+
+<style scoped>
+.project-detail {
+  max-width: 860px;
+}
+
+.project-detail__back {
+  display: inline-block;
+  margin-bottom: var(--space-4);
+  color: var(--color-fg-muted);
+  font-size: 0.9rem;
+}
+
+.project-detail__title {
+  margin: 0 0 var(--space-4);
+}
+
+.project-detail__desc {
+  line-height: 1.7;
+  white-space: pre-line;
+}
+
+.project-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: var(--space-3);
+}
+
+/* Gallery */
+.project-gallery {
+  margin-bottom: var(--space-6);
+}
+
+.project-gallery__main {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface);
+  aspect-ratio: 16 / 10;
+}
+
+.project-gallery__hero {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.project-gallery__thumbs {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.project-gallery__thumb-btn {
+  width: 72px;
+  height: 54px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  background: none;
+  flex-shrink: 0;
+  transition: border-color 120ms;
+}
+
+.project-gallery__thumb-btn--active {
+  border-color: var(--color-accent);
+}
+
+.project-gallery__thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Dog mode */
+[data-theme="dog"] .project-gallery__main {
+  border: 3px solid var(--color-fg);
+  box-shadow: 4px 4px 0 var(--color-fg);
+  border-radius: 0;
+}
+
+[data-theme="dog"] .project-gallery__thumb-btn {
+  border-color: var(--color-fg);
+  border-radius: 0;
+}
+
+[data-theme="dog"] .project-gallery__thumb-btn--active {
+  box-shadow: 2px 2px 0 var(--color-fg);
+}
+
+[data-theme="dog"] .project-gallery__hero {
+  filter: grayscale(1) contrast(1.1);
+}
+
+[data-theme="dog"] .project-gallery__thumb-img {
+  filter: grayscale(1) contrast(1.1);
+}
+</style>

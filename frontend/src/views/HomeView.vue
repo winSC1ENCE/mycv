@@ -25,17 +25,20 @@ usePageMeta({
   description: () => summary.value || "Interactive CV",
   jsonLd: () => {
     if (!cv.value) return {};
-    return {
+    const ld: Record<string, unknown> = {
       "@context": "https://schema.org",
       "@type": "Person",
       name: cv.value.full_name,
       givenName: cv.value.first_name,
       familyName: cv.value.last_name,
       jobTitle: title.value,
-      email: cv.value.email,
       url: typeof window !== "undefined" ? window.location.origin : "",
       sameAs: cv.value.social_links.map((s) => s.url),
     };
+    if (cv.value.access_granted) {
+      ld.email = cv.value.email;
+    }
+    return ld;
   },
 });
 </script>

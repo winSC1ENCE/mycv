@@ -514,6 +514,21 @@ p {
   gap: 4px;
 }
 
+.sensitive {
+  display: inline;
+}
+
+.sensitive--blurred {
+  filter: blur(5px);
+  cursor: help;
+  user-select: none;
+  transition: filter 120ms;
+}
+
+.sensitive--blurred:hover {
+  filter: blur(3px);
+}
+
 footer.footer {
   padding: var(--space-8) 0;
   text-align: center;

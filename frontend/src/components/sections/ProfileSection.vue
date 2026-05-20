@@ -52,13 +52,16 @@ const photoAlt = computed(() =>
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
+  object-position: center 25%;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 [data-theme="dog"] .profile-card__photo {
-  border-radius: var(--radius-sm);
-  border: 3px solid var(--color-ink);
-  box-shadow: 4px 4px 0 var(--color-ink);
+  border-radius: 50%;
+  object-position: center center;
+  border: 3px solid #0a0a0a;
+  box-shadow: 4px 4px 0 #0a0a0a;
 }
 
 .profile-card__info {

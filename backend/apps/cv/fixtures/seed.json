@@ -3,128 +3,199 @@
     "slug": "nicolas-mischler",
     "first_name": "Nicolas",
     "last_name": "Mischler",
-    "title": "Data Engineer",
-    "title_de": "Data Engineer",
-    "email": "nicolas.mischler@metas.ch",
+    "title": "Senior Data Engineer · Data Scientist",
+    "title_de": "Senior Data Engineer · Data Scientist",
+    "email": "nicolas.mischler@pm.me",
     "phone": "",
-    "location": "Bern, Switzerland",
-    "summary": "Data Engineer at METAS with full-stack engineering experience and a focus on clean, scalable systems.",
-    "summary_de": "Data Engineer am METAS mit Full-Stack-Erfahrung und Fokus auf saubere, skalierbare Systeme."
+    "location": "Biel, Switzerland",
+    "summary": "Senior Data Engineer and Data Scientist with 10+ years building data platforms for hospitals and federal agencies in Switzerland. Apache NiFi, Airflow, PySpark, Iceberg. Hands-on and exact; coaches junior engineers and ships in Scrum / SAFe teams.",
+    "summary_de": "Senior Data Engineer und Data Scientist mit über 10 Jahren Erfahrung im Aufbau von Datenplattformen für Spitäler und Bundesstellen in der Schweiz. Apache NiFi, Airflow, PySpark, Iceberg. Hands-on und exakt — coacht Junior-Ingenieure und liefert im Scrum / SAFe-Team."
   },
   "social_links": [
-    {"platform": "email", "label": "Email", "url": "mailto:nicolas.mischler@metas.ch"},
-    {"platform": "github", "label": "GitHub", "url": "https://github.com/winScience"}
+    {"platform": "email", "label": "Email", "url": "mailto:nicolas.mischler@pm.me"},
+    {"platform": "github", "label": "GitHub", "url": "https://github.com/winSC1ENCE"}
   ],
   "technologies": [
     {"name": "Python", "slug": "python", "category": "Language", "icon": "devicon-python-plain"},
-    {"name": "Django", "slug": "django", "category": "Framework", "icon": "devicon-django-plain"},
-    {"name": "Django REST Framework", "slug": "drf", "category": "Framework", "icon": ""},
-    {"name": "Vue.js", "slug": "vue", "category": "Framework", "icon": "devicon-vuejs-plain"},
-    {"name": "TypeScript", "slug": "typescript", "category": "Language", "icon": "devicon-typescript-plain"},
+    {"name": "PySpark", "slug": "pyspark", "category": "Framework", "icon": ""},
+    {"name": "T-SQL", "slug": "t-sql", "category": "Language", "icon": ""},
+    {"name": "C# / .NET", "slug": "csharp", "category": "Language", "icon": "devicon-csharp-plain"},
+    {"name": "PHP", "slug": "php", "category": "Language", "icon": "devicon-php-plain"},
+    {"name": "Delphi", "slug": "delphi", "category": "Language", "icon": ""},
+    {"name": "JavaScript", "slug": "javascript", "category": "Language", "icon": "devicon-javascript-plain"},
+    {"name": "HTML / CSS", "slug": "html-css", "category": "Language", "icon": ""},
+    {"name": "Apache NiFi", "slug": "nifi", "category": "Data", "icon": ""},
+    {"name": "Apache Airflow", "slug": "airflow", "category": "Data", "icon": ""},
+    {"name": "Apache Spark", "slug": "spark", "category": "Data", "icon": ""},
+    {"name": "Apache Iceberg", "slug": "iceberg", "category": "Data", "icon": ""},
+    {"name": "Apache Kafka", "slug": "kafka", "category": "Data", "icon": ""},
+    {"name": "Dremio", "slug": "dremio", "category": "Data", "icon": ""},
+    {"name": "dbt", "slug": "dbt", "category": "Data", "icon": ""},
     {"name": "PostgreSQL", "slug": "postgresql", "category": "Database", "icon": "devicon-postgresql-plain"},
+    {"name": "MS SQL Server", "slug": "mssql", "category": "Database", "icon": ""},
+    {"name": "Snowflake", "slug": "snowflake", "category": "Database", "icon": ""},
     {"name": "Docker", "slug": "docker", "category": "Infra", "icon": "devicon-docker-plain"},
-    {"name": "Caddy", "slug": "caddy", "category": "Infra", "icon": ""},
-    {"name": "GitHub Actions", "slug": "github-actions", "category": "CI/CD", "icon": ""}
+    {"name": "Kubernetes", "slug": "kubernetes", "category": "Infra", "icon": "devicon-kubernetes-plain"},
+    {"name": "AWS S3", "slug": "s3", "category": "Infra", "icon": ""},
+    {"name": "Git", "slug": "git", "category": "DevOps", "icon": "devicon-git-plain"},
+    {"name": "Jenkins", "slug": "jenkins", "category": "DevOps", "icon": ""},
+    {"name": "MLflow", "slug": "mlflow", "category": "ML", "icon": ""},
+    {"name": "Qlik Sense", "slug": "qlik", "category": "BI", "icon": ""},
+    {"name": "Prometheus / Grafana", "slug": "prometheus-grafana", "category": "Observability", "icon": ""}
   ],
   "skill_categories": [
     {
-      "name": "Backend",
-      "name_de": "Backend",
-      "slug": "backend",
+      "name": "Programming",
+      "name_de": "Programmieren",
+      "slug": "programming",
       "skills": [
-        {"name": "Python", "level": 5, "technologies": ["python", "django", "drf"]},
-        {"name": "REST API design", "level": 4, "technologies": ["drf"]},
-        {"name": "PostgreSQL", "level": 4, "technologies": ["postgresql"]}
+        {"name": "Python, PySpark, T-SQL", "name_de": "Python, PySpark, T-SQL", "level": 5, "technologies": ["python", "pyspark", "t-sql"]},
+        {"name": ".NET, C#, PHP, HTML, CSS, JavaScript", "name_de": ".NET, C#, PHP, HTML, CSS, JavaScript", "level": 4, "technologies": ["csharp", "php", "html-css", "javascript"]},
+        {"name": "VB, Jinja", "name_de": "VB, Jinja", "level": 3, "technologies": []},
+        {"name": "Java", "name_de": "Java", "level": 2, "technologies": []},
+        {"name": "Delphi, Scala", "name_de": "Delphi, Scala", "level": 1, "technologies": ["delphi"]}
       ]
     },
     {
-      "name": "Frontend",
-      "name_de": "Frontend",
-      "slug": "frontend",
+      "name": "Tools & Concepts",
+      "name_de": "Tools & Konzepte",
+      "slug": "tools-concepts",
       "skills": [
-        {"name": "Vue 3 + Composition API", "level": 4, "technologies": ["vue", "typescript"]},
-        {"name": "TypeScript", "level": 4, "technologies": ["typescript"]}
+        {"name": "NiFi, Airflow, Spark, Git, Jira, Confluence", "name_de": "NiFi, Airflow, Spark, Git, Jira, Confluence", "level": 5, "technologies": ["nifi", "airflow", "spark", "git"]},
+        {"name": "Dremio, Docker, Qlik, S3, Postgres, CI/CD", "name_de": "Dremio, Docker, Qlik, S3, Postgres, CI/CD", "level": 4, "technologies": ["dremio", "docker", "qlik", "s3", "postgresql"]},
+        {"name": "dbt, Cloud, Jenkins, Kafka, Data Science, Kubernetes", "name_de": "dbt, Cloud, Jenkins, Kafka, Data Science, Kubernetes", "level": 3, "technologies": ["dbt", "jenkins", "kafka", "kubernetes"]},
+        {"name": "MLflow, MLOps", "name_de": "MLflow, MLOps", "level": 2, "technologies": ["mlflow"]},
+        {"name": "Snowflake", "name_de": "Snowflake", "level": 1, "technologies": ["snowflake"]}
       ]
     },
     {
-      "name": "Infra & DevOps",
-      "name_de": "Infrastruktur & DevOps",
-      "slug": "infra",
+      "name": "Languages",
+      "name_de": "Sprachen",
+      "slug": "languages",
       "skills": [
-        {"name": "Docker / Compose", "level": 4, "technologies": ["docker"]},
-        {"name": "CI/CD (GitHub Actions)", "level": 4, "technologies": ["github-actions"]},
-        {"name": "Caddy reverse proxy", "level": 3, "technologies": ["caddy"]}
+        {"name": "German — native (C2)", "name_de": "Deutsch — Muttersprache (C2)", "level": 5, "technologies": []},
+        {"name": "English — upper intermediate (B2)", "name_de": "Englisch — gut (B2)", "level": 4, "technologies": []},
+        {"name": "French — intermediate (B1)", "name_de": "Französisch — Mittelstufe (B1)", "level": 3, "technologies": []}
       ]
     }
   ],
   "experiences": [
     {
-      "link_key": "metas-data-engineer",
-      "role": "Data Engineer",
-      "role_de": "Data Engineer",
-      "company": "METAS — Federal Institute of Metrology",
-      "location": "Bern-Wabern, Switzerland",
-      "start_date": "2025-08-01",
+      "link_key": "usz",
+      "role": "Senior Data Platform Engineer",
+      "role_de": "Sr. Data-Platform Engineer",
+      "company": "Universitätsspital Zürich (USZ)",
+      "location": "Zürich, Switzerland",
+      "start_date": "2023-11-01",
       "end_date": null,
-      "description": "Lead engineer on the institute's data platform. Design and build ingest pipelines for calibration measurement data, structured PostgreSQL storage, and downstream analytics tooling. Mentor apprentices rotating through the data team.",
-      "description_de": "Leitender Engineer der Datenplattform des Instituts. Entwurf und Aufbau von Ingest-Pipelines für Kalibriermessdaten, strukturierter PostgreSQL-Speicherung und nachgelagerten Analytics-Tools. Mentoring von Lehrlingen in der Daten-Rotation.",
-      "technologies": ["python", "django", "postgresql", "docker"]
+      "description": "Develop and operate the existing clinical data platform (.NET C#) including Prometheus/Grafana monitoring. Build a modern Kubernetes-based data platform on open-source tools.",
+      "description_de": "Entwicklung & Betreuung der bestehenden Clinical Data Platform (.NET C#) inkl. Monitoring (Prometheus/Grafana). Aufbau einer modernen Data-Platform auf Kubernetes mit Open-Source-Tools.",
+      "technologies": ["csharp", "python", "kubernetes", "docker", "postgresql", "prometheus-grafana", "git"]
     },
     {
-      "link_key": "metas-apprentice",
-      "role": "Apprentice — Informatik EFZ",
-      "role_de": "Lernender — Informatik EFZ",
-      "company": "METAS — Federal Institute of Metrology",
-      "location": "Bern-Wabern, Switzerland",
-      "start_date": "2021-08-01",
-      "end_date": "2025-07-31",
-      "description": "Four-year federal apprenticeship in computer science. Rotations across the data engineering, software development and laboratory IT teams. Delivered production tooling under senior review and presented a graduation project (IPA) on automated calibration workflows.",
-      "description_de": "Vierjährige Berufslehre als Informatiker EFZ. Rotationen durch Data Engineering, Software-Entwicklung und Labor-IT. Lieferte unter Review produktive Tools und präsentierte eine IPA zur Automatisierung von Kalibrier-Workflows.",
-      "technologies": ["python", "postgresql", "docker"]
+      "link_key": "bazg",
+      "role": "Senior Data Engineer",
+      "role_de": "Senior Data Engineer",
+      "company": "Bundesamt für Zoll und Grenzsicherheit (BAZG)",
+      "location": "Bern, Switzerland",
+      "start_date": "2021-09-01",
+      "end_date": "2023-11-30",
+      "description": "Operated and extended the data analytics platform and the data lake. Built pipelines in Python and PySpark using Apache NiFi, Airflow, Spark, Iceberg, Dremio, S3, Postgres, Git, Kafka, Docker and Linux. Worked in a Scrum / SAFe / DevOps setup.",
+      "description_de": "Betreuung und Entwicklung der Data-Analytics-Plattform und des Datalakes. Entwicklung in Python und PySpark. Tools: Apache NiFi, Airflow, Spark, Iceberg, Dremio, S3, Postgres, Git, Kafka, Docker, Linux. Arbeitsmethodik: Scrum / SAFe / DevOps.",
+      "technologies": ["python", "pyspark", "nifi", "airflow", "spark", "iceberg", "dremio", "s3", "postgresql", "git", "kafka", "docker"]
+    },
+    {
+      "link_key": "spital-thun",
+      "role": "Application Developer",
+      "role_de": "Applikationsentwickler",
+      "company": "Spital Thun STS AG",
+      "location": "Thun, Switzerland",
+      "start_date": "2017-01-01",
+      "end_date": "2021-08-31",
+      "description": "Maintained the hospital information system CGM Clinical (Delphi scripting, MS SQL, Crystal Reports). Built applications in PHP, JavaScript, CSS and HTML.",
+      "description_de": "Betreuung des Klinikinformationssystems CGM Clinical (Skriptsprache Delphi, MS SQL, Crystal Reports). Applikationsentwicklung in PHP, JS, CSS und HTML.",
+      "technologies": ["delphi", "mssql", "php", "javascript", "html-css"]
+    },
+    {
+      "link_key": "kpt",
+      "role": "Software Engineer",
+      "role_de": "Software Entwickler",
+      "company": "KPT Krankenkasse",
+      "location": "Bern, Switzerland",
+      "start_date": "2015-02-01",
+      "end_date": "2021-04-30",
+      "description": "Full-stack software developer in C# (ASP.NET, .NET Core, JavaScript, CSS, HTML).",
+      "description_de": "Fullstack Software Developer in C# (ASP.NET, .NET Core, JS, CSS, HTML).",
+      "technologies": ["csharp", "javascript", "html-css"]
+    },
+    {
+      "link_key": "compugroup",
+      "role": "Solution Developer",
+      "role_de": "Solution Developer",
+      "company": "CompuGroup Medical",
+      "location": "Bern, Switzerland",
+      "start_date": "2014-05-01",
+      "end_date": "2016-12-31",
+      "description": "Further development of the hospital information system CGM Clinical. Sub-project lead of the Siloah rollout in Gümligen (Hermes, Scrum, Jira, Confluence).",
+      "description_de": "Weiterentwicklung des Klinikinformationssystems CGM Clinical. Teilprojektleiter der Einführung Spital Siloah in Gümligen (Hermes, Scrum, Jira, Confluence).",
+      "technologies": ["delphi", "mssql"]
+    },
+    {
+      "link_key": "abb",
+      "role": "Project Manager",
+      "role_de": "Projektleiter",
+      "company": "ABB Schweiz AG",
+      "location": "Baden, Switzerland",
+      "start_date": "2012-11-01",
+      "end_date": "2014-04-30",
+      "description": "Project manager in the Automation, Motors & Drives business unit.",
+      "description_de": "Projektleiter im Bereich Automation, Motoren & Antriebe.",
+      "technologies": []
     }
   ],
   "educations": [
     {
-      "link_key": "efz-informatik",
-      "degree": "Federal Apprenticeship — Informatik EFZ",
-      "degree_de": "Berufslehre — Informatiker EFZ",
-      "institution": "GIBB Berufsfachschule Bern",
+      "link_key": "mas-data-science",
+      "degree": "MAS Data Science",
+      "degree_de": "MAS Data Science",
+      "institution": "Berner Fachhochschule",
       "location": "Bern, Switzerland",
-      "start_date": "2021-08-01",
-      "end_date": "2025-07-01",
-      "description": "Four-year vocational programme combining on-the-job training with 1–2 days/week of classroom instruction in software engineering, networking, databases and project management.",
-      "description_de": "Vierjährige Berufslehre mit Berufsschule (1–2 Tage/Woche): Softwareentwicklung, Netzwerke, Datenbanken und Projektmanagement."
+      "start_date": "2018-10-01",
+      "end_date": "2021-04-30",
+      "description": "CAS: Software Development (Java), Data Analysis (R), Big Data, Practical Machine Learning (Python). Master thesis: development of a Clinical Decision Support System for sepsis patients using machine-learning technologies (Spark-ML, Python).",
+      "description_de": "CAS: Software Development (JAVA), Datenanalyse (R-Scripting), Big Data, Practical Machine Learning (Python). Masterthesis: Entwicklung eines Clinical Decision Support Systems für Sepsis-Patienten/-innen mit ML-Technologien (Spark-ML, Python)."
     },
     {
-      "link_key": "gymnasium",
-      "degree": "Secondary School — Sekundarstufe I",
-      "degree_de": "Sekundarstufe I",
-      "institution": "Schule Bern",
+      "link_key": "bsc-mikrotechnik",
+      "degree": "B.Sc. Micro / Medical Engineering",
+      "degree_de": "B.Sc. Mikro- / Medizintechnik",
+      "institution": "Berner Fachhochschule",
+      "location": "Biel, Switzerland",
+      "start_date": "2009-09-01",
+      "end_date": "2012-09-30",
+      "description": "Focus areas: medical engineering, mechatronics, robotics. Bachelor thesis: 'Development of a tribometer to investigate friction coefficients between organic and inorganic materials in the field of endoprosthetics'.",
+      "description_de": "Vertiefungsrichtungen: Medizintechnik, Mechatronik, Robotik. Bachelorthesis: „Entwicklung eines Tribometers zur Untersuchung des Reibungskoeffizienten zwischen organischen und anorganischen Stoffen im Bereich der Endoprothetik\"."
+    },
+    {
+      "link_key": "humanmedizin",
+      "degree": "Human Medicine (interrupted)",
+      "degree_de": "Humanmedizin (unterbrochen)",
+      "institution": "Universität Bern",
       "location": "Bern, Switzerland",
-      "start_date": "2018-08-01",
-      "end_date": "2021-07-01",
-      "description": "Compulsory secondary school. Mathematics and natural-science focus.",
-      "description_de": "Obligatorische Sekundarstufe I mit Schwerpunkt Mathematik und Naturwissenschaften."
+      "start_date": "2001-09-01",
+      "end_date": "2008-07-31",
+      "description": "Medical studies at the University of Bern. Passed the first and second pre-clinical examinations. Co-author of a peer-reviewed paper on urinary calcium and phosphorus excretion in preterm infants.",
+      "description_de": "Studium der Humanmedizin an der Universität Bern. Erstes und zweites Propädeutikum abgeschlossen. Zweit-Autor einer Studie: „Monitoring of Urinary Calcium and Phosphorus Excretion in Preterm Infants: Comparison of 2 Methods\"."
     }
   ],
   "certificates": [
     {
-      "experience_key": "metas-apprentice",
-      "education_key": "efz-informatik",
-      "name": "Federal Apprenticeship Certificate — Informatik EFZ",
-      "name_de": "Eidg. Fähigkeitszeugnis — Informatik EFZ",
-      "issuer": "Swiss Confederation",
-      "issue_date": "2025-07-01",
-      "description": "Federal vocational qualification in computer science after four years of work-based learning and final examinations (IPA, practical and written).",
-      "description_de": "Eidg. Fähigkeitszeugnis Informatiker EFZ nach vier Jahren betrieblicher Lehre mit IPA und Abschlussprüfungen."
-    },
-    {
-      "name": "Cambridge English: First (FCE) — B2",
-      "name_de": "Cambridge English: First (FCE) — B2",
-      "issuer": "Cambridge Assessment English",
-      "issue_date": "2021-06-15",
-      "description": "Independent upper-intermediate English certification.",
-      "description_de": "Unabhängiges Englisch-Zertifikat auf Niveau B2."
+      "name": "PCAP — Certified Associate in Python Programming",
+      "name_de": "PCAP — Certified Associate in Python Programming",
+      "issuer": "Python Institute",
+      "issue_date": "2023-06-15",
+      "description": "Vendor-neutral certification covering OOP, modules, exceptions, and Pythonic patterns.",
+      "description_de": "Herstellerneutrale Python-Zertifizierung: OOP, Module, Exceptions und pythonische Patterns."
     }
   ],
   "projects": [
@@ -132,23 +203,39 @@
       "name": "mycv — interactive CV",
       "name_de": "mycv — interaktiver Lebenslauf",
       "slug": "mycv",
-      "summary": "Full-stack Django + Vue CV with Dog Mode and ATS-friendly PDF export.",
-      "summary_de": "Full-Stack-Django-+-Vue-Lebenslauf mit Dog-Mode und ATS-tauglichem PDF-Export.",
-      "description": "This site. Showcases clean architecture, typed APIs, 100% backend coverage, and a polished UI with a custom Dog Mode theme.",
-      "description_de": "Diese Seite. Demonstriert saubere Architektur, typisierte APIs, 100 % Backend-Coverage und ein poliertes UI mit eigenem Dog-Mode-Theme.",
+      "summary": "Full-stack Django + Vue CV with a playful Dog Mode theme and ATS-friendly PDF export.",
+      "summary_de": "Full-Stack-Django-+-Vue-Lebenslauf mit verspieltem Dog-Mode-Theme und ATS-tauglichem PDF-Export.",
+      "description": "This site. Demonstrates clean architecture, typed APIs, 100% backend coverage, and a polished UI.",
+      "description_de": "Diese Seite. Demonstriert saubere Architektur, typisierte APIs, 100 % Backend-Coverage und ein poliertes UI.",
       "url": "https://cv.chlous.top",
       "repo_url": "",
-      "technologies": ["python", "django", "drf", "vue", "typescript", "postgresql", "docker", "caddy"]
+      "technologies": ["python", "postgresql", "docker"]
     }
   ],
   "timeline_entries": [
     {
-      "date": "2025-07-15",
-      "kind": "award",
-      "title": "Apprenticeship completed with distinction",
-      "title_de": "Lehrabschluss mit Auszeichnung",
-      "description": "Federal Apprenticeship Certificate — Informatik EFZ awarded by the Swiss Confederation.",
-      "description_de": "Eidg. Fähigkeitszeugnis Informatik EFZ verliehen durch den Bund."
+      "date": "2001-07-01",
+      "kind": "milestone",
+      "title": "Swiss Matura",
+      "title_de": "Schweizerische Matura",
+      "description": "Matura completed (Gymnasium track).",
+      "description_de": "Maturitätsabschluss (gymnasialer Weg)."
+    },
+    {
+      "date": "1998-07-01",
+      "kind": "milestone",
+      "title": "Vocational Baccalaureate (Berufsmatura)",
+      "title_de": "Berufsmaturität",
+      "description": "Berufsmaturität — vocational baccalaureate granting access to universities of applied sciences.",
+      "description_de": "Berufsmaturität als Zugang zur Fachhochschule."
+    },
+    {
+      "date": "1997-08-01",
+      "kind": "milestone",
+      "title": "Apprenticeship completed",
+      "title_de": "Lehrabschluss",
+      "description": "Four-year federal apprenticeship (Berufslehre).",
+      "description_de": "Abschluss der vierjährigen Berufslehre."
     }
   ]
 }

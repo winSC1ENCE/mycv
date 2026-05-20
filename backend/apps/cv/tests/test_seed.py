@@ -23,25 +23,62 @@ def test_load_cv_seed_creates_records() -> None:
     assert person.social_links.exists()
     assert person.timeline_entries.exists()
     assert models.Technology.objects.filter(slug="python").exists()
-    assert models.SkillCategory.objects.filter(slug="backend").exists()
+    assert models.SkillCategory.objects.exists()
+    assert models.Skill.objects.exists()
 
 
-def test_load_cv_seed_links_certificate_to_experience_and_education() -> None:
-    """The EFZ certificate references the apprenticeship via link keys; load wires both FKs."""
-    call_command("load_cv_seed")
-    cert = models.Certificate.objects.get(name__startswith="Federal Apprenticeship")
+def test_load_cv_seed_links_certificate_to_experience_and_education(tmp_path: Path) -> None:
+    """A cert with experience_key + education_key gets both FKs wired by the loader."""
+    payload = {
+        "person": {
+            "slug": "linked-person",
+            "first_name": "L",
+            "last_name": "P",
+            "title": "Engineer",
+            "email": "lp@example.com",
+        },
+        "social_links": [],
+        "technologies": [],
+        "skill_categories": [],
+        "experiences": [
+            {"link_key": "job", "role": "Engineer", "company": "ACME", "start_date": "2020-01-01"}
+        ],
+        "educations": [
+            {
+                "link_key": "school",
+                "degree": "BSc",
+                "institution": "Uni",
+                "start_date": "2017-09-01",
+                "end_date": "2020-06-30",
+            }
+        ],
+        "certificates": [
+            {
+                "experience_key": "job",
+                "education_key": "school",
+                "name": "Linked Cert",
+                "issuer": "Body",
+                "issue_date": "2020-12-01",
+            }
+        ],
+        "projects": [],
+        "timeline_entries": [],
+    }
+    path = tmp_path / "seed.json"
+    path.write_text(json.dumps(payload), encoding="utf-8")
+    call_command("load_cv_seed", f"--path={path}")
+    cert = models.Certificate.objects.get(name="Linked Cert")
     assert cert.experience is not None
-    assert cert.experience.role.startswith("Apprentice")
+    assert cert.experience.role == "Engineer"
     assert cert.education is not None
-    assert cert.education.degree.startswith("Federal Apprenticeship")
+    assert cert.education.degree == "BSc"
 
 
 def test_load_cv_seed_supports_unlinked_certificate() -> None:
-    """The Cambridge English cert has no experience_key/education_key — stays unlinked."""
+    """Certificates without experience_key / education_key stay unlinked."""
     call_command("load_cv_seed")
-    cert = models.Certificate.objects.get(name__startswith="Cambridge")
-    assert cert.experience is None
-    assert cert.education is None
+    unlinked = models.Certificate.objects.filter(experience__isnull=True, education__isnull=True)
+    assert unlinked.exists()
 
 
 def test_load_cv_seed_is_idempotent() -> None:

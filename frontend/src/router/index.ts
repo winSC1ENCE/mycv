@@ -28,6 +28,11 @@ const router = createRouter({
           component: () => import("@/views/admin/AdminDashboardView.vue"),
         },
         {
+          path: "person",
+          name: "admin-person",
+          component: () => import("@/views/admin/AdminPersonView.vue"),
+        },
+        {
           path: "experiences",
           name: "admin-experiences",
           component: () => import("@/views/admin/AdminExperiencesView.vue"),
@@ -61,6 +66,11 @@ const router = createRouter({
           path: "technologies",
           name: "admin-technologies",
           component: () => import("@/views/admin/AdminTechnologiesView.vue"),
+        },
+        {
+          path: "social-links",
+          name: "admin-social-links",
+          component: () => import("@/views/admin/AdminSocialLinksView.vue"),
         },
       ],
     },

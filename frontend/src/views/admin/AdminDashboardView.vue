@@ -26,6 +26,7 @@ import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
 const cards = [
+  { name: "person", route: "admin-person", label: t("admin.nav.person") },
   { name: "experience", route: "admin-experiences", label: t("nav.experience") },
   { name: "education", route: "admin-education", label: t("nav.education") },
   { name: "skills", route: "admin-skills", label: t("nav.skills") },
@@ -33,6 +34,7 @@ const cards = [
   { name: "projects", route: "admin-projects", label: t("nav.projects") },
   { name: "timeline", route: "admin-timeline", label: t("admin.nav.timeline") },
   { name: "technologies", route: "admin-technologies", label: t("admin.nav.technologies") },
+  { name: "socialLinks", route: "admin-social-links", label: t("admin.nav.socialLinks") },
 ];
 </script>
 

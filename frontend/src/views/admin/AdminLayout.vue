@@ -10,6 +10,9 @@
         <RouterLink class="admin-nav__link" :to="{ name: 'admin-dashboard' }">
           {{ $t("admin.nav.dashboard") }}
         </RouterLink>
+        <RouterLink class="admin-nav__link" :to="{ name: 'admin-person' }">
+          {{ $t("admin.nav.person") }}
+        </RouterLink>
         <RouterLink class="admin-nav__link" :to="{ name: 'admin-experiences' }">
           {{ $t("nav.experience") }}
         </RouterLink>
@@ -30,6 +33,9 @@
         </RouterLink>
         <RouterLink class="admin-nav__link" :to="{ name: 'admin-technologies' }">
           {{ $t("admin.nav.technologies") }}
+        </RouterLink>
+        <RouterLink class="admin-nav__link" :to="{ name: 'admin-social-links' }">
+          {{ $t("admin.nav.socialLinks") }}
         </RouterLink>
       </nav>
 

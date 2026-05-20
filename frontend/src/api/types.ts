@@ -112,6 +112,7 @@ export interface SocialLink {
   label: string;
   url: string;
   order: number;
+  is_published?: boolean;
 }
 
 export interface TimelineEntry {
@@ -157,6 +158,28 @@ export type ProjectWrite = Omit<Project, "technologies" | "media"> & {
 export type TimelineEntryWrite = TimelineEntry & { person?: number };
 export type TechnologyWrite = Technology & { is_published: boolean };
 export type SkillCategoryWrite = Omit<SkillCategory, "skills"> & { is_published: boolean };
+export type SkillWrite = Omit<Skill, "technologies"> & {
+  technologies: number[];
+  category: number;
+  is_published: boolean;
+};
+export type SocialLinkWrite = SocialLink & { person?: number; is_published: boolean };
+export interface PersonWrite {
+  id?: number;
+  slug: string;
+  first_name: string;
+  last_name: string;
+  title: string;
+  title_de: string;
+  email: string;
+  phone: string;
+  location: string;
+  summary: string;
+  summary_de: string;
+  photo: number | null;
+  order: number;
+  is_published: boolean;
+}
 
 export interface Cv {
   id: number;

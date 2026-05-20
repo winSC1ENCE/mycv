@@ -2,42 +2,112 @@
   <div class="admin-page">
     <div class="admin-page__header">
       <h1 class="admin-page__title">{{ $t("nav.skills") }}</h1>
-      <button class="btn btn--primary" @click="openNew">+ {{ $t("admin.add") }}</button>
+      <button class="btn btn--primary" @click="openNewCategory">
+        + {{ $t("admin.addCategory") }}
+      </button>
     </div>
 
     <p v-if="loading" class="admin-page__status">{{ $t("common.loading") }}</p>
     <p v-else-if="error" class="admin-page__error">{{ error }}</p>
 
     <div v-else>
-      <div v-for="cat in items" :key="cat.id" class="skill-category">
+      <section v-for="cat in items" :key="cat.id" class="skill-category">
         <div class="entity-row">
           <div class="entity-row__info">
             <strong>{{ cat.name }}</strong>
             <span class="entity-row__sub">{{ cat.skills.length }} skills</span>
           </div>
           <div class="entity-row__actions">
-            <button class="btn-icon" @click="openEdit(cat)">✏</button>
-            <button class="btn-icon btn-icon--danger" @click="remove(cat.id)">✕</button>
+            <button class="btn" @click="openNewSkill(cat.id)">
+              + {{ $t("admin.addSkill") }}
+            </button>
+            <button class="btn-icon" @click="openEditCategory(cat)">✏</button>
+            <button class="btn-icon btn-icon--danger" @click="removeCategory(cat.id)">✕</button>
           </div>
         </div>
-      </div>
+        <ul class="skill-list">
+          <li v-for="skill in cat.skills" :key="skill.id" class="skill-row">
+            <span class="skill-row__name">{{ skill.name }}</span>
+            <span class="skill-row__level">{{ "★".repeat(skill.level) }}</span>
+            <span class="skill-row__tech">
+              {{ skill.technologies.map((t) => t.name).join(", ") }}
+            </span>
+            <div class="entity-row__actions">
+              <button class="btn-icon" @click="openEditSkill(skill, cat.id)">✏</button>
+              <button class="btn-icon btn-icon--danger" @click="removeSkill(skill.id)">✕</button>
+            </div>
+          </li>
+        </ul>
+      </section>
     </div>
 
-    <div v-if="editing !== null" class="form-panel">
+    <!-- Category form panel -->
+    <div v-if="editingCategory !== null" class="form-panel">
       <div class="form-panel__inner">
-        <h2 class="form-panel__title">{{ editing.id ? $t("admin.edit") : $t("admin.add") }}</h2>
-        <form class="entity-form" @submit.prevent="save">
-          <label>{{ $t("admin.fields.name") }}<input v-model="editing.name" required /></label>
-          <label>{{ $t("admin.fields.name_de") }}<input v-model="editing.name_de" /></label>
-          <label>{{ $t("admin.fields.slug") }}<input v-model="editing.slug" required /></label>
+        <h2 class="form-panel__title">
+          {{ editingCategory.id ? $t("admin.edit") : $t("admin.add") }}
+        </h2>
+        <form class="entity-form" @submit.prevent="saveCategory">
+          <label>{{ $t("admin.fields.name") }}<input v-model="editingCategory.name" required /></label>
+          <label>{{ $t("admin.fields.name_de") }}<input v-model="editingCategory.name_de" /></label>
+          <label>{{ $t("admin.fields.slug") }}<input v-model="editingCategory.slug" required /></label>
           <label class="label--checkbox">
-            <input v-model="editing.is_published" type="checkbox" />
+            <input v-model="editingCategory.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
           </label>
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
-            <button class="btn" type="button" @click="editing = null">
+            <button class="btn" type="button" @click="editingCategory = null">
+              {{ $t("admin.cancel") }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Skill form panel -->
+    <div v-if="editingSkill !== null" class="form-panel">
+      <div class="form-panel__inner">
+        <h2 class="form-panel__title">
+          {{ editingSkill.id ? $t("admin.edit") : $t("admin.add") }}
+        </h2>
+        <form class="entity-form" @submit.prevent="saveSkill">
+          <label>{{ $t("admin.fields.name") }}<input v-model="editingSkill.name" required /></label>
+          <label>{{ $t("admin.fields.name_de") }}<input v-model="editingSkill.name_de" /></label>
+          <label>
+            {{ $t("admin.fields.category") }}
+            <select v-model.number="editingSkill.category" required>
+              <option v-for="cat in items" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+            </select>
+          </label>
+          <label>
+            {{ $t("admin.fields.level") }}
+            <input
+              v-model.number="editingSkill.level"
+              type="number"
+              min="1"
+              max="5"
+              required
+            />
+          </label>
+          <label>
+            {{ $t("admin.nav.technologies") }}
+            <select v-model="editingSkill.technologies" multiple size="6">
+              <option v-for="tech in technologies" :key="tech.id" :value="tech.id">
+                {{ tech.name }}
+              </option>
+            </select>
+            <span class="field-hint">{{ $t("admin.multiSelectHint") }}</span>
+          </label>
+          <label class="label--checkbox">
+            <input v-model="editingSkill.is_published" type="checkbox" />
+            {{ $t("admin.fields.published") }}
+          </label>
+          <p v-if="saveError" class="form-error">{{ saveError }}</p>
+          <div class="form-panel__footer">
+            <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
+            <button class="btn" type="button" @click="editingSkill = null">
               {{ $t("admin.cancel") }}
             </button>
           </div>
@@ -48,19 +118,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { skillCategoryApi } from "@/api/admin";
-import type { SkillCategory, SkillCategoryWrite } from "@/api/types";
+import { onMounted, ref } from "vue";
+import { skillApi, skillCategoryApi, technologyApi } from "@/api/admin";
+import type {
+  Skill,
+  SkillCategory,
+  SkillCategoryWrite,
+  SkillWrite,
+  Technology,
+} from "@/api/types";
 
-type Draft = Partial<SkillCategoryWrite> & { id?: number };
+type CategoryDraft = Partial<SkillCategoryWrite> & { id?: number };
+type SkillDraft = Partial<SkillWrite> & { id?: number };
 
 const items = ref<SkillCategory[]>([]);
+const technologies = ref<Technology[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
-const editing = ref<Draft | null>(null);
+const editingCategory = ref<CategoryDraft | null>(null);
+const editingSkill = ref<SkillDraft | null>(null);
 const saveError = ref<string | null>(null);
 
-onMounted(load);
+onMounted(async () => {
+  await Promise.all([load(), loadTechnologies()]);
+});
 
 async function load(): Promise<void> {
   loading.value = true;
@@ -74,39 +155,129 @@ async function load(): Promise<void> {
   }
 }
 
-function openNew(): void {
-  editing.value = { name: "", name_de: "", slug: "", is_published: true };
-}
-
-function openEdit(item: SkillCategory): void {
-  // Exclude the nested skills array — write payload uses only flat fields
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { skills, ...rest } = item;
-  editing.value = { ...rest };
-}
-
-async function save(): Promise<void> {
-  saveError.value = null;
-  if (!editing.value) return;
+async function loadTechnologies(): Promise<void> {
   try {
-    const { id, ...payload } = editing.value;
+    const page = await technologyApi.list();
+    technologies.value = page.results;
+  } catch {
+    // technologies are optional — admin can still edit skills without picking any
+  }
+}
+
+function openNewCategory(): void {
+  editingCategory.value = { name: "", name_de: "", slug: "", is_published: true };
+}
+
+function openEditCategory(cat: SkillCategory): void {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { skills, ...rest } = cat;
+  editingCategory.value = { ...rest };
+}
+
+async function saveCategory(): Promise<void> {
+  saveError.value = null;
+  if (!editingCategory.value) return;
+  try {
+    const { id, ...payload } = editingCategory.value;
     if (id) {
       await skillCategoryApi.update(id, payload);
     } else {
       await skillCategoryApi.create(payload);
     }
-    editing.value = null;
+    editingCategory.value = null;
     await load();
   } catch {
     saveError.value = "Save failed.";
   }
 }
 
-async function remove(id: number): Promise<void> {
-  if (!confirm("Delete this category?")) return;
-  await skillCategoryApi.destroy(id);
+async function removeCategory(id: number): Promise<void> {
+  if (!confirm("Delete this category? Skills inside must be removed first.")) return;
+  try {
+    await skillCategoryApi.destroy(id);
+    await load();
+  } catch {
+    error.value = "Delete failed — empty the category first.";
+  }
+}
+
+function openNewSkill(categoryId: number): void {
+  editingSkill.value = {
+    name: "",
+    name_de: "",
+    category: categoryId,
+    level: 3,
+    technologies: [],
+    is_published: true,
+  };
+}
+
+function openEditSkill(skill: Skill, categoryId: number): void {
+  editingSkill.value = {
+    ...skill,
+    category: categoryId,
+    technologies: skill.technologies.map((t) => t.id),
+    is_published: true,
+  };
+}
+
+async function saveSkill(): Promise<void> {
+  saveError.value = null;
+  if (!editingSkill.value) return;
+  try {
+    const { id, ...payload } = editingSkill.value;
+    if (id) {
+      await skillApi.update(id, payload);
+    } else {
+      await skillApi.create(payload);
+    }
+    editingSkill.value = null;
+    await load();
+  } catch {
+    saveError.value = "Save failed.";
+  }
+}
+
+async function removeSkill(id: number): Promise<void> {
+  if (!confirm("Delete this skill?")) return;
+  await skillApi.destroy(id);
   await load();
 }
 </script>
 
 <style scoped src="./admin-shared.css"></style>
+<style scoped>
+.skill-category {
+  margin-bottom: var(--space-6);
+}
+.skill-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 0 var(--space-6);
+}
+.skill-row {
+  display: grid;
+  grid-template-columns: 1fr auto 2fr auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+.skill-row__name {
+  font-weight: 500;
+}
+.skill-row__level {
+  color: var(--color-accent);
+  letter-spacing: 1px;
+}
+.skill-row__tech {
+  font-size: 0.8rem;
+  color: var(--color-fg-muted);
+}
+.field-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin-top: 2px;
+}
+</style>

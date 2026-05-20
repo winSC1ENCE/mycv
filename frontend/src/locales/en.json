@@ -56,20 +56,28 @@
     "username": "Username",
     "password": "Password",
     "add": "Add",
+    "addCategory": "Add category",
+    "addSkill": "Add skill",
     "edit": "Edit",
     "save": "Save",
+    "saved": "Saved",
     "cancel": "Cancel",
     "crop": "Crop & Upload",
     "chooseFile": "Choose file…",
     "viewPublicCv": "View public CV",
+    "multiSelectHint": "Hold Cmd/Ctrl to select multiple",
     "nav": {
       "dashboard": "Dashboard",
+      "person": "Profile",
       "timeline": "Timeline",
-      "technologies": "Technologies"
+      "technologies": "Technologies",
+      "socialLinks": "Social links"
     },
     "fields": {
       "name": "Name",
       "name_de": "Name (DE)",
+      "first_name": "First name",
+      "last_name": "Last name",
       "slug": "Slug",
       "role": "Role",
       "role_de": "Role (DE)",
@@ -95,7 +103,12 @@
       "url": "URL",
       "repo_url": "Repository URL",
       "published": "Published",
-      "mediaFile": "Attachment"
+      "mediaFile": "Attachment",
+      "email": "Email",
+      "phone": "Phone",
+      "platform": "Platform",
+      "label": "Label",
+      "level": "Level"
     }
   }
 }

@@ -2,16 +2,22 @@ import { http } from "./client";
 import type {
   Certificate,
   CertificateWrite,
+  Cv,
   Education,
   EducationWrite,
   Experience,
   ExperienceWrite,
   MediaAsset,
   Page,
+  PersonWrite,
   Project,
   ProjectWrite,
+  Skill,
   SkillCategory,
   SkillCategoryWrite,
+  SkillWrite,
+  SocialLink,
+  SocialLinkWrite,
   Technology,
   TechnologyWrite,
   TimelineEntry,
@@ -54,6 +60,20 @@ export const projectApi = crud<Project, ProjectWrite>("/projects");
 export const timelineApi = crud<TimelineEntry, TimelineEntryWrite>("/timeline");
 export const technologyApi = crud<Technology, TechnologyWrite>("/technologies");
 export const skillCategoryApi = crud<SkillCategory, SkillCategoryWrite>("/skill-categories");
+export const skillApi = crud<Skill, SkillWrite>("/skills");
+export const socialLinkApi = crud<SocialLink, SocialLinkWrite>("/social-links");
+
+export const personApi = {
+  async retrieve(): Promise<Cv> {
+    // /api/cv/ returns the primary published person directly (not paginated).
+    const { data } = await http.get<Cv>(`/cv/`);
+    return data;
+  },
+  async update(slug: string, payload: Partial<PersonWrite>): Promise<Cv> {
+    const { data } = await http.patch<Cv>(`/cv/${slug}/`, payload);
+    return data;
+  },
+};
 
 export async function uploadMedia(file: File): Promise<MediaAsset> {
   const form = new FormData();

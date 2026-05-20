@@ -86,6 +86,8 @@ def test_cv_detail_by_slug(api_client: APIClient) -> None:
         ("/api/projects/", ProjectFactory),
         ("/api/technologies/", TechnologyFactory),
         ("/api/skill-categories/", SkillCategoryFactory),
+        ("/api/skills/", SkillFactory),
+        ("/api/social-links/", SocialLinkFactory),
         ("/api/timeline/", TimelineEntryFactory),
     ],
 )
@@ -145,6 +147,8 @@ def admin_client(db):
         "/api/certificates/",
         "/api/projects/",
         "/api/technologies/",
+        "/api/skills/",
+        "/api/social-links/",
         "/api/timeline/",
     ],
 )
@@ -316,6 +320,8 @@ def test_admin_can_create_certificate_with_links(admin_client: APIClient) -> Non
         ("/api/projects/", ProjectFactory),
         ("/api/technologies/", TechnologyFactory),
         ("/api/skill-categories/", SkillCategoryFactory),
+        ("/api/skills/", SkillFactory),
+        ("/api/social-links/", SocialLinkFactory),
         ("/api/timeline/", TimelineEntryFactory),
     ],
 )
@@ -324,3 +330,74 @@ def test_admin_sees_unpublished_entities(admin_client: APIClient, path: str, fac
     resp = admin_client.get(path)
     assert resp.status_code == status.HTTP_200_OK
     assert resp.json()["count"] == 1
+
+
+def test_admin_can_create_skill(admin_client: APIClient) -> None:
+    cat = SkillCategoryFactory()
+    tech = TechnologyFactory(slug="python")
+    resp = admin_client.post(
+        "/api/skills/",
+        {
+            "name": "Python",
+            "name_de": "Python",
+            "category": cat.pk,
+            "level": 5,
+            "technologies": [tech.pk],
+        },
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    skill = models.Skill.objects.get(name="Python")
+    assert skill.category_id == cat.pk
+    assert skill.level == 5
+    assert list(skill.technologies.values_list("slug", flat=True)) == ["python"]
+
+
+def test_admin_can_update_skill(admin_client: APIClient) -> None:
+    skill = SkillFactory(level=3)
+    resp = admin_client.patch(
+        f"/api/skills/{skill.pk}/",
+        {"level": 5},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    skill.refresh_from_db()
+    assert skill.level == 5
+
+
+def test_admin_can_delete_skill(admin_client: APIClient) -> None:
+    skill = SkillFactory()
+    resp = admin_client.delete(f"/api/skills/{skill.pk}/")
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    assert not models.Skill.objects.filter(pk=skill.pk).exists()
+
+
+def test_admin_can_create_social_link_with_person_autofill(admin_client: APIClient) -> None:
+    person = PersonFactory(is_published=True)
+    resp = admin_client.post(
+        "/api/social-links/",
+        {"platform": "github", "label": "GitHub", "url": "https://github.com/x"},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    link = models.SocialLink.objects.get(url="https://github.com/x")
+    assert link.person_id == person.pk
+
+
+def test_admin_can_update_social_link(admin_client: APIClient) -> None:
+    link = SocialLinkFactory(url="https://old.example/x")
+    resp = admin_client.patch(
+        f"/api/social-links/{link.pk}/",
+        {"url": "https://new.example/x"},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    link.refresh_from_db()
+    assert link.url == "https://new.example/x"
+
+
+def test_admin_can_delete_social_link(admin_client: APIClient) -> None:
+    link = SocialLinkFactory()
+    resp = admin_client.delete(f"/api/social-links/{link.pk}/")
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    assert not models.SocialLink.objects.filter(pk=link.pk).exists()

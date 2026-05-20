@@ -181,6 +181,39 @@ class SkillCategoryViewSet(viewsets.ModelViewSet[models.SkillCategory]):
         return serializers.SkillCategorySerializer
 
 
+class SkillViewSet(viewsets.ModelViewSet[models.Skill]):
+    queryset = models.Skill.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
+    filterset_fields = ["category"]
+
+    def get_queryset(self) -> QuerySet[models.Skill]:
+        qs = super().get_queryset()
+        if not _is_staff(self.request):
+            qs = qs.filter(is_published=True)
+        return qs
+
+    def get_serializer_class(self) -> _SerializerClass:
+        if self.action in ("create", "update", "partial_update"):
+            return serializers.SkillWriteSerializer
+        return serializers.SkillSerializer
+
+
+class SocialLinkViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.SocialLink]):
+    queryset = models.SocialLink.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self) -> QuerySet[models.SocialLink]:
+        qs = super().get_queryset()
+        if not _is_staff(self.request):
+            qs = qs.filter(is_published=True)
+        return qs
+
+    def get_serializer_class(self) -> _SerializerClass:
+        if self.action in ("create", "update", "partial_update"):
+            return serializers.SocialLinkWriteSerializer
+        return serializers.SocialLinkSerializer
+
+
 class TimelineEntryViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.TimelineEntry]):
     queryset = models.TimelineEntry.objects.all()
     permission_classes = [IsAdminOrReadOnly]

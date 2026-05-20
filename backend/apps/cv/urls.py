@@ -12,6 +12,8 @@ router.register("certificates", views.CertificateViewSet, basename="certificate"
 router.register("projects", views.ProjectViewSet, basename="project")
 router.register("technologies", views.TechnologyViewSet, basename="technology")
 router.register("skill-categories", views.SkillCategoryViewSet, basename="skill-category")
+router.register("skills", views.SkillViewSet, basename="skill")
+router.register("social-links", views.SocialLinkViewSet, basename="social-link")
 router.register("timeline", views.TimelineEntryViewSet, basename="timeline")
 router.register("media-assets", views.MediaAssetViewSet, basename="media-asset")
 

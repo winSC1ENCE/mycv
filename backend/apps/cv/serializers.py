@@ -247,6 +247,31 @@ class SkillCategoryWriteSerializer(serializers.ModelSerializer[models.SkillCateg
         fields = ["id", "name", "name_de", "slug", "order", "is_published"]
 
 
+class SkillWriteSerializer(serializers.ModelSerializer[models.Skill]):
+    class Meta:
+        model = models.Skill
+        fields = [
+            "id",
+            "name",
+            "name_de",
+            "category",
+            "level",
+            "technologies",
+            "order",
+            "is_published",
+        ]
+
+
+class SocialLinkWriteSerializer(serializers.ModelSerializer[models.SocialLink]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
+    class Meta:
+        model = models.SocialLink
+        fields = ["id", "person", "platform", "label", "url", "order", "is_published"]
+
+
 class ExperienceWriteSerializer(serializers.ModelSerializer[models.Experience]):
     person = serializers.PrimaryKeyRelatedField(
         queryset=models.Person.objects.all(), required=False, allow_null=True

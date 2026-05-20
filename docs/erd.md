@@ -21,83 +21,93 @@ erDiagram
     Certificate ||--o| MediaAsset    : "attaches"
 
     Person {
-        slug slug PK
+        string slug PK
         string first_name
         string last_name
         string title
         string title_de
-        email email
+        string email
         string summary
         string summary_de
     }
+
     Experience {
         int id PK
-        FK person FK
+        string person FK
         string role
         string role_de
         string company
         date start_date
-        date end_date "null = current"
-        text description
+        date end_date
+        string description
     }
+
     Education {
         int id PK
-        FK person FK
+        string person FK
         string degree
         string institution
         date start_date
         date end_date
     }
+
     Certificate {
         int id PK
-        FK person FK
+        string person FK
         string name
         string issuer
         date issue_date
-        FK media FK "null"
+        int media FK
     }
+
     Project {
-        slug slug PK
-        FK person FK
+        string slug PK
+        string person FK
         string name
         string summary
-        url url
-        url repo_url
+        string url
+        string repo_url
     }
+
     Technology {
-        slug slug PK
+        string slug PK
         string name
         string category
         string icon
     }
+
     SkillCategory {
-        slug slug PK
+        string slug PK
         string name
     }
+
     Skill {
         int id PK
-        FK category FK
+        string category FK
         string name
-        int level "1-5"
+        int level
     }
+
     SocialLink {
         int id PK
-        FK person FK
+        string person FK
         string platform
-        url url
+        string url
     }
+
     TimelineEntry {
         int id PK
-        FK person FK
+        string person FK
         date date
         string kind
         string title
     }
+
     MediaAsset {
         int id PK
-        file file
+        string file
         string alt_text
-        string kind "image|document|video"
+        string kind
     }
 ```
 

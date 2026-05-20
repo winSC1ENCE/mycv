@@ -239,3 +239,6 @@ backend/db.e2e.sqlite3-journal
 frontend/playwright-report/
 frontend/test-results/
 frontend/tests/e2e/.auth.json
+
+# Local-only operational docs (never push)
+docs/deployment.md

@@ -28,6 +28,7 @@
     "lead": "Klick einen Eintrag, um Details zu sehen.",
     "linked_certificates": "Erworbene Zertifikate",
     "empty": "Noch keine Einträge.",
+    "locked_file": "Gesperrte Datei",
     "pet_counter": "{n} mal gestreichelt",
     "kind": {
       "experience": "Beruf",
@@ -39,7 +40,11 @@
   "actions": {
     "toggle_theme": "Theme wechseln",
     "toggle_language": "Sprache wechseln",
-    "download_pdf": "CV herunterladen"
+    "download_pdf": "CV herunterladen",
+    "zoom_image": "Bild vergrössern",
+    "close": "Schliessen",
+    "previous": "Zurück",
+    "next": "Weiter"
   },
   "labels": {
     "present": "Heute",
@@ -129,7 +134,12 @@
       "date_of_birth": "Geburtsdatum",
       "expires_at": "Läuft ab am",
       "is_active": "Aktiv",
-      "status": "Status"
+      "status": "Status",
+      "photos": "Fotos",
+      "photosHelp": "Bis zu 6 Bilder pro Projekt. Reihenfolge mit ▲/▼ ändern.",
+      "movePhotoUp": "Nach oben",
+      "movePhotoDown": "Nach unten",
+      "removePhoto": "Entfernen"
     },
     "accessKeys": {
       "copyUrl": "URL kopieren",

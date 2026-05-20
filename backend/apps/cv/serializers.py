@@ -115,6 +115,13 @@ class CertificateSerializer(serializers.ModelSerializer[models.Certificate]):
             "is_published",
         ]
 
+    def to_representation(self, instance: models.Certificate) -> Any:
+        data = super().to_representation(instance)
+        granted: bool = self.context.get("access_granted", False)
+        if not granted and data.get("media"):
+            data["media"]["url"] = ""
+        return data
+
 
 class ProjectSerializer(serializers.ModelSerializer[models.Project]):
     technologies = TechnologySerializer(many=True, read_only=True)
@@ -409,6 +416,11 @@ class ProjectWriteSerializer(serializers.ModelSerializer[models.Project]):
             "order",
             "is_published",
         ]
+
+    def validate_media(self, value: list[models.MediaAsset]) -> list[models.MediaAsset]:
+        if len(value) > 6:
+            raise serializers.ValidationError("Maximum 6 photos per project.")
+        return value
 
 
 class TimelineEntryWriteSerializer(serializers.ModelSerializer[models.TimelineEntry]):

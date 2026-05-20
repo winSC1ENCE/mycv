@@ -10,7 +10,7 @@ from rest_framework.test import APIClient
 
 from apps.cv import models
 
-from .factories import PersonFactory
+from .factories import CertificateFactory, MediaAssetFactory, PersonFactory
 
 
 @pytest.fixture()
@@ -158,6 +158,85 @@ class TestStaffAccess:
         data = client.get(f"/api/cv/?key={valid_key.token}").json()
         assert data["access_granted"] is True
         assert data["email"] == "nicolas@example.com"
+
+
+@pytest.mark.django_db
+class TestCertificateMediaRedaction:
+    def test_anonymous_certificate_media_url_blanked(self, person: models.Person) -> None:
+        media = MediaAssetFactory()
+        CertificateFactory(person=person, media=media, name="Cert with file")
+        data = APIClient().get("/api/cv/").json()
+        certs = data["certificates"]
+        assert len(certs) == 1
+        assert certs[0]["media"] is not None
+        assert certs[0]["media"]["url"] == ""
+        assert certs[0]["media"]["kind"] == "image"
+        assert certs[0]["media"]["alt_text"] == "Example"
+
+    def test_valid_key_returns_real_media_url(
+        self, person: models.Person, valid_key: models.AccessKey
+    ) -> None:
+        media = MediaAssetFactory()
+        CertificateFactory(person=person, media=media, name="Cert with file")
+        data = APIClient().get(f"/api/cv/?key={valid_key.token}").json()
+        certs = data["certificates"]
+        assert len(certs) == 1
+        assert certs[0]["media"]["url"]
+        assert certs[0]["media"]["url"] != ""
+
+    def test_certificate_without_media_stays_none(self, person: models.Person) -> None:
+        CertificateFactory(person=person, media=None, name="Cert no file")
+        data = APIClient().get("/api/cv/").json()
+        certs = data["certificates"]
+        assert len(certs) == 1
+        assert certs[0]["media"] is None
+
+
+@pytest.mark.django_db
+class TestProjectMediaMaxSix:
+    def test_create_project_with_seven_media_returns_400(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        media_ids = [MediaAssetFactory().id for _ in range(7)]
+        response = client.post(
+            "/api/projects/",
+            {
+                "name": "Too many photos",
+                "slug": "too-many-photos",
+                "media": media_ids,
+                "is_published": True,
+            },
+            format="json",
+        )
+        assert response.status_code == 400
+        assert "media" in response.json()
+
+    def test_create_project_with_six_media_succeeds(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        media_ids = [MediaAssetFactory().id for _ in range(6)]
+        response = client.post(
+            "/api/projects/",
+            {
+                "name": "Six photos",
+                "slug": "six-photos",
+                "media": media_ids,
+                "is_published": True,
+            },
+            format="json",
+        )
+        assert response.status_code == 201
+        assert len(response.json()["media"]) == 6
 
 
 @pytest.mark.django_db

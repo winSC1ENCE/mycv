@@ -28,6 +28,7 @@
     "lead": "Click any entry to expand details.",
     "linked_certificates": "Certificates earned",
     "empty": "No timeline entries yet.",
+    "locked_file": "Locked file",
     "pet_counter": "{n} pets",
     "kind": {
       "experience": "Work",
@@ -39,7 +40,11 @@
   "actions": {
     "toggle_theme": "Toggle theme",
     "toggle_language": "Switch language",
-    "download_pdf": "Download CV"
+    "download_pdf": "Download CV",
+    "zoom_image": "Zoom image",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next"
   },
   "labels": {
     "present": "Present",
@@ -129,7 +134,12 @@
       "date_of_birth": "Date of birth",
       "expires_at": "Expires at",
       "is_active": "Active",
-      "status": "Status"
+      "status": "Status",
+      "photos": "Photos",
+      "photosHelp": "Up to 6 images per project. Drag-free reorder with ▲/▼.",
+      "movePhotoUp": "Move up",
+      "movePhotoDown": "Move down",
+      "removePhoto": "Remove"
     },
     "accessKeys": {
       "copyUrl": "Copy URL",

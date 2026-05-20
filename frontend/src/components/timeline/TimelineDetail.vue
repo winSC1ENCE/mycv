@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useLocaleStore } from "@/stores/locale";
 import { useI18n } from "vue-i18n";
 import { pickLocalized } from "@/composables/useLocalized";
+import MediaPreview from "@/components/base/MediaPreview.vue";
 import type { TimelineRow } from "@/stores/cv";
 
 defineProps<{ row: TimelineRow }>();
@@ -62,11 +63,10 @@ const { t } = useI18n();
       <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
         {{ pickLocalized(row.data, "description", locale) }}
       </p>
-      <img
-        v-if="row.data.media?.url"
-        :src="row.data.media.url"
-        :alt="row.data.media.alt_text || pickLocalized(row.data, 'name', locale)"
-        class="timeline-detail__media"
+      <MediaPreview
+        v-if="row.data.media"
+        :media="row.data.media"
+        :alt="pickLocalized(row.data, 'name', locale)"
       />
     </template>
 
@@ -135,12 +135,6 @@ const { t } = useI18n();
 .timeline-detail__cert-meta {
   color: var(--color-muted);
   font-size: 0.875rem;
-}
-
-.timeline-detail__media {
-  max-width: 100%;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
 }
 
 .kind-badge {

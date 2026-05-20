@@ -30,7 +30,6 @@
         <form class="entity-form" @submit.prevent="save">
           <label>{{ $t("admin.fields.name") }}<input v-model="editing.name" required /></label>
           <label>{{ $t("admin.fields.name_de") }}<input v-model="editing.name_de" /></label>
-          <label>{{ $t("admin.fields.slug") }}<input v-model="editing.slug" required /></label>
           <label>{{ $t("admin.fields.summary") }}<input v-model="editing.summary" /></label>
           <label>{{ $t("admin.fields.summary_de") }}<input v-model="editing.summary_de" /></label>
           <label
@@ -49,6 +48,46 @@
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
           </label>
+
+          <fieldset class="photos-panel">
+            <legend>{{ photos.length }}/6 {{ $t("admin.fields.photos") }}</legend>
+            <small class="form-help">{{ $t("admin.fields.photosHelp") }}</small>
+            <ul v-if="photos.length" class="photo-list">
+              <li v-for="(p, i) in photos" :key="p.id" class="photo-list__item">
+                <img :src="p.url" :alt="p.alt_text" class="photo-list__thumb" />
+                <div class="photo-list__actions">
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    :disabled="i === 0"
+                    :aria-label="$t('admin.fields.movePhotoUp')"
+                    @click="movePhoto(i, -1)"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-icon"
+                    :disabled="i === photos.length - 1"
+                    :aria-label="$t('admin.fields.movePhotoDown')"
+                    @click="movePhoto(i, 1)"
+                  >
+                    ▼
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-icon btn-icon--danger"
+                    :aria-label="$t('admin.fields.removePhoto')"
+                    @click="removePhoto(i)"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </li>
+            </ul>
+            <FileUpload v-if="photos.length < 6" accept="image/*" @uploaded="onPhotoUploaded" />
+          </fieldset>
+
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
@@ -65,7 +104,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { projectApi } from "@/api/admin";
-import type { Project, ProjectWrite } from "@/api/types";
+import { extractApiError } from "@/api/errors";
+import { slugify } from "@/utils/slugify";
+import FileUpload from "@/components/admin/FileUpload.vue";
+import type { MediaAsset, Project, ProjectWrite } from "@/api/types";
 
 type Draft = Partial<ProjectWrite> & { id?: number };
 
@@ -74,6 +116,7 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
+const photos = ref<MediaAsset[]>([]);
 
 onMounted(load);
 
@@ -91,21 +134,43 @@ async function load(): Promise<void> {
 
 function openNew(): void {
   editing.value = { name: "", slug: "", is_published: true };
+  photos.value = [];
 }
 
 function openEdit(item: Project): void {
+  const { media, technologies, ...rest } = item;
   editing.value = {
-    ...item,
-    technologies: item.technologies.map((t) => t.id),
-    media: item.media.map((m) => m.id),
+    ...rest,
+    technologies: technologies.map((t) => t.id),
+    media: media.map((m) => m.id),
   };
+  photos.value = [...media];
+}
+
+function onPhotoUploaded(asset: MediaAsset): void {
+  if (photos.value.length < 6) photos.value.push(asset);
+}
+
+function movePhoto(i: number, dir: -1 | 1): void {
+  const j = i + dir;
+  if (j < 0 || j >= photos.value.length) return;
+  const arr = photos.value;
+  [arr[i], arr[j]] = [arr[j], arr[i]];
+}
+
+function removePhoto(i: number): void {
+  photos.value.splice(i, 1);
 }
 
 async function save(): Promise<void> {
   saveError.value = null;
   if (!editing.value) return;
+  const { id, ...payload } = editing.value;
+  payload.media = photos.value.map((p) => p.id);
+  if (!id && payload.name && !payload.slug) {
+    payload.slug = slugify(payload.name);
+  }
   try {
-    const { id, ...payload } = editing.value;
     if (id) {
       await projectApi.update(id, payload);
     } else {
@@ -113,8 +178,8 @@ async function save(): Promise<void> {
     }
     editing.value = null;
     await load();
-  } catch {
-    saveError.value = "Save failed.";
+  } catch (err) {
+    saveError.value = extractApiError(err);
   }
 }
 
@@ -126,3 +191,62 @@ async function remove(id: number): Promise<void> {
 </script>
 
 <style scoped src="./admin-shared.css"></style>
+<style scoped>
+.photos-panel {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.photos-panel legend {
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 0 var(--space-2);
+}
+
+.form-help {
+  display: block;
+  color: var(--color-fg-muted);
+  font-size: 0.8rem;
+}
+
+.photo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.photo-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+}
+
+.photo-list__thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.photo-list__actions {
+  display: flex;
+  gap: var(--space-1);
+  margin-left: auto;
+}
+
+.btn-icon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+</style>

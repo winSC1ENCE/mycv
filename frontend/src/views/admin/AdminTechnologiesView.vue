@@ -56,6 +56,7 @@
 import { ref, onMounted } from "vue";
 import { technologyApi } from "@/api/admin";
 import { extractApiError } from "@/api/errors";
+import { slugify } from "@/utils/slugify";
 import type { Technology, TechnologyWrite } from "@/api/types";
 
 type Draft = Partial<TechnologyWrite> & { id?: number };
@@ -86,15 +87,6 @@ function openNew(): void {
 
 function openEdit(item: Technology): void {
   editing.value = { ...item, is_published: true };
-}
-
-function slugify(s: string): string {
-  return s
-    .toLowerCase()
-    .normalize("NFKD")
-    .replace(/\p{Diacritic}/gu, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 async function save(): Promise<void> {

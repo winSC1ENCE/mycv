@@ -16,7 +16,7 @@ const mapsUrl = computed(
       <h2 id="contact-title" class="section__title">{{ $t("nav.contact") }}</h2>
       <div class="card">
         <p>
-          <a v-if="cv.access_granted" :href="`mailto:${cv.email}`">{{ cv.email }}</a>
+          <span v-if="cv.access_granted">{{ cv.email }}</span>
           <Sensitive v-else :blurred="true">{{ cv.email }}</Sensitive>
           <span v-if="cv.phone">
             · <Sensitive :blurred="!cv.access_granted">{{ cv.phone }}</Sensitive>

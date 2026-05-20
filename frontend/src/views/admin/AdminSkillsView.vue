@@ -28,7 +28,7 @@
         <ul class="skill-list">
           <li v-for="skill in cat.skills" :key="skill.id" class="skill-row">
             <span class="skill-row__name">{{ skill.name }}</span>
-            <span class="skill-row__level">{{ "★".repeat(skill.level) }}</span>
+            <span class="skill-row__level">{{ levelLabel(skill.level) }}</span>
             <span class="skill-row__tech">
               {{ skill.technologies.map((t) => t.name).join(", ") }}
             </span>
@@ -120,6 +120,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { skillApi, skillCategoryApi, technologyApi } from "@/api/admin";
+import { useLevelLabel } from "@/composables/useLevelLabel";
 import type {
   Skill,
   SkillCategory,
@@ -127,6 +128,8 @@ import type {
   SkillWrite,
   Technology,
 } from "@/api/types";
+
+const levelLabel = useLevelLabel();
 
 type CategoryDraft = Partial<SkillCategoryWrite> & { id?: number };
 type SkillDraft = Partial<SkillWrite> & { id?: number };

@@ -10,6 +10,15 @@
     "projects": "Projekte",
     "contact": "Kontakt"
   },
+  "skills": {
+    "levels": {
+      "1": "Neuling",
+      "2": "Fortgeschrittener Anfänger",
+      "3": "Kompetent",
+      "4": "Versiert",
+      "5": "Experte"
+    }
+  },
   "timeline": {
     "title": "Werdegang",
     "lead": "Klick einen Eintrag, um Details zu sehen.",

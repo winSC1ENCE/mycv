@@ -1,8 +1,8 @@
 <template>
-  <VueDraggable v-model="localItems" handle=".drag-handle" item-key="id" @end="onEnd">
-    <template #item="{ element }">
+  <VueDraggable v-model="localItems" handle=".drag-handle" @end="onEnd">
+    <div v-for="element in localItems" :key="element.id">
       <slot name="item" :item="element" />
-    </template>
+    </div>
   </VueDraggable>
 </template>
 

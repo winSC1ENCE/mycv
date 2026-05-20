@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import { useLevelLabel } from "@/composables/useLevelLabel";
 import type { SkillCategory } from "@/api/types";
 
 defineProps<{ categories: SkillCategory[] }>();
 const { locale } = storeToRefs(useLocaleStore());
+const { t } = useI18n();
+const levelLabel = useLevelLabel();
 </script>
 
 <template>
@@ -13,26 +17,31 @@ const { locale } = storeToRefs(useLocaleStore());
     <div class="container">
       <h2 id="skills-title" class="section__title">{{ $t("nav.skills") }}</h2>
       <div class="grid grid--2">
-        <article v-for="cat in categories" :key="cat.id" class="card">
-          <h3>{{ pickLocalized(cat, "name", locale) }}</h3>
-          <ul style="list-style: none; padding: 0; margin: 0">
-            <li v-for="skill in cat.skills" :key="skill.id" style="margin-bottom: var(--space-3)">
-              <strong>{{ pickLocalized(skill, "name", locale) }}</strong>
+        <article v-for="cat in categories" :key="cat.id" class="card skill-card">
+          <h3 class="skill-card__title">{{ pickLocalized(cat, "name", locale) }}</h3>
+          <ul class="skill-list">
+            <li v-for="skill in cat.skills" :key="skill.id" class="skill-row">
+              <strong class="skill-row__name">{{ pickLocalized(skill, "name", locale) }}</strong>
               <div
-                class="skill-bar"
-                role="progressbar"
-                :aria-label="`${$t('labels.level')} ${skill.level} / 5`"
-                :aria-valuenow="skill.level"
-                aria-valuemin="0"
-                aria-valuemax="5"
+                class="skill-rating"
+                role="img"
+                :aria-label="`${t('labels.level')}: ${levelLabel(skill.level)} (${skill.level} / 5)`"
               >
-                <div class="skill-bar__fill" :style="{ width: `${(skill.level / 5) * 100}%` }" />
+                <span class="skill-dots" aria-hidden="true">
+                  <span
+                    v-for="n in 5"
+                    :key="n"
+                    class="skill-dot"
+                    :class="{ 'skill-dot--filled': n <= skill.level }"
+                  />
+                </span>
+                <span class="skill-level-label">{{ levelLabel(skill.level) }}</span>
               </div>
-              <div>
-                <span v-for="tech in skill.technologies" :key="tech.id" class="tag">{{
-                  tech.name
-                }}</span>
-              </div>
+              <ul v-if="skill.technologies.length" class="skill-tech">
+                <li v-for="tech in skill.technologies" :key="tech.id" class="tag">
+                  {{ tech.name }}
+                </li>
+              </ul>
             </li>
           </ul>
         </article>

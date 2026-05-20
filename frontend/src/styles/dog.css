@@ -103,22 +103,26 @@
   box-shadow: 2px 2px 0 var(--color-fg);
 }
 
-/* --- Skill bars: chunky Ben-Day-style blocks --- */
-[data-theme="dog"] .skill-bar {
+/* --- Skill dots: comic-book pen-stroke circles --- */
+[data-theme="dog"] .skill-dot {
+  background: transparent;
   border: 2px solid var(--color-fg);
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 4px,
-      rgba(0, 0, 0, 0.06) 4px,
-      rgba(0, 0, 0, 0.06) 5px
-    ),
-    var(--color-bg-elevated);
 }
-
-[data-theme="dog"] .skill-bar__fill {
+[data-theme="dog"] .skill-dot--filled {
   background: var(--color-fg);
+}
+[data-theme="dog"] .skill-level-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-fg);
+}
+[data-theme="dog"] .skill-row {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--color-fg);
+}
+[data-theme="dog"] .skill-row:hover {
+  background: transparent;
 }
 
 /* --- Alt timeline (central-axis, alternating, expandable) --- */

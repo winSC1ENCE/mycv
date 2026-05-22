@@ -3,6 +3,8 @@
 [data-theme="normal"] {
   --color-bg: #f7f8fb;
   --color-bg-elevated: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1f5f9;
   --color-fg: #0f172a;
   --color-fg-muted: #475569;
   --color-muted: #64748b;

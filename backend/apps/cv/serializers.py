@@ -58,6 +58,7 @@ class SkillCategorySerializer(serializers.ModelSerializer[models.SkillCategory])
 
 class ExperienceSerializer(serializers.ModelSerializer[models.Experience]):
     technologies = TechnologySerializer(many=True, read_only=True)
+    media = MediaAssetSerializer(read_only=True)
 
     class Meta:
         model = models.Experience
@@ -72,6 +73,7 @@ class ExperienceSerializer(serializers.ModelSerializer[models.Experience]):
             "description",
             "description_de",
             "technologies",
+            "media",
             "order",
             "is_published",
         ]
@@ -340,6 +342,7 @@ class ExperienceWriteSerializer(serializers.ModelSerializer[models.Experience]):
             "description",
             "description_de",
             "technologies",
+            "media",
             "order",
             "is_published",
         ]

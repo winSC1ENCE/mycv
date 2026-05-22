@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export type IconName = "map-pin" | "heart" | "cake" | "lock" | "mail" | "phone";
+export type IconName =
+  | "map-pin"
+  | "heart"
+  | "cake"
+  | "lock"
+  | "mail"
+  | "phone"
+  | "file-text";
 
 const props = withDefaults(
   defineProps<{ name: IconName; size?: number; ariaHidden?: boolean }>(),
@@ -18,6 +25,8 @@ const PATHS: Record<IconName, string> = {
   mail: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7 M22 17V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2Z",
   phone:
     "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z",
+  "file-text":
+    "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7l-5-5Z M14 2v4a2 2 0 0 0 2 2h4 M9 13h6 M9 17h6 M9 9h1",
 };
 
 const path = computed(() => PATHS[props.name]);

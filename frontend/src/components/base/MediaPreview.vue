@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import Icon from "@/components/base/Icon.vue";
+import ImageLightbox from "@/components/base/ImageLightbox.vue";
 import type { MediaAsset } from "@/api/types";
 
 const props = withDefaults(defineProps<{ media: MediaAsset; alt?: string }>(), { alt: "" });
 const { t } = useI18n();
 const locked = computed(() => !props.media.url);
-const pdfSrc = computed(() => `${props.media.url}#view=FitH`);
+const lightboxOpen = ref(false);
 </script>
 
 <template>
@@ -22,24 +23,34 @@ const pdfSrc = computed(() => `${props.media.url}#view=FitH`);
       <Icon name="lock" :size="32" />
       <span class="media-preview__locked-text">{{ t("timeline.locked_file") }}</span>
     </div>
-    <img
-      v-else-if="media.kind === 'image'"
-      :src="media.url"
-      :alt="media.alt_text || alt"
-      class="media-preview__img"
-    />
-    <div v-else-if="media.kind === 'document'" class="media-preview__document">
-      <embed
-        :src="pdfSrc"
-        type="application/pdf"
-        class="media-preview__embed"
-        :aria-label="media.alt_text || alt || 'Document'"
-      />
+    <template v-else-if="media.kind === 'image'">
+      <button
+        type="button"
+        class="media-preview__img-btn"
+        :aria-label="t('actions.zoom_image')"
+        @click="lightboxOpen = true"
+      >
+        <img
+          :src="media.url"
+          :alt="media.alt_text || alt"
+          class="media-preview__img"
+        />
+      </button>
+      <ImageLightbox v-model:open="lightboxOpen" :images="[media]" />
+    </template>
+    <div v-else-if="media.kind === 'document'" class="media-preview__pdf-card">
+      <Icon name="file-text" :size="40" class="media-preview__pdf-icon" />
+      <div class="media-preview__pdf-meta">
+        <span class="media-preview__pdf-title">
+          {{ media.alt_text || alt || "Document" }}
+        </span>
+        <span class="media-preview__pdf-hint">PDF</span>
+      </div>
       <a
         :href="media.url"
         target="_blank"
         rel="noopener"
-        class="media-preview__fallback"
+        class="media-preview__pdf-button"
       >
         {{ t("actions.openPdf") }}
       </a>
@@ -58,31 +69,77 @@ const pdfSrc = computed(() => `${props.media.url}#view=FitH`);
   width: 100%;
 }
 
+.media-preview__img-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+}
+
+.media-preview__img-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .media-preview__img {
   max-width: 100%;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
+  display: block;
 }
 
-.media-preview__document {
+.media-preview__pdf-card {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.media-preview__embed {
-  width: 100%;
-  min-height: 540px;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface, #ffffff);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background: var(--color-surface);
 }
 
-.media-preview__fallback {
-  align-self: flex-start;
-  font-size: 0.875rem;
+.media-preview__pdf-icon {
   color: var(--color-accent);
-  text-decoration: underline;
+  flex-shrink: 0;
+}
+
+.media-preview__pdf-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.media-preview__pdf-title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.media-preview__pdf-hint {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.media-preview__pdf-button {
+  background: var(--color-accent);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.media-preview__pdf-button:hover {
+  filter: brightness(0.92);
 }
 
 .media-preview__video {
@@ -163,10 +220,19 @@ const pdfSrc = computed(() => `${props.media.url}#view=FitH`);
   box-shadow: 4px 4px 0 var(--color-fg);
 }
 
-[data-theme="dog"] .media-preview__embed,
 [data-theme="dog"] .media-preview__img,
 [data-theme="dog"] .media-preview__video {
   border-radius: 0;
   border: 3px solid var(--color-fg);
+}
+
+[data-theme="dog"] .media-preview__pdf-card {
+  border-radius: 0;
+  border: 3px solid var(--color-fg);
+  box-shadow: 4px 4px 0 var(--color-fg);
+}
+
+[data-theme="dog"] .media-preview__pdf-button {
+  border-radius: 0;
 }
 </style>

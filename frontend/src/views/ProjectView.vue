@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useCvStore } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
 import { usePageMeta } from "@/composables/usePageMeta";
+import ImageLightbox from "@/components/base/ImageLightbox.vue";
 
 const props = defineProps<{ slug: string }>();
 
@@ -20,32 +21,6 @@ const summary = computed(() => pickLocalized(project.value, "summary", locale.va
 const activeIdx = ref(0);
 const activeImage = computed(() => project.value?.media[activeIdx.value] ?? null);
 const lightboxOpen = ref(false);
-
-function mediaCount(): number {
-  return project.value?.media.length ?? 0;
-}
-
-function prevPhoto(): void {
-  const n = mediaCount();
-  if (n === 0) return;
-  activeIdx.value = (activeIdx.value - 1 + n) % n;
-}
-
-function nextPhoto(): void {
-  const n = mediaCount();
-  if (n === 0) return;
-  activeIdx.value = (activeIdx.value + 1) % n;
-}
-
-function onKeydown(e: KeyboardEvent): void {
-  if (!lightboxOpen.value) return;
-  if (e.key === "Escape") lightboxOpen.value = false;
-  else if (e.key === "ArrowLeft") prevPhoto();
-  else if (e.key === "ArrowRight") nextPhoto();
-}
-
-onMounted(() => window.addEventListener("keydown", onKeydown));
-onUnmounted(() => window.removeEventListener("keydown", onKeydown));
 
 usePageMeta({
   title: () => (name.value ? `${name.value} — Project` : "Project"),
@@ -93,48 +68,12 @@ usePageMeta({
           </div>
         </div>
 
-        <Teleport to="body">
-          <div
-            v-if="lightboxOpen"
-            class="lightbox"
-            role="dialog"
-            aria-modal="true"
-            @click.self="lightboxOpen = false"
-          >
-            <button
-              type="button"
-              class="lightbox__close"
-              :aria-label="$t('actions.close')"
-              @click="lightboxOpen = false"
-            >
-              ✕
-            </button>
-            <button
-              v-if="project.media.length > 1"
-              type="button"
-              class="lightbox__nav lightbox__nav--prev"
-              :aria-label="$t('actions.previous')"
-              @click.stop="prevPhoto"
-            >
-              ‹
-            </button>
-            <img
-              v-if="activeImage"
-              :src="activeImage.url"
-              :alt="activeImage.alt_text || name"
-              class="lightbox__img"
-            />
-            <button
-              v-if="project.media.length > 1"
-              type="button"
-              class="lightbox__nav lightbox__nav--next"
-              :aria-label="$t('actions.next')"
-              @click.stop="nextPhoto"
-            >
-              ›
-            </button>
-          </div>
-        </Teleport>
+        <ImageLightbox
+          v-model:open="lightboxOpen"
+          :images="project.media"
+          :initial-index="activeIdx"
+          @update:initial-index="activeIdx = $event"
+        />
 
         <p v-if="description" class="project-detail__desc">{{ description }}</p>
         <p v-if="project.url">
@@ -256,72 +195,5 @@ usePageMeta({
 
 [data-theme="dog"] .project-gallery__thumb-img {
   filter: grayscale(1) contrast(1.1);
-}
-
-/* Lightbox */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: var(--space-4);
-}
-
-.lightbox__img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  display: block;
-  border-radius: var(--radius-md);
-}
-
-.lightbox__close,
-.lightbox__nav {
-  position: absolute;
-  background: rgba(0, 0, 0, 0.6);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 1.5rem;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 120ms;
-}
-
-.lightbox__close:hover,
-.lightbox__nav:hover {
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.lightbox__close {
-  top: var(--space-4);
-  right: var(--space-4);
-}
-
-.lightbox__nav--prev {
-  left: var(--space-4);
-}
-
-.lightbox__nav--next {
-  right: var(--space-4);
-}
-
-[data-theme="dog"] .lightbox__close,
-[data-theme="dog"] .lightbox__nav {
-  border-radius: 0;
-  border: 2px solid #fff;
-}
-
-[data-theme="dog"] .lightbox__img {
-  border-radius: 0;
-  filter: grayscale(1) contrast(1.1);
-  border: 3px solid #fff;
 }
 </style>

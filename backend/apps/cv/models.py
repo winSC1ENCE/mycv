@@ -151,6 +151,13 @@ class Experience(Orderable):
     description = models.TextField(blank=True)
     description_de = models.TextField(blank=True)
     technologies = models.ManyToManyField(Technology, blank=True, related_name="experiences")
+    media = models.ForeignKey(
+        MediaAsset,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="experiences",
+    )
 
     class Meta(Orderable.Meta):
         ordering = ["-start_date", "order"]

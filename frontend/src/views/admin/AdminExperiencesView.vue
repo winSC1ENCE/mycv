@@ -56,6 +56,14 @@
             {{ $t("admin.fields.description_de") }}
             <textarea v-model="editing.description_de" rows="3"></textarea>
           </label>
+          <div class="field-group">
+            <span class="field-group__label">{{ $t("admin.fields.mediaFile") }}</span>
+            <FileUpload accept="image/*,application/pdf" @uploaded="onMediaUploaded" />
+            <span v-if="editing.media" class="field-group__hint">
+              Current: ID {{ editing.media }}
+            </span>
+          </div>
+
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -78,7 +86,8 @@
 import { computed, ref, onMounted } from "vue";
 import { experienceApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import type { Experience, ExperienceWrite } from "@/api/types";
+import type { Experience, ExperienceWrite, MediaAsset } from "@/api/types";
+import FileUpload from "@/components/admin/FileUpload.vue";
 import SortableList from "@/components/admin/SortableList.vue";
 
 type Draft = Partial<ExperienceWrite> & { id?: number };
@@ -120,12 +129,22 @@ function openNew(): void {
     end_date: null,
     description: "",
     description_de: "",
+    media: null,
     is_published: true,
   };
 }
 
 function openEdit(item: Experience): void {
-  editing.value = { ...item, technologies: item.technologies.map((t) => t.id) };
+  const { media, technologies, ...rest } = item;
+  editing.value = {
+    ...rest,
+    technologies: technologies.map((t) => t.id),
+    media: media?.id ?? null,
+  };
+}
+
+function onMediaUploaded(asset: MediaAsset): void {
+  if (editing.value) editing.value.media = asset.id;
 }
 
 async function save(): Promise<void> {

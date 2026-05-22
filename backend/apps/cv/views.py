@@ -58,6 +58,7 @@ class PersonViewSet(viewsets.ModelViewSet[models.Person]):
 
     queryset = models.Person.objects.prefetch_related(
         "experiences__technologies",
+        "experiences__media",
         "educations",
         "certificates__media",
         "projects__technologies",
@@ -116,6 +117,7 @@ class AdminCvView(APIView):
         person = (
             models.Person.objects.prefetch_related(
                 "experiences__technologies",
+                "experiences__media",
                 "educations",
                 "certificates__media",
                 "projects__technologies",

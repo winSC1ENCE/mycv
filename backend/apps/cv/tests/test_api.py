@@ -35,7 +35,8 @@ def _populated_person() -> models.Person:
     cat = SkillCategoryFactory(slug="backend", name="Backend")
     skill = SkillFactory(category=cat)
     skill.technologies.add(tech)
-    exp = ExperienceFactory(person=person)
+    exp_media = MediaAssetFactory()
+    exp = ExperienceFactory(person=person, media=exp_media)
     exp.technologies.add(tech)
     EducationFactory(person=person)
     media = MediaAssetFactory()
@@ -63,6 +64,10 @@ def test_cv_list_returns_primary_person(api_client: APIClient) -> None:
     assert len(body["timeline_entries"]) == 1
     assert len(body["skill_categories"]) == 1
     assert body["skill_categories"][0]["skills"][0]["technologies"][0]["slug"] == "python"
+    exp_payload = body["experiences"][0]
+    assert exp_payload["media"] is not None
+    assert exp_payload["media"]["kind"] == "image"
+    assert exp_payload["media"]["url"]
 
 
 def test_cv_list_404_when_no_published_person(api_client: APIClient) -> None:

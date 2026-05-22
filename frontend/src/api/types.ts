@@ -55,6 +55,7 @@ export interface Experience {
   description: string;
   description_de: string;
   technologies: Technology[];
+  media: MediaAsset | null;
   order: number;
   is_published: boolean;
 }
@@ -140,8 +141,9 @@ export interface Page<T> {
 // Write payloads (flat, FK fields as IDs)
 // ---------------------------------------------------------------------------
 
-export type ExperienceWrite = Omit<Experience, "technologies"> & {
+export type ExperienceWrite = Omit<Experience, "technologies" | "media"> & {
   technologies: number[];
+  media?: number | null;
   person?: number;
 };
 export type EducationWrite = Education & { person?: number };

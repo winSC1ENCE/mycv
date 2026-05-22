@@ -24,7 +24,9 @@
 
     <!-- Created URL -->
     <div v-if="createdUrl" class="access-key-url">
-      <p><strong>{{ $t("admin.accessKeys.urlReady") }}</strong></p>
+      <p>
+        <strong>{{ $t("admin.accessKeys.urlReady") }}</strong>
+      </p>
       <code class="access-key-url__code">{{ createdUrl }}</code>
       <button class="btn btn--ghost" @click="copyUrl">{{ $t("admin.accessKeys.copyUrl") }}</button>
       <span v-if="copied" class="access-key-url__copied">

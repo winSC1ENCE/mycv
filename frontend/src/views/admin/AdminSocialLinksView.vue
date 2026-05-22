@@ -40,7 +40,9 @@
             </select>
           </label>
           <label>{{ $t("admin.fields.label") }}<input v-model="editing.label" /></label>
-          <label>{{ $t("admin.fields.url") }}<input v-model="editing.url" type="url" required /></label>
+          <label
+            >{{ $t("admin.fields.url") }}<input v-model="editing.url" type="url" required
+          /></label>
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}

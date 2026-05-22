@@ -30,11 +30,7 @@ const lightboxOpen = ref(false);
         :aria-label="t('actions.zoom_image')"
         @click="lightboxOpen = true"
       >
-        <img
-          :src="media.url"
-          :alt="media.alt_text || alt"
-          class="media-preview__img"
-        />
+        <img :src="media.url" :alt="media.alt_text || alt" class="media-preview__img" />
       </button>
       <ImageLightbox v-model:open="lightboxOpen" :images="[media]" />
     </template>
@@ -46,12 +42,7 @@ const lightboxOpen = ref(false);
         </span>
         <span class="media-preview__pdf-hint">PDF</span>
       </div>
-      <a
-        :href="media.url"
-        target="_blank"
-        rel="noopener"
-        class="media-preview__pdf-button"
-      >
+      <a :href="media.url" target="_blank" rel="noopener" class="media-preview__pdf-button">
         {{ t("actions.openPdf") }}
       </a>
     </div>
@@ -156,12 +147,11 @@ const lightboxOpen = ref(false);
   gap: 10px;
   width: 100%;
   min-height: 200px;
-  background:
-    radial-gradient(
-      ellipse at center,
-      var(--color-surface) 0%,
-      var(--color-surface-alt, var(--color-bg, #f4f4f5)) 100%
-    );
+  background: radial-gradient(
+    ellipse at center,
+    var(--color-surface) 0%,
+    var(--color-surface-alt, var(--color-bg, #f4f4f5)) 100%
+  );
   backdrop-filter: blur(8px);
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);

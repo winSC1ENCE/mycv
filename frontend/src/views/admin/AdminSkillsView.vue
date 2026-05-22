@@ -18,9 +18,7 @@
             <span class="entity-row__sub">{{ cat.skills.length }} skills</span>
           </div>
           <div class="entity-row__actions">
-            <button class="btn" @click="openNewSkill(cat.id)">
-              + {{ $t("admin.addSkill") }}
-            </button>
+            <button class="btn" @click="openNewSkill(cat.id)">+ {{ $t("admin.addSkill") }}</button>
             <button class="btn-icon" @click="openEditCategory(cat)">✏</button>
             <button class="btn-icon btn-icon--danger" @click="removeCategory(cat.id)">✕</button>
           </div>
@@ -48,9 +46,13 @@
           {{ editingCategory.id ? $t("admin.edit") : $t("admin.add") }}
         </h2>
         <form class="entity-form" @submit.prevent="saveCategory">
-          <label>{{ $t("admin.fields.name") }}<input v-model="editingCategory.name" required /></label>
+          <label
+            >{{ $t("admin.fields.name") }}<input v-model="editingCategory.name" required
+          /></label>
           <label>{{ $t("admin.fields.name_de") }}<input v-model="editingCategory.name_de" /></label>
-          <label>{{ $t("admin.fields.slug") }}<input v-model="editingCategory.slug" required /></label>
+          <label
+            >{{ $t("admin.fields.slug") }}<input v-model="editingCategory.slug" required
+          /></label>
           <label class="label--checkbox">
             <input v-model="editingCategory.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -83,22 +85,12 @@
           </label>
           <label>
             {{ $t("admin.fields.level") }}
-            <input
-              v-model.number="editingSkill.level"
-              type="number"
-              min="1"
-              max="5"
-              required
-            />
+            <input v-model.number="editingSkill.level" type="number" min="1" max="5" required />
           </label>
           <label>
             {{ $t("admin.nav.technologies") }}
             <select v-model="editingSkill.technologies" multiple size="10">
-              <optgroup
-                v-for="[cat, techs] in groupedTechnologies"
-                :key="cat"
-                :label="cat"
-              >
+              <optgroup v-for="[cat, techs] in groupedTechnologies" :key="cat" :label="cat">
                 <option v-for="tech in techs" :key="tech.id" :value="tech.id">
                   {{ tech.name }}
                 </option>
@@ -128,13 +120,7 @@ import { computed, onMounted, ref } from "vue";
 import { skillApi, skillCategoryApi, technologyApi } from "@/api/admin";
 import { useLevelLabel } from "@/composables/useLevelLabel";
 import { useEscClose } from "@/composables/useEscClose";
-import type {
-  Skill,
-  SkillCategory,
-  SkillCategoryWrite,
-  SkillWrite,
-  Technology,
-} from "@/api/types";
+import type { Skill, SkillCategory, SkillCategoryWrite, SkillWrite, Technology } from "@/api/types";
 
 const levelLabel = useLevelLabel();
 

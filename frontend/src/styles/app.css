@@ -178,10 +178,18 @@ p {
   text-align: right;
 }
 
-.timeline__row--experience  { --kind-accent: #2563eb; }
-.timeline__row--education   { --kind-accent: #16a34a; }
-.timeline__row--certificate { --kind-accent: #d97706; }
-.timeline__row--milestone   { --kind-accent: #7c3aed; }
+.timeline__row--experience {
+  --kind-accent: #2563eb;
+}
+.timeline__row--education {
+  --kind-accent: #16a34a;
+}
+.timeline__row--certificate {
+  --kind-accent: #d97706;
+}
+.timeline__row--milestone {
+  --kind-accent: #7c3aed;
+}
 
 .timeline__node {
   grid-column: 2;

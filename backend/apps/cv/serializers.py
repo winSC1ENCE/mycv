@@ -274,7 +274,14 @@ class AccessKeySerializer(serializers.ModelSerializer[models.AccessKey]):
     class Meta:
         model = models.AccessKey
         fields = [
-            "id", "person", "token", "label", "expires_at", "is_active", "created_at", "is_valid"
+            "id",
+            "person",
+            "token",
+            "label",
+            "expires_at",
+            "is_active",
+            "created_at",
+            "is_valid",
         ]
         read_only_fields = ["token", "created_at", "is_valid"]
 

@@ -90,16 +90,12 @@ class PersonViewSet(viewsets.ModelViewSet[models.Person]):
         if person is None:
             raise NotFound("No published Person record exists.")
         ctx = {**self.get_serializer_context(), "access_granted": _resolve_access(request)}
-        return Response(
-            self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK
-        )
+        return Response(self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK)
 
     def retrieve(self, request: Request, *args: object, **kwargs: object) -> Response:
         person = self.get_object()
         ctx = {**self.get_serializer_context(), "access_granted": _resolve_access(request)}
-        return Response(
-            self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK
-        )
+        return Response(self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK)
 
 
 class AdminCvView(APIView):

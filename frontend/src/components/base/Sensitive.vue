@@ -113,11 +113,7 @@ const resolvedTooltip = computed(() => props.tooltip ?? t("sensitive.tooltip"));
 
 [data-theme="dog"] .sensitive--blurred .sensitive__text {
   filter: none;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--color-fg) 0 10px,
-    transparent 10px 14px
-  );
+  background: repeating-linear-gradient(90deg, var(--color-fg) 0 10px, transparent 10px 14px);
   color: transparent;
   border-radius: 2px;
 }

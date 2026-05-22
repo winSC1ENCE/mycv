@@ -38,12 +38,18 @@
   background-repeat: repeat;
 }
 
-[data-theme="dog"] body::before { left: 0; }
-[data-theme="dog"] body::after  { right: 0; }
+[data-theme="dog"] body::before {
+  left: 0;
+}
+[data-theme="dog"] body::after {
+  right: 0;
+}
 
 @media (max-width: 720px) {
   [data-theme="dog"] body::before,
-  [data-theme="dog"] body::after { display: none; }
+  [data-theme="dog"] body::after {
+    display: none;
+  }
 }
 
 /* --- Headings: hand-drawn rotation --- */
@@ -153,8 +159,7 @@
 
 /* Spine = paw print trail */
 [data-theme="dog"] .timeline--alt::before {
-  background:
-    url("/icons/dog/paw-trail.svg") center top / 96px auto repeat-y;
+  background: url("/icons/dog/paw-trail.svg") center top / 96px auto repeat-y;
   width: 96px;
   border-radius: 0;
   -webkit-mask-image: none;

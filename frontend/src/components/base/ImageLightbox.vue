@@ -80,11 +80,7 @@ onUnmounted(() => window.removeEventListener("keydown", onKeydown));
       >
         ‹
       </button>
-      <img
-        :src="activeImage.url"
-        :alt="activeImage.alt_text || ''"
-        class="image-lightbox__img"
-      />
+      <img :src="activeImage.url" :alt="activeImage.alt_text || ''" class="image-lightbox__img" />
       <button
         v-if="multi"
         type="button"

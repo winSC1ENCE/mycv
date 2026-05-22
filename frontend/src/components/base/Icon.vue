@@ -1,19 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-export type IconName =
-  | "map-pin"
-  | "heart"
-  | "cake"
-  | "lock"
-  | "mail"
-  | "phone"
-  | "file-text";
+export type IconName = "map-pin" | "heart" | "cake" | "lock" | "mail" | "phone" | "file-text";
 
-const props = withDefaults(
-  defineProps<{ name: IconName; size?: number; ariaHidden?: boolean }>(),
-  { size: 16, ariaHidden: true },
-);
+const props = withDefaults(defineProps<{ name: IconName; size?: number; ariaHidden?: boolean }>(), {
+  size: 16,
+  ariaHidden: true,
+});
 
 const PATHS: Record<IconName, string> = {
   "map-pin":

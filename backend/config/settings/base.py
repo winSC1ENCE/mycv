@@ -116,7 +116,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "mycv API",
-    "DESCRIPTION": "REST API for the cv.chlous.top interactive CV.",
+    "DESCRIPTION": "REST API for the mycv interactive CV.",
     "VERSION": "0.1.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,

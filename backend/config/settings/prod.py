@@ -1,4 +1,4 @@
-"""Production settings — Hetzner deploy behind Caddy."""
+"""Production settings — Docker deploy behind a reverse proxy."""
 
 from .base import *  # noqa: F403
 from .base import env
@@ -17,7 +17,7 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=["https://cv.chlous.top"])
+CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
 # CSP — strict production policy (django-csp 4.x DIRECTIVES format)
 CONTENT_SECURITY_POLICY = {

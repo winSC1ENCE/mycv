@@ -99,9 +99,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-  # ── 3. SSH deploy to Hetzner (skipped until DEPLOY_HOST var is set) ──────
+  # ── 3. SSH deploy (skipped until DEPLOY_HOST var is set) ──────
   deploy:
-    name: Deploy to Hetzner
+    name: Deploy via SSH
     runs-on: ubuntu-latest
     needs: build_push
     # Set the DEPLOY_HOST repository variable to activate this job.

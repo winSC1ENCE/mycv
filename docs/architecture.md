@@ -145,7 +145,7 @@ Playwright spawns a dedicated backend on port 8001 with `DATABASE_URL=sqlite:///
 
 ## Deployment
 
-See [deployment.md](deployment.md) for the full Hetzner setup.
+See [deployment.md](deployment.md) for the self-host deployment guide.
 
 ## Domain model
 

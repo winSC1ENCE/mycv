@@ -1,7 +1,8 @@
-# Merge this snippet into the existing Caddyfile on the Hetzner host.
+# Merge this snippet into the existing Caddyfile on your host.
+# Replace your-domain.tld with your actual hostname before reloading Caddy.
 # See docs/deployment.md for step-by-step instructions.
 
-cv.chlous.top {
+your-domain.tld {
     encode gzip zstd
 
     header {

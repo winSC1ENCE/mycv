@@ -73,7 +73,7 @@ onMounted(() => {
 
   <footer class="footer">
     <div class="container">
-      <p>© {{ new Date().getFullYear() }} {{ cv ? cv.full_name : "" }} · cv.chlous.top</p>
+      <p>© {{ new Date().getFullYear() }} {{ cv ? cv.full_name : "" }}</p>
     </div>
   </footer>
 </template>

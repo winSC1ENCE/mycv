@@ -19,6 +19,8 @@ erDiagram
     Skill       }o--|| SkillCategory : "in"
     Skill       }o--o{ Technology    : "implies (M2M)"
     Certificate ||--o| MediaAsset    : "attaches"
+    Experience  }o--o| MediaAsset    : "attaches"
+    Person      ||--o{ AccessKey     : "issues"
 
     Person {
         string slug PK
@@ -27,6 +29,11 @@ erDiagram
         string title
         string title_de
         string email
+        string phone
+        string address
+        string zivilstand
+        date date_of_birth
+        string location
         string summary
         string summary_de
     }
@@ -37,26 +44,38 @@ erDiagram
         string role
         string role_de
         string company
+        string location
         date start_date
         date end_date
         string description
+        string description_de
+        int media FK
     }
 
     Education {
         int id PK
         string person FK
         string degree
+        string degree_de
         string institution
+        string location
         date start_date
         date end_date
+        string description
+        string description_de
     }
 
     Certificate {
         int id PK
         string person FK
+        int experience FK
+        int education FK
         string name
+        string name_de
         string issuer
         date issue_date
+        string description
+        string description_de
         int media FK
     }
 
@@ -64,7 +83,11 @@ erDiagram
         string slug PK
         string person FK
         string name
+        string name_de
         string summary
+        string summary_de
+        string description
+        string description_de
         string url
         string repo_url
     }
@@ -73,7 +96,16 @@ erDiagram
         string slug PK
         string name
         string category
-        string icon
+    }
+
+    AccessKey {
+        int id PK
+        string person FK
+        string token UK
+        string label
+        datetime expires_at
+        bool is_active
+        datetime created_at
     }
 
     SkillCategory {
@@ -127,4 +159,4 @@ This is a single-person CV. The data model is deliberately Person-rooted rather 
 
 ## Migration churn warning
 
-The `Orderable` mixin + bilingual field pattern means every schema migration touches many rows. Migrations are designed to be additive: prefer adding nullable columns over reshaping existing ones. The current migrations directory contains exactly one initial migration per app (`0001_initial.py`).
+The `Orderable` mixin + bilingual field pattern means every schema migration touches many rows. Migrations are designed to be additive: prefer adding nullable columns over reshaping existing ones. Look at the existing chain in `backend/apps/cv/migrations/` for the established pattern (initial → AccessKey + sensitive person fields → Technology icon removal → Experience media FK).

@@ -1,7 +1,7 @@
 [project]
 name = "mycv-backend"
 version = "0.1.0"
-description = "Django backend for the mycv interactive CV at cv.chlous.top"
+description = "Django backend for the mycv interactive CV"
 readme = "../README.md"
 requires-python = ">=3.14"
 dependencies = [

@@ -67,8 +67,8 @@ export const socialLinkApi = crud<SocialLink, SocialLinkWrite>("/social-links");
 
 export const personApi = {
   async retrieve(): Promise<Cv> {
-    // /api/cv/ returns the primary published person directly (not paginated).
-    const { data } = await http.get<Cv>(`/cv/`);
+    // Admin endpoint returns unredacted data (staff-only, no ?key= needed).
+    const { data } = await http.get<Cv>(`/admin/cv/`);
     return data;
   },
   async update(slug: string, payload: Partial<PersonWrite>): Promise<Cv> {

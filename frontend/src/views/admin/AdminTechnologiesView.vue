@@ -53,10 +53,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { technologyApi } from "@/api/admin";
 import { extractApiError } from "@/api/errors";
 import { slugify } from "@/utils/slugify";
+import { useEscClose } from "@/composables/useEscClose";
 import type { Technology, TechnologyWrite } from "@/api/types";
 
 type Draft = Partial<TechnologyWrite> & { id?: number };
@@ -68,6 +69,13 @@ const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
 
 onMounted(load);
+
+useEscClose(
+  () => {
+    editing.value = null;
+  },
+  computed(() => editing.value !== null),
+);
 
 async function load(): Promise<void> {
   loading.value = true;

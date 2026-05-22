@@ -59,8 +59,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { socialLinkApi } from "@/api/admin";
+import { useEscClose } from "@/composables/useEscClose";
 import type { SocialLink, SocialLinkWrite } from "@/api/types";
 
 type Draft = Partial<SocialLinkWrite> & { id?: number };
@@ -72,6 +73,13 @@ const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
 
 onMounted(load);
+
+useEscClose(
+  () => {
+    editing.value = null;
+  },
+  computed(() => editing.value !== null),
+);
 
 async function load(): Promise<void> {
   loading.value = true;

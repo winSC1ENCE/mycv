@@ -240,6 +240,66 @@ class TestProjectMediaMaxSix:
 
 
 @pytest.mark.django_db
+class TestAdminCvEndpoint:
+    def test_anonymous_returns_403(self, person: models.Person) -> None:
+        response = APIClient().get("/api/admin/cv/")
+        assert response.status_code in (401, 403)
+
+    def test_non_staff_user_returns_403(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        regular = django_user_model.objects.create_user(username="regular", password="pass")
+        client = APIClient()
+        client.force_authenticate(user=regular)
+        response = client.get("/api/admin/cv/")
+        assert response.status_code == 403
+
+    def test_staff_user_sees_unredacted_data(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        response = client.get("/api/admin/cv/")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["access_granted"] is True
+        assert data["email"] == "nicolas@example.com"
+        assert data["phone"] == "+41 79 123 45 67"
+        assert data["address"] == "Musterstrasse 1, 3000 Bern"
+        assert data["zivilstand"] == "ledig"
+        assert data["date_of_birth"] == "1990-05-15"
+
+    def test_staff_user_with_no_person_returns_404(self, django_user_model: type) -> None:
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        response = client.get("/api/admin/cv/")
+        assert response.status_code == 404
+
+    def test_staff_user_sees_real_certificate_media_url(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        media = MediaAssetFactory()
+        CertificateFactory(person=person, media=media, name="Cert")
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        response = client.get("/api/admin/cv/")
+        assert response.status_code == 200
+        certs = response.json()["certificates"]
+        assert len(certs) == 1
+        assert certs[0]["media"]["url"]
+        assert certs[0]["media"]["url"] != ""
+
+
+@pytest.mark.django_db
 class TestAccessKeyWriteSerializer:
     def test_create_response_returns_token(
         self, person: models.Person, django_user_model: type

@@ -25,11 +25,11 @@ function mountSensitive(blurred: boolean, tooltip?: string) {
 }
 
 describe("Sensitive.vue", () => {
-  it("renders slot content when not blurred", () => {
+  it("renders slot content unblurred when not blurred", () => {
     const wrapper = mountSensitive(false);
     expect(wrapper.text()).toBe("secret@example.com");
     expect(wrapper.classes()).not.toContain("sensitive--blurred");
-    expect(wrapper.attributes("title")).toBeUndefined();
+    expect(wrapper.find(".sensitive__chip").exists()).toBe(false);
   });
 
   it("adds blurred class when blurred=true", () => {
@@ -37,25 +37,36 @@ describe("Sensitive.vue", () => {
     expect(wrapper.classes()).toContain("sensitive--blurred");
   });
 
-  it("shows default tooltip from i18n when blurred", () => {
+  it("renders a lock chip with data-tooltip when blurred", () => {
     const wrapper = mountSensitive(true);
-    expect(wrapper.attributes("title")).toBe("Order access via cv@chlous.top");
+    const chip = wrapper.find(".sensitive__chip");
+    expect(chip.exists()).toBe(true);
+    expect(chip.attributes("data-tooltip")).toBe("Order access via cv@chlous.top");
+    expect(chip.find("svg[data-icon='lock']").exists()).toBe(true);
   });
 
-  it("shows custom tooltip when provided", () => {
+  it("uses custom tooltip when provided", () => {
     const wrapper = mountSensitive(true, "Custom tooltip");
-    expect(wrapper.attributes("title")).toBe("Custom tooltip");
+    expect(wrapper.find(".sensitive__chip").attributes("data-tooltip")).toBe(
+      "Custom tooltip",
+    );
   });
 
-  it("sets aria-label when blurred for screen readers", () => {
+  it("sets aria-label on the chip for screen readers", () => {
     const wrapper = mountSensitive(true);
-    expect(wrapper.attributes("aria-label")).toBe(
+    expect(wrapper.find(".sensitive__chip").attributes("aria-label")).toBe(
       "Sensitive — request access via cv@chlous.top",
     );
   });
 
-  it("has no aria-label when not blurred", () => {
+  it("has no chip when not blurred", () => {
     const wrapper = mountSensitive(false);
-    expect(wrapper.attributes("aria-label")).toBeUndefined();
+    expect(wrapper.find(".sensitive__chip").exists()).toBe(false);
+  });
+
+  it("does not set native title attribute (uses custom tooltip instead)", () => {
+    const wrapper = mountSensitive(true);
+    expect(wrapper.attributes("title")).toBeUndefined();
+    expect(wrapper.find(".sensitive__chip").attributes("title")).toBeUndefined();
   });
 });

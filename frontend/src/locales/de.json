@@ -44,7 +44,8 @@
     "zoom_image": "Bild vergrössern",
     "close": "Schliessen",
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "openPdf": "PDF öffnen"
   },
   "labels": {
     "present": "Heute",

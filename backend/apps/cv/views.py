@@ -12,6 +12,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import BaseSerializer
+from rest_framework.views import APIView
 
 from . import models, serializers
 from .permissions import IsAdminOrReadOnly
@@ -98,6 +99,38 @@ class PersonViewSet(viewsets.ModelViewSet[models.Person]):
         return Response(
             self.get_serializer(person, context=ctx).data, status=status.HTTP_200_OK
         )
+
+
+class AdminCvView(APIView):
+    """Admin-only CV endpoint that always returns unredacted data.
+
+    Public ``/api/cv/`` still requires a valid ``?key=`` token to unlock
+    sensitive fields. The admin SPA uses this endpoint instead so it can
+    render real values once the user has logged in.
+    """
+
+    permission_classes = [permissions.IsAdminUser]
+
+    @extend_schema(responses=serializers.PersonDetailSerializer)
+    def get(self, request: Request) -> Response:
+        person = (
+            models.Person.objects.prefetch_related(
+                "experiences__technologies",
+                "educations",
+                "certificates__media",
+                "projects__technologies",
+                "projects__media",
+                "social_links",
+                "timeline_entries",
+            )
+            .order_by("order", "id")
+            .first()
+        )
+        if person is None:
+            raise NotFound("No Person record exists.")
+        ctx: dict[str, Any] = {"request": request, "view": self, "access_granted": True}
+        data = serializers.PersonDetailSerializer(person, context=ctx).data
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class ExperienceViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Experience]):

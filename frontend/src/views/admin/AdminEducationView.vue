@@ -70,8 +70,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { educationApi } from "@/api/admin";
+import { useEscClose } from "@/composables/useEscClose";
 import type { Education } from "@/api/types";
 import SortableList from "@/components/admin/SortableList.vue";
 
@@ -84,6 +85,13 @@ const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
 
 onMounted(load);
+
+useEscClose(
+  () => {
+    editing.value = null;
+  },
+  computed(() => editing.value !== null),
+);
 
 async function load(): Promise<void> {
   loading.value = true;

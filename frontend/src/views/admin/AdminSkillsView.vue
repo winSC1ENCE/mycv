@@ -93,10 +93,16 @@
           </label>
           <label>
             {{ $t("admin.nav.technologies") }}
-            <select v-model="editingSkill.technologies" multiple size="6">
-              <option v-for="tech in technologies" :key="tech.id" :value="tech.id">
-                {{ tech.name }}
-              </option>
+            <select v-model="editingSkill.technologies" multiple size="10">
+              <optgroup
+                v-for="[cat, techs] in groupedTechnologies"
+                :key="cat"
+                :label="cat"
+              >
+                <option v-for="tech in techs" :key="tech.id" :value="tech.id">
+                  {{ tech.name }}
+                </option>
+              </optgroup>
             </select>
             <span class="field-hint">{{ $t("admin.multiSelectHint") }}</span>
           </label>
@@ -118,9 +124,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { skillApi, skillCategoryApi, technologyApi } from "@/api/admin";
 import { useLevelLabel } from "@/composables/useLevelLabel";
+import { useEscClose } from "@/composables/useEscClose";
 import type {
   Skill,
   SkillCategory,
@@ -130,6 +137,17 @@ import type {
 } from "@/api/types";
 
 const levelLabel = useLevelLabel();
+
+const groupedTechnologies = computed((): Array<[string, Technology[]]> => {
+  const map = new Map<string, Technology[]>();
+  for (const t of technologies.value) {
+    const cat = t.category || "Other";
+    const bucket = map.get(cat) ?? [];
+    bucket.push(t);
+    map.set(cat, bucket);
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
+});
 
 type CategoryDraft = Partial<SkillCategoryWrite> & { id?: number };
 type SkillDraft = Partial<SkillWrite> & { id?: number };
@@ -145,6 +163,14 @@ const saveError = ref<string | null>(null);
 onMounted(async () => {
   await Promise.all([load(), loadTechnologies()]);
 });
+
+useEscClose(
+  () => {
+    editingSkill.value = null;
+    editingCategory.value = null;
+  },
+  computed(() => editingSkill.value !== null || editingCategory.value !== null),
+);
 
 async function load(): Promise<void> {
   loading.value = true;

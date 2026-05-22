@@ -44,7 +44,8 @@
     "zoom_image": "Zoom image",
     "close": "Close",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "openPdf": "Open PDF"
   },
   "labels": {
     "present": "Present",

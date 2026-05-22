@@ -102,10 +102,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { projectApi } from "@/api/admin";
 import { extractApiError } from "@/api/errors";
 import { slugify } from "@/utils/slugify";
+import { useEscClose } from "@/composables/useEscClose";
 import FileUpload from "@/components/admin/FileUpload.vue";
 import type { MediaAsset, Project, ProjectWrite } from "@/api/types";
 
@@ -119,6 +120,13 @@ const saveError = ref<string | null>(null);
 const photos = ref<MediaAsset[]>([]);
 
 onMounted(load);
+
+useEscClose(
+  () => {
+    editing.value = null;
+  },
+  computed(() => editing.value !== null),
+);
 
 async function load(): Promise<void> {
   loading.value = true;

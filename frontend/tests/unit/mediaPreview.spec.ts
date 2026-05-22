@@ -11,6 +11,7 @@ const i18n = createI18n({
     en: {
       sensitive: { tooltip: "Order access via cv{'@'}chlous.top" },
       timeline: { locked_file: "Locked file" },
+      actions: { openPdf: "Open PDF" },
     },
   },
 });
@@ -42,13 +43,19 @@ describe("MediaPreview.vue", () => {
     expect(img.attributes("alt")).toBe("Example file");
   });
 
-  it("renders <iframe> when kind=document with url", () => {
+  it("renders <embed> + fallback link when kind=document with url", () => {
     const wrapper = mountPreview(
       makeAsset({ kind: "document", url: "https://example.com/file.pdf" }),
     );
-    const iframe = wrapper.find("iframe");
-    expect(iframe.exists()).toBe(true);
-    expect(iframe.attributes("src")).toBe("https://example.com/file.pdf");
+    const embed = wrapper.find("embed");
+    expect(embed.exists()).toBe(true);
+    expect(embed.attributes("src")).toBe("https://example.com/file.pdf#view=FitH");
+    expect(embed.attributes("type")).toBe("application/pdf");
+    const fallback = wrapper.find("a.media-preview__fallback");
+    expect(fallback.exists()).toBe(true);
+    expect(fallback.attributes("href")).toBe("https://example.com/file.pdf");
+    expect(fallback.attributes("target")).toBe("_blank");
+    expect(fallback.text()).toBe("Open PDF");
   });
 
   it("renders <video> when kind=video with url", () => {
@@ -61,14 +68,15 @@ describe("MediaPreview.vue", () => {
     expect(video.attributes("controls")).toBeDefined();
   });
 
-  it("renders locked placeholder when url is empty", () => {
+  it("renders locked placeholder with Icon when url is empty", () => {
     const wrapper = mountPreview(makeAsset({ url: "", kind: "image" }));
     expect(wrapper.find("img").exists()).toBe(false);
-    expect(wrapper.find("iframe").exists()).toBe(false);
+    expect(wrapper.find("embed").exists()).toBe(false);
     const locked = wrapper.find(".media-preview__locked");
     expect(locked.exists()).toBe(true);
     expect(locked.attributes("aria-label")).toBe("Locked file");
-    expect(locked.attributes("title")).toBe("Order access via cv@chlous.top");
+    expect(locked.attributes("data-tooltip")).toBe("Order access via cv@chlous.top");
+    expect(locked.find("svg[data-icon='lock']").exists()).toBe(true);
   });
 
   it("falls back to alt prop when alt_text is empty", () => {

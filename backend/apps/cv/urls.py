@@ -1,5 +1,6 @@
 """CV API router."""
 
+from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from . import views
@@ -18,4 +19,7 @@ router.register("timeline", views.TimelineEntryViewSet, basename="timeline")
 router.register("media-assets", views.MediaAssetViewSet, basename="media-asset")
 router.register("access-keys", views.AccessKeyViewSet, basename="access-key")
 
-urlpatterns = router.urls
+urlpatterns = [
+    path("admin/cv/", views.AdminCvView.as_view(), name="admin-cv"),
+    *router.urls,
+]

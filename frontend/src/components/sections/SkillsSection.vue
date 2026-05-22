@@ -21,9 +21,14 @@ const levelLabel = useLevelLabel();
           <h3 class="skill-card__title">{{ pickLocalized(cat, "name", locale) }}</h3>
           <ul class="skill-list">
             <li v-for="skill in cat.skills" :key="skill.id" class="skill-row">
-              <strong v-if="cat.slug === 'languages'" class="skill-row__name">
+              <strong class="skill-row__name">
                 {{ pickLocalized(skill, "name", locale) }}
               </strong>
+              <ul v-if="skill.technologies.length" class="skill-tech">
+                <li v-for="tech in skill.technologies" :key="tech.id" class="tag">
+                  {{ tech.name }}
+                </li>
+              </ul>
               <div
                 class="skill-rating"
                 role="img"
@@ -37,15 +42,10 @@ const levelLabel = useLevelLabel();
                     :class="{ 'skill-dot--filled': n <= skill.level }"
                   />
                 </span>
-                <span v-if="cat.slug === 'languages'" class="skill-level-label">
+                <span class="skill-level-label">
                   {{ levelLabel(skill.level) }}
                 </span>
               </div>
-              <ul v-if="skill.technologies.length" class="skill-tech">
-                <li v-for="tech in skill.technologies" :key="tech.id" class="tag">
-                  {{ tech.name }}
-                </li>
-              </ul>
             </li>
           </ul>
         </article>

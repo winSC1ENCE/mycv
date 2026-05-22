@@ -3,6 +3,7 @@ import { computed } from "vue";
 import type { Cv } from "@/api/types";
 import { useThemeStore } from "@/stores/theme";
 import Sensitive from "@/components/base/Sensitive.vue";
+import Icon from "@/components/base/Icon.vue";
 
 defineProps<{ cv: Cv }>();
 
@@ -31,12 +32,16 @@ const photoAlt = computed(() =>
           <p>
             <strong>{{ cv.full_name }}</strong> · {{ cv.title }}
           </p>
-          <p v-if="cv.location">📍 {{ cv.location }}</p>
-          <p v-if="cv.zivilstand">
-            💍 <Sensitive :blurred="!cv.access_granted">{{ cv.zivilstand }}</Sensitive>
+          <p v-if="cv.location" class="profile-card__row">
+            <Icon name="map-pin" /> {{ cv.location }}
           </p>
-          <p v-if="cv.date_of_birth">
-            🎂 <Sensitive :blurred="!cv.access_granted">{{ cv.date_of_birth }}</Sensitive>
+          <p v-if="cv.zivilstand" class="profile-card__row">
+            <Icon name="heart" />
+            <Sensitive :blurred="!cv.access_granted">{{ cv.zivilstand }}</Sensitive>
+          </p>
+          <p v-if="cv.date_of_birth" class="profile-card__row">
+            <Icon name="cake" />
+            <Sensitive :blurred="!cv.access_granted">{{ cv.date_of_birth }}</Sensitive>
           </p>
         </div>
       </div>
@@ -72,6 +77,18 @@ const photoAlt = computed(() =>
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+}
+
+.profile-card__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--color-fg);
+}
+
+.profile-card__row .icon {
+  color: var(--color-fg-muted);
 }
 
 @media (max-width: 480px) {

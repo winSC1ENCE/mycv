@@ -26,8 +26,12 @@
           :stencil-props="{ aspectRatio: 0 }"
         />
         <div class="crop-modal__actions">
-          <button class="btn btn--primary" @click="confirmCrop">{{ $t("admin.crop") }}</button>
-          <button class="btn" @click="cancelCrop">{{ $t("admin.cancel") }}</button>
+          <button type="button" class="btn btn--primary" @click="confirmCrop">
+            {{ $t("admin.crop") }}
+          </button>
+          <button type="button" class="btn" @click="cancelCrop">
+            {{ $t("admin.cancel") }}
+          </button>
         </div>
       </div>
     </div>

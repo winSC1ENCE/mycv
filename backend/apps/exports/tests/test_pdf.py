@@ -1,13 +1,23 @@
-"""Tests for the PDF export endpoint."""
+"""Tests for the PDF export endpoint — currently disabled (refactoring_12).
+
+To re-enable: remove the ``pytest.skip`` line below and re-enable the
+``cv/pdf/`` URL in ``apps/exports/urls.py``.
+"""
 
 from __future__ import annotations
 
-from unittest.mock import patch
-
 import pytest
-from rest_framework.test import APIClient
 
-from apps.cv.tests.factories import (
+pytest.skip(
+    "PDF export disabled — re-enable in apps/exports/urls.py",
+    allow_module_level=True,
+)
+
+from unittest.mock import patch  # noqa: E402
+
+from rest_framework.test import APIClient  # noqa: E402
+
+from apps.cv.tests.factories import (  # noqa: E402
     CertificateFactory,
     EducationFactory,
     ExperienceFactory,

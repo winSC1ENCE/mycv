@@ -80,7 +80,14 @@ addopts = "-ra --strict-markers --cov=apps --cov-report=term-missing --cov-fail-
 [tool.coverage.run]
 branch = true
 source = ["apps"]
-omit = ["*/migrations/*", "*/tests/*", "*/__init__.py", "*/apps.py"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/__init__.py",
+    "*/apps.py",
+    # PDF export currently disabled (refactoring_12) — remove this line to re-include.
+    "apps/exports/views.py",
+]
 
 [tool.coverage.report]
 exclude_also = [

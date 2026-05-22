@@ -145,15 +145,10 @@
   padding-bottom: var(--space-3);
 }
 
-/* Title chip overlaps the top edge of the page panel — comic title-card feel. */
-[data-theme="dog"] .section[aria-labelledby="timeline-title"] {
-  position: relative;
-}
+/* Title sits cleanly above the comic-page panel (no overlap). */
 [data-theme="dog"] .section[aria-labelledby="timeline-title"] .section__title {
-  position: relative;
-  z-index: 1;
   font-size: 1.6em;
-  margin-bottom: calc(-1 * var(--space-3));
+  margin-bottom: var(--space-3);
 }
 
 /* Spine = paw print trail */

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useCvStore } from "@/stores/cv";
 import { useThemeStore } from "@/stores/theme";
 import { useLocaleStore } from "@/stores/locale";
-import { buildPdfUrl } from "@/api/exports";
+// PDF export disabled (refactoring_12) — uncomment to re-enable.
+// import { buildPdfUrl } from "@/api/exports";
 import { useAccessKey } from "@/composables/useAccessKey";
 import ErrorBoundary from "@/components/base/ErrorBoundary.vue";
 
@@ -17,7 +18,8 @@ const { theme } = storeToRefs(themeStore);
 const { locale } = storeToRefs(localeStore);
 const { t, locale: i18nLocale } = useI18n();
 
-const pdfUrl = computed(() => buildPdfUrl(locale.value, theme.value));
+// PDF export disabled (refactoring_12) — uncomment to re-enable.
+// const pdfUrl = computed(() => buildPdfUrl(locale.value, theme.value));
 
 useAccessKey();
 
@@ -33,6 +35,7 @@ onMounted(() => {
         {{ cv ? cv.full_name : "mycv" }}
       </router-link>
       <div class="header__actions">
+        <!-- PDF export disabled (refactoring_12) — uncomment to re-enable.
         <a
           class="button button--ghost"
           :href="pdfUrl"
@@ -42,6 +45,7 @@ onMounted(() => {
         >
           📄 {{ t("actions.download_pdf") }}
         </a>
+        -->
         <button
           type="button"
           class="button button--ghost"

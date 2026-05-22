@@ -242,3 +242,6 @@ frontend/tests/e2e/.auth.json
 
 # Local-only operational docs (never push)
 docs/deployment.md
+
+# Private security reports — never commit.
+docs/reports/

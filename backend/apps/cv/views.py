@@ -180,9 +180,10 @@ class CertificateViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Ce
         return serializers.CertificateSerializer
 
     def get_serializer_context(self) -> dict[str, Any]:
-        ctx = super().get_serializer_context()
-        ctx["access_granted"] = _resolve_access(self.request) or _is_staff(self.request)
-        return ctx
+        return {
+            **super().get_serializer_context(),
+            "access_granted": _resolve_access(self.request) or _is_staff(self.request),
+        }
 
 
 class ProjectViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Project]):

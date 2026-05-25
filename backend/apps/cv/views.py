@@ -179,6 +179,11 @@ class CertificateViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Ce
             return serializers.CertificateWriteSerializer
         return serializers.CertificateSerializer
 
+    def get_serializer_context(self) -> dict[str, Any]:
+        ctx = super().get_serializer_context()
+        ctx["access_granted"] = _resolve_access(self.request) or _is_staff(self.request)
+        return ctx
+
 
 class ProjectViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Project]):
     queryset = models.Project.objects.all()
@@ -283,7 +288,7 @@ class TimelineEntryViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.
 
 class MediaAssetViewSet(viewsets.ModelViewSet[models.MediaAsset]):
     queryset = models.MediaAsset.objects.all()
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [permissions.IsAdminUser]
     parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
 
     def get_queryset(self) -> QuerySet[models.MediaAsset]:

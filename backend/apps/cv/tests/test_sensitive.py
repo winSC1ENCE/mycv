@@ -300,6 +300,67 @@ class TestAdminCvEndpoint:
 
 
 @pytest.mark.django_db
+class TestCertificateViewsetMediaRedaction:
+    def test_anonymous_list_blanks_media_url(self, person: models.Person) -> None:
+        media = MediaAssetFactory()
+        CertificateFactory(person=person, media=media, name="Cert", is_published=True)
+        data = APIClient().get("/api/certificates/").json()
+        assert len(data) == 1
+        assert data[0]["media"] is not None
+        assert data[0]["media"]["url"] == ""
+
+    def test_anonymous_retrieve_blanks_media_url(self, person: models.Person) -> None:
+        media = MediaAssetFactory()
+        cert = CertificateFactory(person=person, media=media, name="Cert", is_published=True)
+        data = APIClient().get(f"/api/certificates/{cert.id}/").json()
+        assert data["media"] is not None
+        assert data["media"]["url"] == ""
+
+    def test_valid_key_returns_real_media_url(
+        self, person: models.Person, valid_key: models.AccessKey
+    ) -> None:
+        media = MediaAssetFactory()
+        cert = CertificateFactory(person=person, media=media, name="Cert", is_published=True)
+        data = APIClient().get(f"/api/certificates/{cert.id}/?key={valid_key.token}").json()
+        assert data["media"]["url"]
+        assert data["media"]["url"] != ""
+
+    def test_staff_sees_real_media_url(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        media = MediaAssetFactory()
+        cert = CertificateFactory(person=person, media=media, name="Cert", is_published=True)
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        data = client.get(f"/api/certificates/{cert.id}/").json()
+        assert data["media"]["url"]
+        assert data["media"]["url"] != ""
+
+
+@pytest.mark.django_db
+class TestMediaAssetViewsetGating:
+    def test_anonymous_list_returns_403(self, person: models.Person) -> None:
+        MediaAssetFactory()
+        response = APIClient().get("/api/media-assets/")
+        assert response.status_code in (401, 403)
+
+    def test_staff_list_returns_200(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        MediaAssetFactory()
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        response = client.get("/api/media-assets/")
+        assert response.status_code == 200
+
+
+@pytest.mark.django_db
 class TestAccessKeyWriteSerializer:
     def test_create_response_returns_token(
         self, person: models.Person, django_user_model: type

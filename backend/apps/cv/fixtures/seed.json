@@ -5,9 +5,9 @@
     "last_name": "Mischler",
     "title": "Senior Data Engineer · Data Scientist",
     "title_de": "Senior Data Engineer · Data Scientist",
-    "email": "nicolas.mischler@pm.me",
+    "email": "placeholder@example.com",
     "phone": "",
-    "location": "Biel, Switzerland",
+    "location": "Seeland, Switzerland",
     "summary": "Senior Data Engineer and Data Scientist with 10+ years building data platforms for hospitals and federal agencies in Switzerland. Apache NiFi, Airflow, PySpark, Iceberg. Hands-on and exact; coaches junior engineers and ships in Scrum / SAFe teams.",
     "summary_de": "Senior Data Engineer und Data Scientist mit über 10 Jahren Erfahrung im Aufbau von Datenplattformen für Spitäler und Bundesstellen in der Schweiz. Apache NiFi, Airflow, PySpark, Iceberg. Hands-on und exakt — coacht Junior-Ingenieure und liefert im Scrum / SAFe-Team."
   },
@@ -15,7 +15,7 @@
     {
       "platform": "email",
       "label": "Email",
-      "url": "mailto:nicolas.mischler@pm.me"
+      "url": "mailto:placeholder@example.com"
     },
     {
       "platform": "github",

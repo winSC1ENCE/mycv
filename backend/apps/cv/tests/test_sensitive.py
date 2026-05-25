@@ -347,9 +347,7 @@ class TestMediaAssetViewsetGating:
         response = APIClient().get("/api/media-assets/")
         assert response.status_code in (401, 403)
 
-    def test_staff_list_returns_200(
-        self, person: models.Person, django_user_model: type
-    ) -> None:
+    def test_staff_list_returns_200(self, person: models.Person, django_user_model: type) -> None:
         MediaAssetFactory()
         staff = django_user_model.objects.create_user(
             username="admin", password="pass", is_staff=True

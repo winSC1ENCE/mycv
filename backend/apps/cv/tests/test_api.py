@@ -260,8 +260,7 @@ def test_admin_sees_unpublished_media_assets(admin_client: APIClient) -> None:
 def test_anon_cannot_see_unpublished_media_assets(api_client: APIClient) -> None:
     MediaAssetFactory(is_published=False)
     resp = api_client.get("/api/media-assets/")
-    assert resp.status_code == status.HTTP_200_OK
-    assert resp.json()["count"] == 0
+    assert resp.status_code == status.HTTP_403_FORBIDDEN
 
 
 def test_admin_cv_list_includes_unpublished(admin_client: APIClient) -> None:

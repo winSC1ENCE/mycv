@@ -292,12 +292,6 @@ class MediaAssetViewSet(viewsets.ModelViewSet[models.MediaAsset]):
     permission_classes = [permissions.IsAdminUser]
     parser_classes = [parsers.MultiPartParser, parsers.FormParser, parsers.JSONParser]
 
-    def get_queryset(self) -> QuerySet[models.MediaAsset]:
-        qs = models.MediaAsset.objects.all()
-        if not _is_staff(self.request):
-            qs = qs.filter(is_published=True)
-        return qs
-
     def get_serializer_class(self) -> _SerializerClass:
         if self.action in ("create", "update", "partial_update"):
             return serializers.MediaAssetWriteSerializer

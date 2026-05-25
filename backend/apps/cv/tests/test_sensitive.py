@@ -304,10 +304,10 @@ class TestCertificateViewsetMediaRedaction:
     def test_anonymous_list_blanks_media_url(self, person: models.Person) -> None:
         media = MediaAssetFactory()
         CertificateFactory(person=person, media=media, name="Cert", is_published=True)
-        data = APIClient().get("/api/certificates/").json()
-        assert len(data) == 1
-        assert data[0]["media"] is not None
-        assert data[0]["media"]["url"] == ""
+        results = APIClient().get("/api/certificates/").json()["results"]
+        assert len(results) == 1
+        assert results[0]["media"] is not None
+        assert results[0]["media"]["url"] == ""
 
     def test_anonymous_retrieve_blanks_media_url(self, person: models.Person) -> None:
         media = MediaAssetFactory()

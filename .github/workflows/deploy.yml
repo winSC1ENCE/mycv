@@ -138,4 +138,4 @@ jobs:
           HOST="${HOST#https://}"
           HOST="${HOST%/}"
           HOST="$(echo -n "$HOST" | tr -d '[:space:]')"
-          curl --fail --max-time 10 "https://${HOST}/api/health/" | grep '"status":"ok"'
+          curl --fail --max-time 10 "https://${HOST}/api/health/" | grep -E '"status"[[:space:]]*:[[:space:]]*"ok"'

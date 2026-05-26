@@ -78,6 +78,13 @@ class ExperienceSerializer(serializers.ModelSerializer[models.Experience]):
             "is_published",
         ]
 
+    def to_representation(self, instance: models.Experience) -> Any:
+        data = super().to_representation(instance)
+        granted: bool = self.context.get("access_granted", False)
+        if not granted and data.get("media"):
+            data["media"]["url"] = ""
+        return data
+
 
 class EducationSerializer(serializers.ModelSerializer[models.Education]):
     class Meta:

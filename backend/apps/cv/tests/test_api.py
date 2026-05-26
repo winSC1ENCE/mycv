@@ -67,7 +67,7 @@ def test_cv_list_returns_primary_person(api_client: APIClient) -> None:
     exp_payload = body["experiences"][0]
     assert exp_payload["media"] is not None
     assert exp_payload["media"]["kind"] == "image"
-    assert exp_payload["media"]["url"]
+    assert exp_payload["media"]["url"] == ""  # gated behind AccessKey for anonymous
 
 
 def test_cv_list_404_when_no_published_person(api_client: APIClient) -> None:

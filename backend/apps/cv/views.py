@@ -147,6 +147,12 @@ class ExperienceViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Exp
             return serializers.ExperienceWriteSerializer
         return serializers.ExperienceSerializer
 
+    def get_serializer_context(self) -> dict[str, Any]:
+        return {
+            **super().get_serializer_context(),
+            "access_granted": _resolve_access(self.request) or _is_staff(self.request),
+        }
+
 
 class EducationViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Education]):
     queryset = models.Education.objects.all()

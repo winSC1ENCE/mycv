@@ -21,6 +21,7 @@ const resolvedTooltip = computed(() => props.tooltip ?? t("sensitive.tooltip"));
     <span
       v-if="blurred"
       class="sensitive__chip"
+      role="img"
       :data-tooltip="resolvedTooltip"
       :aria-label="t('sensitive.ariaLabel')"
       tabindex="0"

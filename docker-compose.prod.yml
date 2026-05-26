@@ -18,6 +18,7 @@ services:
     # No port exposure — internal network only
 
   backend:
+    image: ghcr.io/winsc1ence/mycv-backend:latest
     build:
       context: ./backend
       target: runtime
@@ -48,6 +49,7 @@ services:
     restart: unless-stopped
 
   frontend:
+    image: ghcr.io/winsc1ence/mycv-frontend:latest
     build:
       context: ./frontend
       target: runtime

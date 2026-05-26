@@ -123,10 +123,22 @@ jobs:
           script: |
             set -euo pipefail
             cd /srv/mycv
+            # Sync docker-compose.prod.yml and any other tracked files
+            # released with this tag. Image code itself is delivered via GHCR.
+            git fetch --tags origin
+            git checkout --force "${{ github.ref_name }}"
             echo "${{ secrets.GITHUB_TOKEN }}" \
               | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            # Wait for backend to be reachable, then apply any pending migrations.
+            for _ in $(seq 1 30); do
+              docker compose -f docker-compose.prod.yml exec -T backend \
+                curl -sf http://localhost:8000/api/health/ >/dev/null && break
+              sleep 2
+            done
+            docker compose -f docker-compose.prod.yml exec -T backend \
+              python manage.py migrate --noinput
             docker image prune -af --filter "until=24h"
             echo "Deploy complete — $(date -u)"
 

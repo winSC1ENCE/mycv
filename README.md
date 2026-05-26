@@ -182,3 +182,5 @@ All planned iterations are complete (Phases 1–5) plus a series of follow-up re
 - **Admin endpoint** — `/api/admin/cv/` returns unredacted data for staff users
 - **Media everywhere** — Certificate/Experience FK to `MediaAsset`; Project M2M (cap 6) with reorder; shared `ImageLightbox` + `MediaPreview` (PDF card) primitives
 - **UX polish** — flat SVG icons (`Icon.vue`), Esc-to-close admin modals (`useEscClose`), modernised `Sensitive` blur + lock chip
+
+Test

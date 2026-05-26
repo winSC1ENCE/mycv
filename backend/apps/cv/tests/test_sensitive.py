@@ -342,9 +342,7 @@ class TestCertificateViewsetMediaRedaction:
 
 @pytest.mark.django_db
 class TestExperienceMediaRedaction:
-    def test_cv_endpoint_blanks_experience_media_for_anonymous(
-        self, person: models.Person
-    ) -> None:
+    def test_cv_endpoint_blanks_experience_media_for_anonymous(self, person: models.Person) -> None:
         media = MediaAssetFactory()
         ExperienceFactory(person=person, media=media, is_published=True)
         data = APIClient().get("/api/cv/").json()

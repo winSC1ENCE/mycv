@@ -12,7 +12,7 @@ repos:
         args: ["--maxkb=512"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+    rev: v0.15.14
     hooks:
       - id: ruff
         args: [--fix]
@@ -21,7 +21,7 @@ repos:
         files: ^backend/
 
   - repo: https://github.com/psf/black
-    rev: 24.10.0
+    rev: 26.5.1
     hooks:
       - id: black
         files: ^backend/

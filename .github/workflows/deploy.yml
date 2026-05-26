@@ -133,6 +133,9 @@ jobs:
       - name: Smoke test
         run: |
           sleep 15
-          curl --fail --max-time 10 \
-            "https://${{ vars.DEPLOY_HOST }}/api/health/" \
-            | grep '"status":"ok"'
+          HOST="${{ vars.DEPLOY_HOST }}"
+          HOST="${HOST#http://}"
+          HOST="${HOST#https://}"
+          HOST="${HOST%/}"
+          HOST="$(echo -n "$HOST" | tr -d '[:space:]')"
+          curl --fail --max-time 10 "https://${HOST}/api/health/" | grep '"status":"ok"'

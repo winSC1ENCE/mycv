@@ -50,6 +50,9 @@ const { t } = useI18n();
       <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
         {{ pickLocalized(row.data, "description", locale) }}
       </p>
+      <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
+        <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
+      </ul>
       <div v-if="row.certs.length" class="timeline-detail__certs">
         <h4>{{ t("timeline.linked_certificates") }}</h4>
         <ul>
@@ -68,6 +71,9 @@ const { t } = useI18n();
       <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
         {{ pickLocalized(row.data, "description", locale) }}
       </p>
+      <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
+        <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
+      </ul>
       <MediaPreview
         v-if="row.data.media"
         :media="row.data.media"

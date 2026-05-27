@@ -70,6 +70,7 @@ export interface Education {
   end_date: string | null;
   description: string;
   description_de: string;
+  technologies: Technology[];
   order: number;
   is_published: boolean;
 }
@@ -84,6 +85,7 @@ export interface Certificate {
   issue_date: string;
   description: string;
   description_de: string;
+  technologies: Technology[];
   media: MediaAsset | null;
   order: number;
   is_published: boolean;
@@ -146,8 +148,12 @@ export type ExperienceWrite = Omit<Experience, "technologies" | "media"> & {
   media?: number | null;
   person?: number;
 };
-export type EducationWrite = Education & { person?: number };
-export type CertificateWrite = Omit<Certificate, "media"> & {
+export type EducationWrite = Omit<Education, "technologies"> & {
+  technologies: number[];
+  person?: number;
+};
+export type CertificateWrite = Omit<Certificate, "media" | "technologies"> & {
+  technologies: number[];
   media: number | null;
   person?: number;
 };

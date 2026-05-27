@@ -56,6 +56,18 @@
             {{ $t("admin.fields.description_de") }}
             <textarea v-model="editing.description_de" rows="3"></textarea>
           </label>
+          <label>
+            {{ $t("admin.nav.technologies") }}
+            <select v-model="editing.technologies" multiple size="8">
+              <optgroup v-for="[cat, techs] in groupedTechnologies" :key="cat" :label="cat">
+                <option v-for="tech in techs" :key="tech.id" :value="tech.id">
+                  {{ tech.name }}
+                </option>
+              </optgroup>
+            </select>
+            <span class="field-hint">{{ $t("admin.multiSelectHint") }}</span>
+          </label>
+
           <div class="field-group">
             <span class="field-group__label">{{ $t("admin.fields.mediaFile") }}</span>
             <FileUpload accept="image/*,application/pdf" @uploaded="onMediaUploaded" />
@@ -84,21 +96,33 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
-import { experienceApi } from "@/api/admin";
+import { experienceApi, technologyApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import type { Experience, ExperienceWrite, MediaAsset } from "@/api/types";
+import type { Experience, ExperienceWrite, MediaAsset, Technology } from "@/api/types";
 import FileUpload from "@/components/admin/FileUpload.vue";
 import SortableList from "@/components/admin/SortableList.vue";
 
 type Draft = Partial<ExperienceWrite> & { id?: number };
 
 const items = ref<Experience[]>([]);
+const technologies = ref<Technology[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
 
-onMounted(load);
+const groupedTechnologies = computed((): Array<[string, Technology[]]> => {
+  const map = new Map<string, Technology[]>();
+  for (const t of technologies.value) {
+    const cat = t.category || "Other";
+    const bucket = map.get(cat) ?? [];
+    bucket.push(t);
+    map.set(cat, bucket);
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
+});
+
+onMounted(() => Promise.all([load(), loadTechnologies()]));
 
 useEscClose(
   () => {
@@ -106,6 +130,15 @@ useEscClose(
   },
   computed(() => editing.value !== null),
 );
+
+async function loadTechnologies(): Promise<void> {
+  try {
+    const page = await technologyApi.list();
+    technologies.value = page.results;
+  } catch {
+    // technologies are optional — admin can still edit experiences without picking any
+  }
+}
 
 async function load(): Promise<void> {
   loading.value = true;
@@ -129,6 +162,7 @@ function openNew(): void {
     end_date: null,
     description: "",
     description_de: "",
+    technologies: [],
     media: null,
     is_published: true,
   };
@@ -176,3 +210,11 @@ async function onReorder(ids: number[]): Promise<void> {
 </script>
 
 <style scoped src="./admin-shared.css"></style>
+<style scoped>
+.field-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin-top: 2px;
+}
+</style>

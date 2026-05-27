@@ -87,6 +87,8 @@ class ExperienceSerializer(serializers.ModelSerializer[models.Experience]):
 
 
 class EducationSerializer(serializers.ModelSerializer[models.Education]):
+    technologies = TechnologySerializer(many=True, read_only=True)
+
     class Meta:
         model = models.Education
         fields = [
@@ -99,12 +101,14 @@ class EducationSerializer(serializers.ModelSerializer[models.Education]):
             "end_date",
             "description",
             "description_de",
+            "technologies",
             "order",
             "is_published",
         ]
 
 
 class CertificateSerializer(serializers.ModelSerializer[models.Certificate]):
+    technologies = TechnologySerializer(many=True, read_only=True)
     media = MediaAssetSerializer(read_only=True)
 
     class Meta:
@@ -119,6 +123,7 @@ class CertificateSerializer(serializers.ModelSerializer[models.Certificate]):
             "issue_date",
             "description",
             "description_de",
+            "technologies",
             "media",
             "order",
             "is_published",
@@ -380,6 +385,7 @@ class EducationWriteSerializer(serializers.ModelSerializer[models.Education]):
             "end_date",
             "description",
             "description_de",
+            "technologies",
             "order",
             "is_published",
         ]
@@ -403,6 +409,7 @@ class CertificateWriteSerializer(serializers.ModelSerializer[models.Certificate]
             "issue_date",
             "description",
             "description_de",
+            "technologies",
             "media",
             "order",
             "is_published",

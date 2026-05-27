@@ -52,6 +52,18 @@
             >{{ $t("admin.fields.description_de")
             }}<textarea v-model="editing.description_de" rows="3"></textarea>
           </label>
+          <label>
+            {{ $t("admin.nav.technologies") }}
+            <select v-model="editing.technologies" multiple size="8">
+              <optgroup v-for="[cat, techs] in groupedTechnologies" :key="cat" :label="cat">
+                <option v-for="tech in techs" :key="tech.id" :value="tech.id">
+                  {{ tech.name }}
+                </option>
+              </optgroup>
+            </select>
+            <span class="field-hint">{{ $t("admin.multiSelectHint") }}</span>
+          </label>
+
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -71,20 +83,32 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
-import { educationApi } from "@/api/admin";
+import { educationApi, technologyApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import type { Education } from "@/api/types";
+import type { Education, EducationWrite, Technology } from "@/api/types";
 import SortableList from "@/components/admin/SortableList.vue";
 
-type Draft = Partial<Education> & { id?: number };
+type Draft = Partial<EducationWrite> & { id?: number };
 
 const items = ref<Education[]>([]);
+const technologies = ref<Technology[]>([]);
 const loading = ref(false);
 const error = ref<string | null>(null);
 const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
 
-onMounted(load);
+const groupedTechnologies = computed((): Array<[string, Technology[]]> => {
+  const map = new Map<string, Technology[]>();
+  for (const t of technologies.value) {
+    const cat = t.category || "Other";
+    const bucket = map.get(cat) ?? [];
+    bucket.push(t);
+    map.set(cat, bucket);
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
+});
+
+onMounted(() => Promise.all([load(), loadTechnologies()]));
 
 useEscClose(
   () => {
@@ -92,6 +116,15 @@ useEscClose(
   },
   computed(() => editing.value !== null),
 );
+
+async function loadTechnologies(): Promise<void> {
+  try {
+    const page = await technologyApi.list();
+    technologies.value = page.results;
+  } catch {
+    // technologies are optional — admin can still edit education without picking any
+  }
+}
 
 async function load(): Promise<void> {
   loading.value = true;
@@ -106,11 +139,12 @@ async function load(): Promise<void> {
 }
 
 function openNew(): void {
-  editing.value = { degree: "", institution: "", start_date: "", is_published: true };
+  editing.value = { degree: "", institution: "", start_date: "", technologies: [], is_published: true };
 }
 
 function openEdit(item: Education): void {
-  editing.value = { ...item };
+  const { technologies, ...rest } = item;
+  editing.value = { ...rest, technologies: technologies.map((t) => t.id) };
 }
 
 async function save(): Promise<void> {
@@ -142,3 +176,11 @@ async function onReorder(ids: number[]): Promise<void> {
 </script>
 
 <style scoped src="./admin-shared.css"></style>
+<style scoped>
+.field-hint {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  margin-top: 2px;
+}
+</style>

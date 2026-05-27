@@ -177,6 +177,7 @@ class Education(Orderable):
     end_date = models.DateField(null=True, blank=True)
     description = models.TextField(blank=True)
     description_de = models.TextField(blank=True)
+    technologies = models.ManyToManyField(Technology, blank=True, related_name="educations")
 
     class Meta(Orderable.Meta):
         ordering = ["-start_date", "order"]
@@ -207,6 +208,7 @@ class Certificate(Orderable):
     issue_date = models.DateField()
     description = models.TextField(blank=True)
     description_de = models.TextField(blank=True)
+    technologies = models.ManyToManyField(Technology, blank=True, related_name="certificates")
     media = models.ForeignKey(
         MediaAsset, null=True, blank=True, on_delete=models.PROTECT, related_name="certificates"
     )

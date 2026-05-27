@@ -119,6 +119,13 @@ def test_technology_detail_by_slug(api_client: APIClient) -> None:
     assert resp.status_code == status.HTTP_200_OK
 
 
+def test_skill_category_detail_by_slug(api_client: APIClient) -> None:
+    cat = SkillCategoryFactory(slug="backend")
+    resp = api_client.get(f"/api/skill-categories/{cat.slug}/")
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["slug"] == "backend"
+
+
 def test_health_endpoint(api_client: APIClient) -> None:
     resp = api_client.get("/api/health/")
     assert resp.status_code == status.HTTP_200_OK
@@ -212,6 +219,47 @@ def test_admin_can_delete_experience(admin_client: APIClient) -> None:
     resp = admin_client.delete(f"/api/experiences/{exp.pk}/")
     assert resp.status_code == status.HTTP_204_NO_CONTENT
     assert not models.Experience.objects.filter(pk=exp.pk).exists()
+
+
+# ---------------------------------------------------------------------------
+# Slug-keyed viewsets must also resolve detail routes by numeric id, so the
+# admin SPA (which keys mutations by id) can edit/delete them.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "path,factory",
+    [
+        ("/api/technologies/", TechnologyFactory),
+        ("/api/projects/", ProjectFactory),
+        ("/api/skill-categories/", SkillCategoryFactory),
+    ],
+)
+def test_admin_can_update_slug_keyed_entity_by_id(
+    admin_client: APIClient, path: str, factory: type
+) -> None:
+    obj = factory()
+    resp = admin_client.patch(f"{path}{obj.pk}/", {"is_published": False}, format="json")
+    assert resp.status_code == status.HTTP_200_OK
+    obj.refresh_from_db()
+    assert obj.is_published is False
+
+
+@pytest.mark.parametrize(
+    "path,factory,model",
+    [
+        ("/api/technologies/", TechnologyFactory, models.Technology),
+        ("/api/projects/", ProjectFactory, models.Project),
+        ("/api/skill-categories/", SkillCategoryFactory, models.SkillCategory),
+    ],
+)
+def test_admin_can_delete_slug_keyed_entity_by_id(
+    admin_client: APIClient, path: str, factory: type, model: type
+) -> None:
+    obj = factory()
+    resp = admin_client.delete(f"{path}{obj.pk}/")
+    assert resp.status_code == status.HTTP_204_NO_CONTENT
+    assert not model.objects.filter(pk=obj.pk).exists()
 
 
 # ---------------------------------------------------------------------------

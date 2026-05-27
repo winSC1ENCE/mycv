@@ -9,6 +9,7 @@ from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 from rest_framework import parsers, permissions, status, viewsets
 from rest_framework.exceptions import NotFound
+from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import BaseSerializer
@@ -39,6 +40,22 @@ def _default_person() -> models.Person | None:
     Admin create forms don't ask for the FK; this fills it in server-side.
     """
     return models.Person.objects.filter(is_published=True).order_by("order", "id").first()
+
+
+class IdOrSlugLookupMixin:
+    """Resolve detail routes by numeric pk OR by slug.
+
+    Admin mutations key by the stable numeric id; public detail GETs use the
+    slug. The router's default detail regex matches both.
+    """
+
+    def get_object(self) -> Any:
+        queryset = self.filter_queryset(self.get_queryset())
+        lookup = self.kwargs[self.lookup_url_kwarg or self.lookup_field]
+        field = "pk" if str(lookup).isdigit() else self.lookup_field
+        obj = get_object_or_404(queryset, **{field: lookup})
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class PersonOwnedCreateMixin:
@@ -192,7 +209,9 @@ class CertificateViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Ce
         }
 
 
-class ProjectViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Project]):
+class ProjectViewSet(
+    IdOrSlugLookupMixin, PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Project]
+):
     queryset = models.Project.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
@@ -209,7 +228,7 @@ class ProjectViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Projec
         return serializers.ProjectSerializer
 
 
-class TechnologyViewSet(viewsets.ModelViewSet[models.Technology]):
+class TechnologyViewSet(IdOrSlugLookupMixin, viewsets.ModelViewSet[models.Technology]):
     queryset = models.Technology.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"
@@ -227,7 +246,7 @@ class TechnologyViewSet(viewsets.ModelViewSet[models.Technology]):
         return serializers.TechnologySerializer
 
 
-class SkillCategoryViewSet(viewsets.ModelViewSet[models.SkillCategory]):
+class SkillCategoryViewSet(IdOrSlugLookupMixin, viewsets.ModelViewSet[models.SkillCategory]):
     queryset = models.SkillCategory.objects.all()
     permission_classes = [IsAdminOrReadOnly]
     lookup_field = "slug"

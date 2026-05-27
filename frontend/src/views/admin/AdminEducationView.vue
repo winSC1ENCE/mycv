@@ -139,7 +139,13 @@ async function load(): Promise<void> {
 }
 
 function openNew(): void {
-  editing.value = { degree: "", institution: "", start_date: "", technologies: [], is_published: true };
+  editing.value = {
+    degree: "",
+    institution: "",
+    start_date: "",
+    technologies: [],
+    is_published: true,
+  };
 }
 
 function openEdit(item: Education): void {

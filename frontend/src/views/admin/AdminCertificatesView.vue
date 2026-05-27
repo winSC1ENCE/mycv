@@ -139,12 +139,23 @@ async function load(): Promise<void> {
 }
 
 function openNew(): void {
-  editing.value = { name: "", issuer: "", issue_date: "", technologies: [], media: null, is_published: true };
+  editing.value = {
+    name: "",
+    issuer: "",
+    issue_date: "",
+    technologies: [],
+    media: null,
+    is_published: true,
+  };
 }
 
 function openEdit(item: Certificate): void {
   const { media, technologies, ...rest } = item;
-  editing.value = { ...rest, technologies: technologies.map((t) => t.id), media: media?.id ?? null };
+  editing.value = {
+    ...rest,
+    technologies: technologies.map((t) => t.id),
+    media: media?.id ?? null,
+  };
 }
 
 function onMediaUploaded(asset: MediaAsset): void {

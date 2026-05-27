@@ -99,6 +99,13 @@ h1, h2, h3 { font-weight: 700; line-height: 1.2; }
 }
 .cv-entry__sub { font-size: 10pt; color: #475569; margin-top: 0.5mm; }
 .cv-entry__body { font-size: 10pt; margin-top: 1.5mm; color: #1e293b; }
+.cv-entry__body p, .cv-summary p { margin: 0 0 1.5mm 0; }
+.cv-entry__body p:last-child, .cv-summary p:last-child { margin-bottom: 0; }
+.cv-entry__body ul, .cv-entry__body ol, .cv-summary ul, .cv-summary ol { margin: 0 0 1.5mm 0; padding-left: 5mm; }
+.cv-entry__body li, .cv-summary li { margin: 0 0 0.5mm 0; }
+.cv-entry__body strong, .cv-summary strong { font-weight: 700; }
+.cv-entry__body em, .cv-summary em { font-style: italic; }
+.cv-entry__body a, .cv-summary a { color: inherit; text-decoration: underline; }
 .cv-entry__tech { margin-top: 2mm; }
 .cv-entry__url { font-family: "JetBrains Mono", monospace; font-size: 8.5pt; }
 

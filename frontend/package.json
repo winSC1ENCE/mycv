@@ -21,7 +21,9 @@
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^11.3.0",
     "axios": "^1.7.9",
+    "dompurify": "^3.4.7",
     "gsap": "^3.12.5",
+    "markdown-it": "^14.2.0",
     "pinia": "^2.3.0",
     "vee-validate": "^4.15.1",
     "vue": "^3.5.13",
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",
     "@playwright/test": "^1.49.1",
+    "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.10.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/test-utils": "^2.4.6",

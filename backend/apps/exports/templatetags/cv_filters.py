@@ -4,9 +4,28 @@ from __future__ import annotations
 
 from typing import Any
 
+import markdown as md
+import nh3
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
+
+_ALLOWED_TAGS = {
+    "p",
+    "br",
+    "strong",
+    "em",
+    "ul",
+    "ol",
+    "li",
+    "a",
+    "code",
+    "h3",
+    "h4",
+    "blockquote",
+}
+_ALLOWED_ATTRS = {"a": {"href"}}
 
 
 @register.filter(name="localize")
@@ -40,6 +59,23 @@ def localized(obj: Any, field: str, lang: str) -> str:
         return base
     de = _read(obj, f"{field}_de") or ""
     return de or base
+
+
+@register.simple_tag(name="markdown")
+def markdown_tag(obj: Any, field: str, lang: str) -> str:
+    """Render the localized ``<field>`` value as sanitized Markdown HTML.
+
+    Mirrors ``localized`` for de/en resolution, then converts Markdown to HTML
+    and strips everything outside a tight allowlist (parity with the web app's
+    markdown-it + DOMPurify pipeline).
+    """
+    text = localized(obj, field, lang)
+    if not text:
+        return ""
+    html = md.markdown(text, extensions=["sane_lists", "nl2br"])
+    # nh3.clean strips everything outside the allowlist, so the result is safe to mark.
+    clean = nh3.clean(html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
+    return mark_safe(clean)  # nosec B308 B703 # noqa: S308
 
 
 def _read(obj: Any, key: str) -> str:

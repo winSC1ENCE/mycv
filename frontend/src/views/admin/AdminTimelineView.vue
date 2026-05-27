@@ -47,11 +47,11 @@
           </label>
           <label
             >{{ $t("admin.fields.description")
-            }}<textarea v-model="editing.description" rows="3"></textarea>
+            }}<MarkdownField v-model="editing.description" :rows="3" />
           </label>
           <label
             >{{ $t("admin.fields.description_de")
-            }}<textarea v-model="editing.description_de" rows="3"></textarea>
+            }}<MarkdownField v-model="editing.description_de" :rows="3" />
           </label>
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
@@ -76,6 +76,7 @@ import { timelineApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
 import type { TimelineEntry } from "@/api/types";
 import SortableList from "@/components/admin/SortableList.vue";
+import MarkdownField from "@/components/base/MarkdownField.vue";
 
 type Draft = Partial<TimelineEntry> & { id?: number };
 

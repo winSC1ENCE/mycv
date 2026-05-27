@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from apps.exports.templatetags.cv_filters import _read, localize, localized
+from apps.exports.templatetags.cv_filters import _read, localize, localized, markdown_tag
 
 
 class FakeObj:
@@ -66,3 +66,34 @@ def test_read_missing_returns_empty():
 
 def test_read_non_string_value_coerced():
     assert _read(FakeObj(a=5), "a") == "5"
+
+
+def test_markdown_renders_bold_and_list():
+    obj = FakeObj(description="**Bold**\n\n- one\n- two", description_de="")
+    html = markdown_tag(obj, "description", "en")
+    assert "<strong>Bold</strong>" in html
+    assert "<ul>" in html
+    assert "<li>one</li>" in html
+
+
+def test_markdown_uses_de_variant():
+    obj = FakeObj(description="**Hi**", description_de="**Hallo**")
+    assert "<strong>Hallo</strong>" in markdown_tag(obj, "description", "de")
+
+
+def test_markdown_empty_returns_empty():
+    assert markdown_tag(FakeObj(description=""), "description", "en") == ""
+
+
+def test_markdown_strips_dangerous_html():
+    obj = FakeObj(description="ok <script>alert(1)</script>", description_de="")
+    html = markdown_tag(obj, "description", "en")
+    assert "<script>" not in html
+    assert "alert(1)" not in html
+
+
+def test_markdown_adds_rel_to_links():
+    obj = FakeObj(description="[x](https://example.com)", description_de="")
+    html = markdown_tag(obj, "description", "en")
+    assert 'href="https://example.com"' in html
+    assert 'rel="noopener noreferrer"' in html

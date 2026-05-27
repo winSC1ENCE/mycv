@@ -50,11 +50,11 @@
           /></label>
           <label>
             {{ $t("admin.fields.description") }}
-            <textarea v-model="editing.description" rows="3"></textarea>
+            <MarkdownField v-model="editing.description" :rows="3" />
           </label>
           <label>
             {{ $t("admin.fields.description_de") }}
-            <textarea v-model="editing.description_de" rows="3"></textarea>
+            <MarkdownField v-model="editing.description_de" :rows="3" />
           </label>
           <label>
             {{ $t("admin.nav.technologies") }}
@@ -100,6 +100,7 @@ import { experienceApi, technologyApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
 import type { Experience, ExperienceWrite, MediaAsset, Technology } from "@/api/types";
 import FileUpload from "@/components/admin/FileUpload.vue";
+import MarkdownField from "@/components/base/MarkdownField.vue";
 import SortableList from "@/components/admin/SortableList.vue";
 
 type Draft = Partial<ExperienceWrite> & { id?: number };

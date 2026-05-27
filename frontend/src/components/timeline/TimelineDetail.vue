@@ -4,6 +4,7 @@ import { useLocaleStore } from "@/stores/locale";
 import { useI18n } from "vue-i18n";
 import { pickLocalized } from "@/composables/useLocalized";
 import MediaPreview from "@/components/base/MediaPreview.vue";
+import RichText from "@/components/base/RichText.vue";
 import type { TimelineRow } from "@/stores/cv";
 
 defineProps<{ row: TimelineRow }>();
@@ -18,9 +19,11 @@ const { t } = useI18n();
         {{ row.data.start_date }} → {{ row.data.end_date ?? t("labels.present") }}
         <span v-if="row.data.location"> · {{ row.data.location }}</span>
       </p>
-      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
-        {{ pickLocalized(row.data, "description", locale) }}
-      </p>
+      <RichText
+        v-if="pickLocalized(row.data, 'description', locale)"
+        :text="pickLocalized(row.data, 'description', locale)"
+        class="timeline-detail__body"
+      />
       <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
         <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
       </ul>
@@ -47,9 +50,11 @@ const { t } = useI18n();
         {{ row.data.start_date }} → {{ row.data.end_date ?? t("labels.present") }}
         <span v-if="row.data.location"> · {{ row.data.location }}</span>
       </p>
-      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
-        {{ pickLocalized(row.data, "description", locale) }}
-      </p>
+      <RichText
+        v-if="pickLocalized(row.data, 'description', locale)"
+        :text="pickLocalized(row.data, 'description', locale)"
+        class="timeline-detail__body"
+      />
       <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
         <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
       </ul>
@@ -68,9 +73,11 @@ const { t } = useI18n();
 
     <template v-else-if="row.kind === 'certificate'">
       <p class="timeline-detail__dates">{{ row.data.issuer }} · {{ row.data.issue_date }}</p>
-      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
-        {{ pickLocalized(row.data, "description", locale) }}
-      </p>
+      <RichText
+        v-if="pickLocalized(row.data, 'description', locale)"
+        :text="pickLocalized(row.data, 'description', locale)"
+        class="timeline-detail__body"
+      />
       <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
         <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
       </ul>
@@ -85,9 +92,11 @@ const { t } = useI18n();
       <p class="timeline-detail__dates">
         <span class="kind-badge">{{ row.data.kind }}</span> · {{ row.data.date }}
       </p>
-      <p v-if="pickLocalized(row.data, 'description', locale)" class="timeline-detail__body">
-        {{ pickLocalized(row.data, "description", locale) }}
-      </p>
+      <RichText
+        v-if="pickLocalized(row.data, 'description', locale)"
+        :text="pickLocalized(row.data, 'description', locale)"
+        class="timeline-detail__body"
+      />
     </template>
   </div>
 </template>

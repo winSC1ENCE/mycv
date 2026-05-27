@@ -12,6 +12,7 @@ import ProjectsSection from "@/components/sections/ProjectsSection.vue";
 import TimelineSection from "@/components/timeline/TimelineSection.vue";
 import ContactSection from "@/components/sections/ContactSection.vue";
 import CvSkeleton from "@/components/base/CvSkeleton.vue";
+import RichText from "@/components/base/RichText.vue";
 
 const cvStore = useCvStore();
 const { cv, loading, error } = storeToRefs(cvStore);
@@ -56,7 +57,7 @@ usePageMeta({
       <div class="container">
         <h1 class="hero__title">{{ cv.full_name }}</h1>
         <p class="hero__subtitle">{{ title }}</p>
-        <p>{{ summary }}</p>
+        <RichText v-if="summary" :text="summary" class="hero__summary" />
       </div>
     </section>
 

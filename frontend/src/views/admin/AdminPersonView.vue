@@ -23,11 +23,11 @@
       /></label>
       <label class="entity-form__wide">
         {{ $t("admin.fields.summary") }}
-        <textarea v-model="form.summary" rows="4"></textarea>
+        <MarkdownField v-model="form.summary" :rows="4" />
       </label>
       <label class="entity-form__wide">
         {{ $t("admin.fields.summary_de") }}
-        <textarea v-model="form.summary_de" rows="4"></textarea>
+        <MarkdownField v-model="form.summary_de" :rows="4" />
       </label>
 
       <p v-if="saveError" class="form-error">{{ saveError }}</p>
@@ -46,6 +46,7 @@
 import { onMounted, ref } from "vue";
 import { personApi } from "@/api/admin";
 import type { Cv, PersonWrite } from "@/api/types";
+import MarkdownField from "@/components/base/MarkdownField.vue";
 
 const form = ref<Partial<PersonWrite> | null>(null);
 const originalSlug = ref<string>("");

@@ -55,7 +55,7 @@ onMounted(() => {
             i18nLocale = locale;
           "
         >
-          {{ locale.toUpperCase() }}
+          {{ locale === "en" ? "DE" : "EN" }}
         </button>
         <button
           type="button"

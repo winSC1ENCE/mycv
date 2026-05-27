@@ -24,7 +24,7 @@
 
   {% if person.summary %}
     <section class="cv-section cv-section--summary">
-      <p class="cv-summary">{% localized person "summary" lang %}</p>
+      <div class="cv-summary">{% markdown person "summary" lang %}</div>
     </section>
   {% endif %}
 
@@ -43,7 +43,7 @@
                 </span>
               </div>
               <p class="cv-entry__sub">{{ exp.company }}{% if exp.location %} · {{ exp.location }}{% endif %}</p>
-              {% if exp.description %}<p class="cv-entry__body">{% localized exp "description" lang %}</p>{% endif %}
+              {% if exp.description %}<div class="cv-entry__body">{% markdown exp "description" lang %}</div>{% endif %}
               {% with techs=exp.technologies.all %}
                 {% if techs %}
                   <p class="cv-entry__tech">
@@ -72,7 +72,7 @@
                 </span>
               </div>
               <p class="cv-entry__sub">{{ ed.institution }}{% if ed.location %} · {{ ed.location }}{% endif %}</p>
-              {% if ed.description %}<p class="cv-entry__body">{% localized ed "description" lang %}</p>{% endif %}
+              {% if ed.description %}<div class="cv-entry__body">{% markdown ed "description" lang %}</div>{% endif %}
             </article>
           {% endif %}
         {% endfor %}
@@ -106,6 +106,7 @@
                 <span class="cv-entry__dates">{{ cert.issue_date|date:"Y-m" }}</span>
               </div>
               <p class="cv-entry__sub">{{ cert.issuer }}</p>
+              {% if cert.description %}<div class="cv-entry__body">{% markdown cert "description" lang %}</div>{% endif %}
             </article>
           {% endif %}
         {% endfor %}
@@ -123,6 +124,7 @@
               <h3 class="cv-entry__title">{% localized proj "name" lang %}</h3>
               {% if proj.summary %}<p class="cv-entry__sub">{% localized proj "summary" lang %}</p>{% endif %}
               {% if proj.url %}<p class="cv-entry__sub cv-entry__url">{{ proj.url }}</p>{% endif %}
+              {% if proj.description %}<div class="cv-entry__body">{% markdown proj "description" lang %}</div>{% endif %}
             </article>
           {% endif %}
         {% endfor %}

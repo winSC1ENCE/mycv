@@ -6,6 +6,7 @@ import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
 import { usePageMeta } from "@/composables/usePageMeta";
 import ImageLightbox from "@/components/base/ImageLightbox.vue";
+import RichText from "@/components/base/RichText.vue";
 
 const props = defineProps<{ slug: string }>();
 
@@ -75,7 +76,7 @@ usePageMeta({
           @update:initial-index="activeIdx = $event"
         />
 
-        <p v-if="description" class="project-detail__desc">{{ description }}</p>
+        <RichText v-if="description" :text="description" class="project-detail__desc" />
         <p v-if="project.url">
           <a :href="project.url" target="_blank" rel="noopener">{{ project.url }}</a>
         </p>

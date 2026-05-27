@@ -34,11 +34,11 @@
           <label>{{ $t("admin.fields.summary_de") }}<input v-model="editing.summary_de" /></label>
           <label
             >{{ $t("admin.fields.description")
-            }}<textarea v-model="editing.description" rows="3"></textarea>
+            }}<MarkdownField v-model="editing.description" :rows="3" />
           </label>
           <label
             >{{ $t("admin.fields.description_de")
-            }}<textarea v-model="editing.description_de" rows="3"></textarea>
+            }}<MarkdownField v-model="editing.description_de" :rows="3" />
           </label>
           <label>{{ $t("admin.fields.url") }}<input v-model="editing.url" type="url" /></label>
           <label
@@ -108,6 +108,7 @@ import { extractApiError } from "@/api/errors";
 import { slugify } from "@/utils/slugify";
 import { useEscClose } from "@/composables/useEscClose";
 import FileUpload from "@/components/admin/FileUpload.vue";
+import MarkdownField from "@/components/base/MarkdownField.vue";
 import type { MediaAsset, Project, ProjectWrite } from "@/api/types";
 
 type Draft = Partial<ProjectWrite> & { id?: number };

@@ -18,6 +18,8 @@ dependencies = [
     "django-axes>=8.0",
     "weasyprint>=63.0",
     "segno>=1.6.0",
+    "markdown>=3.7",
+    "nh3>=0.2.18",
     "django-csp>=3.8",
     "sentry-sdk[django]>=2.18",
     "python-json-logger>=2.0",
@@ -34,6 +36,7 @@ dev = [
     "mypy>=1.13",
     "django-stubs[compatible-mypy]>=5.1",
     "djangorestframework-stubs[compatible-mypy]>=3.15",
+    "types-Markdown>=3.7",
     "bandit>=1.7",
     "safety>=3.2",
 ]

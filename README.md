@@ -52,7 +52,7 @@ cp .env.example .env             # fill in SECRET_KEY, POSTGRES_PASSWORD
 make up                          # starts db + backend + frontend
 # →  http://localhost:3000        (Vue frontend)
 # →  http://localhost:8000/api/   (Django API)
-# →  http://localhost:8000/admin/ (Django admin)
+# →  http://localhost:8000/django-admin/ (Django admin)
 ```
 
 The backend container auto-runs `migrate` and `load_cv_seed` on first boot, so the site is populated immediately.

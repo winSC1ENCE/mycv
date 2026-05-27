@@ -34,7 +34,7 @@ def readyz(_request):  # type: ignore[no-untyped-def]
 sitemaps = {"static": StaticSitemap, "projects": ProjectSitemap}
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("django-admin/", admin.site.urls),
     path("api/health/", healthz, name="health"),
     path("api/ready/", readyz, name="ready"),
     path("api/auth/", include("apps.accounts.urls")),

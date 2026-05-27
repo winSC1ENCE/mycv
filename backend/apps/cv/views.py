@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from django.db.models import QuerySet
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
-from rest_framework import parsers, permissions, status, viewsets
+from rest_framework import generics, parsers, permissions, status, viewsets
 from rest_framework.exceptions import NotFound
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
@@ -42,7 +42,13 @@ def _default_person() -> models.Person | None:
     return models.Person.objects.filter(is_published=True).order_by("order", "id").first()
 
 
-class IdOrSlugLookupMixin:
+if TYPE_CHECKING:
+    _LookupBase = generics.GenericAPIView[Any]
+else:
+    _LookupBase = object
+
+
+class IdOrSlugLookupMixin(_LookupBase):
     """Resolve detail routes by numeric pk OR by slug.
 
     Admin mutations key by the stable numeric id; public detail GETs use the

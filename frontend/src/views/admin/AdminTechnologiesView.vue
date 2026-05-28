@@ -13,7 +13,9 @@
         <div class="entity-row">
           <div class="entity-row__info">
             <strong>{{ cat }}</strong>
-            <span class="entity-row__sub">{{ techs.length }} {{ $t("admin.nav.technologies") }}</span>
+            <span class="entity-row__sub"
+              >{{ techs.length }} {{ $t("admin.nav.technologies") }}</span
+            >
           </div>
         </div>
         <ul class="tech-list">

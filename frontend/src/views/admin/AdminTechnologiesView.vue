@@ -9,16 +9,23 @@
     <p v-else-if="error" class="admin-page__error">{{ error }}</p>
 
     <div v-else>
-      <div v-for="item in items" :key="item.id" class="entity-row">
-        <div class="entity-row__info">
-          <strong>{{ item.name }}</strong>
-          <span class="entity-row__sub">{{ item.category }}</span>
+      <section v-for="[cat, techs] in groupedItems" :key="cat" class="tech-category">
+        <div class="entity-row">
+          <div class="entity-row__info">
+            <strong>{{ cat }}</strong>
+            <span class="entity-row__sub">{{ techs.length }} {{ $t("admin.nav.technologies") }}</span>
+          </div>
         </div>
-        <div class="entity-row__actions">
-          <button class="btn-icon" @click="openEdit(item)">✏</button>
-          <button class="btn-icon btn-icon--danger" @click="remove(item.id)">✕</button>
-        </div>
-      </div>
+        <ul class="tech-list">
+          <li v-for="item in techs" :key="item.id" class="tech-row">
+            <span class="tech-row__name">{{ item.name }}</span>
+            <div class="entity-row__actions">
+              <button class="btn-icon" @click="openEdit(item)">✏</button>
+              <button class="btn-icon btn-icon--danger" @click="remove(item.id)">✕</button>
+            </div>
+          </li>
+        </ul>
+      </section>
     </div>
 
     <div v-if="editing !== null" class="form-panel">
@@ -67,6 +74,20 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
+
+const groupedItems = computed((): Array<[string, Technology[]]> => {
+  const map = new Map<string, Technology[]>();
+  for (const t of items.value) {
+    const cat = t.category || "Other";
+    const bucket = map.get(cat) ?? [];
+    bucket.push(t);
+    map.set(cat, bucket);
+  }
+  for (const bucket of map.values()) {
+    bucket.sort((a, b) => a.name.localeCompare(b.name));
+  }
+  return [...map.entries()].sort(([a], [b]) => a.localeCompare(b));
+});
 
 onMounted(load);
 
@@ -128,5 +149,24 @@ async function remove(id: number): Promise<void> {
   margin-top: 4px;
   color: var(--color-fg-muted);
   font-size: 0.8rem;
+}
+.tech-category {
+  margin-bottom: var(--space-6);
+}
+.tech-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-2) 0 0 var(--space-6);
+}
+.tech-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+.tech-row__name {
+  font-weight: 500;
 }
 </style>

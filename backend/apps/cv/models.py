@@ -69,6 +69,7 @@ class Person(Orderable):
     location = models.CharField(max_length=160, blank=True)
     address = models.CharField(max_length=200, blank=True)
     zivilstand = models.CharField(max_length=40, blank=True)
+    zivilstand_de = models.CharField(max_length=40, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
     summary = models.TextField(blank=True)
     summary_de = models.TextField(blank=True)

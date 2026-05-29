@@ -132,6 +132,7 @@
       "level": "Level",
       "address": "Address",
       "zivilstand": "Marital status",
+      "zivilstand_de": "Marital status (DE)",
       "date_of_birth": "Date of birth",
       "expires_at": "Expires at",
       "is_active": "Active",

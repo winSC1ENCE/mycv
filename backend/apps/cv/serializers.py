@@ -188,6 +188,7 @@ _REDACTED: dict[str, Any] = {
     "phone": "••• ••• ••••",
     "address": "••• ••• ••• •••",
     "zivilstand": "•••••",
+    "zivilstand_de": "•••••",
     "date_of_birth": None,
 }
 
@@ -220,6 +221,7 @@ class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
             "location",
             "address",
             "zivilstand",
+            "zivilstand_de",
             "date_of_birth",
             "summary",
             "summary_de",
@@ -271,6 +273,7 @@ class PersonWriteSerializer(serializers.ModelSerializer[models.Person]):
             "location",
             "address",
             "zivilstand",
+            "zivilstand_de",
             "date_of_birth",
             "summary",
             "summary_de",

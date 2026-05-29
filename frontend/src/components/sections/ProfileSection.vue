@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { storeToRefs } from "pinia";
 import type { Cv } from "@/api/types";
 import { useThemeStore } from "@/stores/theme";
+import { useLocaleStore } from "@/stores/locale";
+import { pickLocalized } from "@/composables/useLocalized";
 import Sensitive from "@/components/base/Sensitive.vue";
 import Icon from "@/components/base/Icon.vue";
 
-defineProps<{ cv: Cv }>();
+const props = defineProps<{ cv: Cv }>();
+
+const { locale } = storeToRefs(useLocaleStore());
+const zivilstand = computed(() => pickLocalized(props.cv, "zivilstand", locale.value));
 
 const themeStore = useThemeStore();
 const profilePhoto = computed(() =>
@@ -35,9 +41,9 @@ const photoAlt = computed(() =>
           <p v-if="cv.location" class="profile-card__row">
             <Icon name="map-pin" /> {{ cv.location }}
           </p>
-          <p v-if="cv.zivilstand" class="profile-card__row">
+          <p v-if="zivilstand" class="profile-card__row">
             <Icon name="heart" />
-            <Sensitive :blurred="!cv.access_granted">{{ cv.zivilstand }}</Sensitive>
+            <Sensitive :blurred="!cv.access_granted">{{ zivilstand }}</Sensitive>
           </p>
           <p v-if="cv.date_of_birth" class="profile-card__row">
             <Icon name="cake" />

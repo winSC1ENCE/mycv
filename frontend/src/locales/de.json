@@ -132,6 +132,7 @@
       "level": "Niveau",
       "address": "Adresse",
       "zivilstand": "Zivilstand",
+      "zivilstand_de": "Zivilstand (DE)",
       "date_of_birth": "Geburtsdatum",
       "expires_at": "Läuft ab am",
       "is_active": "Aktiv",

@@ -183,6 +183,7 @@ export interface PersonWrite {
   location: string;
   address: string;
   zivilstand: string;
+  zivilstand_de: string;
   date_of_birth: string | null;
   summary: string;
   summary_de: string;
@@ -204,6 +205,7 @@ export interface Cv {
   location: string;
   address: string;
   zivilstand: string;
+  zivilstand_de: string;
   date_of_birth: string | null;
   access_granted: boolean;
   summary: string;

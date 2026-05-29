@@ -17,6 +17,7 @@
       <label>{{ $t("admin.fields.phone") }}<input v-model="form.phone" type="tel" /></label>
       <label>{{ $t("admin.fields.location") }}<input v-model="form.location" /></label>
       <label>{{ $t("admin.fields.zivilstand") }}<input v-model="form.zivilstand" /></label>
+      <label>{{ $t("admin.fields.zivilstand_de") }}<input v-model="form.zivilstand_de" /></label>
       <label>{{ $t("admin.fields.address") }}<input v-model="form.address" /></label>
       <label
         >{{ $t("admin.fields.date_of_birth") }}<input v-model="form.date_of_birth" type="date"
@@ -74,6 +75,7 @@ async function load(): Promise<void> {
       location: cv.location,
       address: cv.address,
       zivilstand: cv.zivilstand,
+      zivilstand_de: cv.zivilstand_de,
       date_of_birth: cv.date_of_birth ?? undefined,
       summary: cv.summary,
       summary_de: cv.summary_de,

@@ -327,10 +327,6 @@ p {
   animation: timeline-expand var(--motion-medium) var(--easing-out);
 }
 
-.timeline__row--left .timeline__detail {
-  text-align: right;
-}
-
 @keyframes timeline-expand {
   from {
     opacity: 0;
@@ -340,12 +336,6 @@ p {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.timeline__row--left .timeline__detail ul {
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .timeline__empty {
@@ -396,9 +386,6 @@ p {
   }
   .timeline__row--left .timeline__card-toggle {
     flex-direction: row;
-  }
-  .timeline__row--left .timeline__detail {
-    text-align: left;
   }
 }
 

@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useLocaleStore } from "@/stores/locale";
 import { useI18n } from "vue-i18n";
 import { pickLocalized } from "@/composables/useLocalized";
+import { formatDate } from "@/utils/dateFormat";
 import MediaPreview from "@/components/base/MediaPreview.vue";
 import RichText from "@/components/base/RichText.vue";
 import type { TimelineRow } from "@/stores/cv";
@@ -10,13 +11,18 @@ import type { TimelineRow } from "@/stores/cv";
 defineProps<{ row: TimelineRow }>();
 const { locale } = storeToRefs(useLocaleStore());
 const { t } = useI18n();
+
+function fmt(iso: string): string {
+  return formatDate(iso, locale.value);
+}
 </script>
 
 <template>
   <div class="timeline-detail">
     <template v-if="row.kind === 'experience'">
       <p class="timeline-detail__dates">
-        {{ row.data.start_date }} → {{ row.data.end_date ?? t("labels.present") }}
+        {{ fmt(row.data.start_date) }} →
+        {{ row.data.end_date ? fmt(row.data.end_date) : t("labels.present") }}
         <span v-if="row.data.location"> · {{ row.data.location }}</span>
       </p>
       <RichText
@@ -38,7 +44,7 @@ const { t } = useI18n();
           <li v-for="cert in row.certs" :key="cert.id">
             <strong>{{ pickLocalized(cert, "name", locale) }}</strong>
             <span class="timeline-detail__cert-meta">
-              · {{ cert.issuer }} · {{ cert.issue_date }}</span
+              · {{ cert.issuer }} · {{ fmt(cert.issue_date) }}</span
             >
           </li>
         </ul>
@@ -47,7 +53,8 @@ const { t } = useI18n();
 
     <template v-else-if="row.kind === 'education'">
       <p class="timeline-detail__dates">
-        {{ row.data.start_date }} → {{ row.data.end_date ?? t("labels.present") }}
+        {{ fmt(row.data.start_date) }} →
+        {{ row.data.end_date ? fmt(row.data.end_date) : t("labels.present") }}
         <span v-if="row.data.location"> · {{ row.data.location }}</span>
       </p>
       <RichText
@@ -64,7 +71,7 @@ const { t } = useI18n();
           <li v-for="cert in row.certs" :key="cert.id">
             <strong>{{ pickLocalized(cert, "name", locale) }}</strong>
             <span class="timeline-detail__cert-meta">
-              · {{ cert.issuer }} · {{ cert.issue_date }}</span
+              · {{ cert.issuer }} · {{ fmt(cert.issue_date) }}</span
             >
           </li>
         </ul>
@@ -72,7 +79,7 @@ const { t } = useI18n();
     </template>
 
     <template v-else-if="row.kind === 'certificate'">
-      <p class="timeline-detail__dates">{{ row.data.issuer }} · {{ row.data.issue_date }}</p>
+      <p class="timeline-detail__dates">{{ row.data.issuer }} · {{ fmt(row.data.issue_date) }}</p>
       <RichText
         v-if="pickLocalized(row.data, 'description', locale)"
         :text="pickLocalized(row.data, 'description', locale)"
@@ -90,7 +97,7 @@ const { t } = useI18n();
 
     <template v-else>
       <p class="timeline-detail__dates">
-        <span class="kind-badge">{{ row.data.kind }}</span> · {{ row.data.date }}
+        <span class="kind-badge">{{ row.data.kind }}</span> · {{ fmt(row.data.date) }}
       </p>
       <RichText
         v-if="pickLocalized(row.data, 'description', locale)"

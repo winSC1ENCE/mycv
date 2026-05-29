@@ -7,6 +7,7 @@ import { useI18n } from "vue-i18n";
 import { useCvStore, type TimelineRow } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import { formatMonthYear } from "@/utils/dateFormat";
 import { dogIconFor } from "@/composables/useDogIcon";
 import { petCount, spawnBubble } from "@/composables/useDogBubbles";
 import { useThemeStore } from "@/stores/theme";
@@ -63,27 +64,24 @@ function subline(row: TimelineRow): string {
   }
 }
 
-function formatYear(iso: string): string {
-  return iso.slice(0, 4);
+type AxisDates =
+  | { range: true; start: string; end: string | null }
+  | { range: false; single: string };
+
+function axisDates(row: TimelineRow): AxisDates {
+  switch (row.kind) {
+    case "experience":
+    case "education":
+      return { range: true, start: row.data.start_date, end: row.data.end_date };
+    case "certificate":
+      return { range: false, single: row.data.issue_date };
+    case "milestone":
+      return { range: false, single: row.data.date };
+  }
 }
 
-function formatMonth(iso: string): string {
-  const [, m] = iso.split("-");
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return months[parseInt(m, 10) - 1] ?? "";
+function fmtMY(iso: string): string {
+  return formatMonthYear(iso, locale.value);
 }
 
 function toggle(id: string, ev: Event): void {
@@ -124,6 +122,8 @@ onUnmounted(() => {
   triggers = [];
 });
 
+const rows = computed(() => timelineItems.value.map((row) => ({ row, axis: axisDates(row) })));
+
 const hasItems = computed(() => timelineItems.value.length > 0);
 </script>
 
@@ -134,7 +134,7 @@ const hasItems = computed(() => timelineItems.value.length > 0);
       <p class="section__lead">{{ t("timeline.lead") }}</p>
       <ol v-if="hasItems" ref="root" class="timeline timeline--alt" role="list">
         <li
-          v-for="(row, i) in timelineItems"
+          v-for="({ row, axis }, i) in rows"
           :key="uid(row)"
           class="timeline__row"
           :class="[
@@ -150,8 +150,14 @@ const hasItems = computed(() => timelineItems.value.length > 0);
             @click="(ev) => onNodeClick(ev, row)"
           />
           <time class="timeline__date" :datetime="row.date">
-            <span class="timeline__year">{{ formatYear(row.date) }}</span>
-            <span class="timeline__month">{{ formatMonth(row.date) }}</span>
+            <template v-if="axis.range">
+              <span class="timeline__date-part">{{ fmtMY(axis.start) }}</span>
+              <span class="timeline__date-sep" aria-hidden="true">–</span>
+              <span class="timeline__date-part timeline__date-part--end">
+                {{ axis.end ? fmtMY(axis.end) : $t("labels.present") }}
+              </span>
+            </template>
+            <span v-else class="timeline__date-part">{{ fmtMY(axis.single) }}</span>
           </time>
           <article class="timeline__card">
             <button

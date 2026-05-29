@@ -219,6 +219,10 @@
 }
 
 [data-theme="dog"] .timeline__date {
+  gap: 8px;
+}
+
+[data-theme="dog"] .timeline__date-part {
   font-family: var(--font-display);
   color: var(--color-fg);
   background: #fff;
@@ -228,13 +232,12 @@
   transform: rotate(-3deg);
 }
 
-[data-theme="dog"] .timeline__row--right .timeline__date {
+[data-theme="dog"] .timeline__date-part--end {
   transform: rotate(3deg);
 }
 
-[data-theme="dog"] .timeline__year,
-[data-theme="dog"] .timeline__month {
-  color: var(--color-fg);
+[data-theme="dog"] .timeline__date-sep {
+  display: none;
 }
 
 [data-theme="dog"] .timeline__card-title {

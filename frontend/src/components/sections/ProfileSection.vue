@@ -5,6 +5,7 @@ import type { Cv } from "@/api/types";
 import { useThemeStore } from "@/stores/theme";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import { formatDate } from "@/utils/dateFormat";
 import Sensitive from "@/components/base/Sensitive.vue";
 import Icon from "@/components/base/Icon.vue";
 
@@ -12,6 +13,9 @@ const props = defineProps<{ cv: Cv }>();
 
 const { locale } = storeToRefs(useLocaleStore());
 const zivilstand = computed(() => pickLocalized(props.cv, "zivilstand", locale.value));
+const birthDate = computed(() =>
+  props.cv.date_of_birth ? formatDate(props.cv.date_of_birth, locale.value) : "",
+);
 
 const themeStore = useThemeStore();
 const profilePhoto = computed(() =>
@@ -47,7 +51,7 @@ const photoAlt = computed(() =>
           </p>
           <p v-if="cv.date_of_birth" class="profile-card__row">
             <Icon name="cake" />
-            <Sensitive :blurred="!cv.access_granted">{{ cv.date_of_birth }}</Sensitive>
+            <Sensitive :blurred="!cv.access_granted">{{ birthDate }}</Sensitive>
           </p>
         </div>
       </div>

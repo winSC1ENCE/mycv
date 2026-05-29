@@ -9,9 +9,14 @@ export type TimelineRow =
   | { kind: "certificate"; date: string; data: Certificate }
   | { kind: "milestone"; date: string; data: TimelineEntry };
 
-function pickAnchorDate(start: string, end: string | null): string {
-  // Sort by end-date (current roles use start as anchor since end is null).
-  return end ?? start;
+function todayIso(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function pickAnchorDate(_start: string, end: string | null): string {
+  // The end date defines the position; ongoing roles (no end) anchor to today
+  // so they sort to the top of the (descending) timeline.
+  return end ?? todayIso();
 }
 
 export const useCvStore = defineStore("cv", () => {

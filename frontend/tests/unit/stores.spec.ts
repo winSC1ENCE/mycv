@@ -170,7 +170,7 @@ describe("stores", () => {
     }
   });
 
-  it("timelineItems uses start_date as anchor for current roles (end_date null)", () => {
+  it("timelineItems anchors current roles (end_date null) to today so they sort to the top", () => {
     const store = useCvStore();
     store.cv = {
       id: 1,
@@ -215,6 +215,7 @@ describe("stores", () => {
       timeline_entries: [],
       skill_categories: [],
     } as Cv;
-    expect(store.timelineItems[0].date).toBe("2025-08-01");
+    const today = new Date().toISOString().slice(0, 10);
+    expect(store.timelineItems[0].date).toBe(today);
   });
 });

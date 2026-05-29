@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useCvStore } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
@@ -9,6 +10,13 @@ import ImageLightbox from "@/components/base/ImageLightbox.vue";
 import RichText from "@/components/base/RichText.vue";
 
 const props = defineProps<{ slug: string }>();
+
+const router = useRouter();
+
+function goBack() {
+  if (window.history.state?.back) router.back();
+  else router.push({ name: "home" });
+}
 
 const cvStore = useCvStore();
 const { cv } = storeToRefs(cvStore);
@@ -32,7 +40,7 @@ usePageMeta({
 <template>
   <section class="section">
     <div class="container project-detail">
-      <router-link to="/" class="project-detail__back">← Back</router-link>
+      <button type="button" class="project-detail__back" @click="goBack">← Back</button>
 
       <template v-if="project">
         <h1 class="project-detail__title">{{ name }}</h1>
@@ -99,8 +107,13 @@ usePageMeta({
 .project-detail__back {
   display: inline-block;
   margin-bottom: var(--space-4);
+  padding: 0;
+  border: none;
+  background: none;
   color: var(--color-fg-muted);
   font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .project-detail__title {

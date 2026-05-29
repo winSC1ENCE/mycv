@@ -14,6 +14,9 @@
     "projects": "Projekte",
     "contact": "Kontakt"
   },
+  "projects": {
+    "source_code": "Quellcode"
+  },
   "skills": {
     "levels": {
       "1": "Neuling",

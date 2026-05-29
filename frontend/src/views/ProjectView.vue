@@ -8,6 +8,7 @@ import { pickLocalized } from "@/composables/useLocalized";
 import { usePageMeta } from "@/composables/usePageMeta";
 import ImageLightbox from "@/components/base/ImageLightbox.vue";
 import RichText from "@/components/base/RichText.vue";
+import Icon from "@/components/base/Icon.vue";
 
 const props = defineProps<{ slug: string }>();
 
@@ -88,6 +89,11 @@ usePageMeta({
         <p v-if="project.url">
           <a :href="project.url" target="_blank" rel="noopener">{{ project.url }}</a>
         </p>
+        <p v-if="project.repo_url">
+          <a :href="project.repo_url" target="_blank" rel="noopener" class="project-detail__repo">
+            <Icon name="github" /> {{ $t("projects.source_code") }}
+          </a>
+        </p>
         <div class="project-detail__tags">
           <span v-for="tech in project.technologies" :key="tech.id" class="tag">{{
             tech.name
@@ -118,6 +124,13 @@ usePageMeta({
 
 .project-detail__title {
   margin: 0 0 var(--space-4);
+}
+
+.project-detail__repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-accent);
 }
 
 .project-detail__desc {

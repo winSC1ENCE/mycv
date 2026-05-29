@@ -2,6 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import Icon from "@/components/base/Icon.vue";
 import type { Project } from "@/api/types";
 
 defineProps<{ projects: Project[] }>();
@@ -39,6 +40,15 @@ const { locale } = storeToRefs(useLocaleStore());
                 tech.name
               }}</span>
             </div>
+            <a
+              v-if="project.repo_url"
+              :href="project.repo_url"
+              target="_blank"
+              rel="noopener"
+              class="project-card__repo"
+            >
+              <Icon name="github" :size="14" /> {{ $t("projects.source_code") }}
+            </a>
           </div>
         </article>
       </div>
@@ -96,6 +106,19 @@ const { locale } = storeToRefs(useLocaleStore());
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+}
+
+.project-card__repo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-fg-muted);
+  width: fit-content;
+}
+
+.project-card__repo:hover {
+  color: var(--color-accent);
 }
 
 [data-theme="dog"] .project-card {

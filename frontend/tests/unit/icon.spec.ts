@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
 import Icon, { type IconName } from "@/components/base/Icon.vue";
 
-const ALL_NAMES: IconName[] = ["map-pin", "heart", "cake", "lock", "mail", "phone"];
+const ALL_NAMES: IconName[] = ["map-pin", "heart", "cake", "lock", "mail", "phone", "github"];
 
 describe("Icon.vue", () => {
   it.each(ALL_NAMES)("renders an svg with the expected data-icon for '%s'", (name) => {

@@ -14,6 +14,9 @@
     "projects": "Projects",
     "contact": "Contact"
   },
+  "projects": {
+    "source_code": "Source code"
+  },
   "skills": {
     "levels": {
       "1": "Novice",

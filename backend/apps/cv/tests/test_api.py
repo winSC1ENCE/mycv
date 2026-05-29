@@ -284,9 +284,7 @@ def test_admin_reorder_project_media_persists(admin_client: APIClient) -> None:
     project.media.set([a, b, c])
 
     new_order = [c.pk, a.pk, b.pk]
-    resp = admin_client.patch(
-        f"/api/projects/{project.pk}/", {"media": new_order}, format="json"
-    )
+    resp = admin_client.patch(f"/api/projects/{project.pk}/", {"media": new_order}, format="json")
     assert resp.status_code == status.HTTP_200_OK
 
     detail = admin_client.get(f"/api/projects/{project.slug}/")
@@ -356,7 +354,7 @@ def test_certificate_exposes_experience_and_education_fks(api_client: APIClient)
     CertificateFactory(person=person)  # unlinked
     resp = api_client.get("/api/cv/")
     body = resp.json()
-    certs = sorted(body["certificates"], key=lambda c: (c["experience"] or 0))
+    certs = sorted(body["certificates"], key=lambda c: c["experience"] or 0)
     assert certs[0]["experience"] is None
     assert certs[0]["education"] is None
     assert certs[1]["experience"] == exp.pk

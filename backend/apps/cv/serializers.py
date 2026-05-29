@@ -449,6 +449,31 @@ class ProjectWriteSerializer(serializers.ModelSerializer[models.Project]):
             raise serializers.ValidationError("Maximum 6 photos per project.")
         return value
 
+    def _apply_media_order(self, media: list[models.MediaAsset]) -> None:
+        """Persist the submitted gallery order onto each asset's ``order``.
+
+        ``Project.media`` is a plain M2M, so ``.set()`` only stores membership.
+        The read path orders by ``MediaAsset.order``, so we mirror the submitted
+        positions there to make reordering visible.
+        """
+        for index, asset in enumerate(media):
+            if asset.order != index:
+                asset.order = index
+                asset.save(update_fields=["order"])
+
+    def create(self, validated_data: dict[str, Any]) -> models.Project:
+        media = list(validated_data.get("media", []))
+        instance = super().create(validated_data)
+        self._apply_media_order(media)
+        return instance
+
+    def update(self, instance: models.Project, validated_data: dict[str, Any]) -> models.Project:
+        media = validated_data.get("media")
+        instance = super().update(instance, validated_data)
+        if media is not None:  # PATCH may omit media → leave order untouched
+            self._apply_media_order(list(media))
+        return instance
+
 
 class TimelineEntryWriteSerializer(serializers.ModelSerializer[models.TimelineEntry]):
     person = serializers.PrimaryKeyRelatedField(

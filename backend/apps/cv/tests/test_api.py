@@ -262,6 +262,37 @@ def test_admin_can_delete_slug_keyed_entity_by_id(
     assert not model.objects.filter(pk=obj.pk).exists()
 
 
+def test_admin_create_project_applies_media_order(admin_client: APIClient) -> None:
+    person = PersonFactory()
+    # ``a`` already sits at its target index 0 (exercises the skip branch).
+    a, b, c = MediaAssetFactory(order=0), MediaAssetFactory(order=5), MediaAssetFactory(order=5)
+    resp = admin_client.post(
+        "/api/projects/",
+        {"person": person.pk, "name": "Gallery", "slug": "gallery", "media": [a.pk, b.pk, c.pk]},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_201_CREATED
+    detail = admin_client.get("/api/projects/gallery/")
+    assert [m["id"] for m in detail.json()["media"]] == [a.pk, b.pk, c.pk]
+    b.refresh_from_db()
+    assert b.order == 1
+
+
+def test_admin_reorder_project_media_persists(admin_client: APIClient) -> None:
+    project = ProjectFactory()
+    a, b, c = (MediaAssetFactory(order=i) for i in range(3))
+    project.media.set([a, b, c])
+
+    new_order = [c.pk, a.pk, b.pk]
+    resp = admin_client.patch(
+        f"/api/projects/{project.pk}/", {"media": new_order}, format="json"
+    )
+    assert resp.status_code == status.HTTP_200_OK
+
+    detail = admin_client.get(f"/api/projects/{project.slug}/")
+    assert [m["id"] for m in detail.json()["media"]] == new_order
+
+
 # ---------------------------------------------------------------------------
 # Media asset upload
 # ---------------------------------------------------------------------------

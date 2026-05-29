@@ -64,6 +64,14 @@
             <span class="field-hint">{{ $t("admin.multiSelectHint") }}</span>
           </label>
 
+          <div class="field-group">
+            <span class="field-group__label">{{ $t("admin.fields.mediaFile") }}</span>
+            <FileUpload accept="image/*,application/pdf" @uploaded="onMediaUploaded" />
+            <span v-if="editing.media" class="field-group__hint">
+              Current: ID {{ editing.media }}
+            </span>
+          </div>
+
           <label class="label--checkbox">
             <input v-model="editing.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
@@ -85,9 +93,10 @@
 import { computed, ref, onMounted } from "vue";
 import { educationApi, technologyApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import type { Education, EducationWrite, Technology } from "@/api/types";
+import type { Education, EducationWrite, MediaAsset, Technology } from "@/api/types";
 import SortableList from "@/components/admin/SortableList.vue";
 import MarkdownField from "@/components/base/MarkdownField.vue";
+import FileUpload from "@/components/admin/FileUpload.vue";
 
 type Draft = Partial<EducationWrite> & { id?: number };
 
@@ -145,13 +154,22 @@ function openNew(): void {
     institution: "",
     start_date: "",
     technologies: [],
+    media: null,
     is_published: true,
   };
 }
 
 function openEdit(item: Education): void {
-  const { technologies, ...rest } = item;
-  editing.value = { ...rest, technologies: technologies.map((t) => t.id) };
+  const { media, technologies, ...rest } = item;
+  editing.value = {
+    ...rest,
+    technologies: technologies.map((t) => t.id),
+    media: media?.id ?? null,
+  };
+}
+
+function onMediaUploaded(asset: MediaAsset): void {
+  if (editing.value) editing.value.media = asset.id;
 }
 
 async function save(): Promise<void> {

@@ -10,7 +10,13 @@ from rest_framework.test import APIClient
 
 from apps.cv import models
 
-from .factories import CertificateFactory, ExperienceFactory, MediaAssetFactory, PersonFactory
+from .factories import (
+    CertificateFactory,
+    EducationFactory,
+    ExperienceFactory,
+    MediaAssetFactory,
+    PersonFactory,
+)
 
 
 @pytest.fixture()
@@ -386,6 +392,56 @@ class TestExperienceMediaRedaction:
         client = APIClient()
         client.force_authenticate(user=staff)
         data = client.get(f"/api/experiences/{exp.id}/").json()
+        assert data["media"]["url"]
+        assert data["media"]["url"] != ""
+
+
+@pytest.mark.django_db
+class TestEducationMediaRedaction:
+    def test_cv_endpoint_blanks_education_media_for_anonymous(self, person: models.Person) -> None:
+        media = MediaAssetFactory()
+        EducationFactory(person=person, media=media, is_published=True)
+        data = APIClient().get("/api/cv/").json()
+        educations = data["educations"]
+        assert len(educations) == 1
+        assert educations[0]["media"] is not None
+        assert educations[0]["media"]["url"] == ""
+
+    def test_anonymous_list_blanks_media_url(self, person: models.Person) -> None:
+        media = MediaAssetFactory()
+        EducationFactory(person=person, media=media, is_published=True)
+        results = APIClient().get("/api/educations/").json()["results"]
+        assert len(results) == 1
+        assert results[0]["media"] is not None
+        assert results[0]["media"]["url"] == ""
+
+    def test_anonymous_retrieve_blanks_media_url(self, person: models.Person) -> None:
+        media = MediaAssetFactory()
+        edu = EducationFactory(person=person, media=media, is_published=True)
+        data = APIClient().get(f"/api/educations/{edu.id}/").json()
+        assert data["media"] is not None
+        assert data["media"]["url"] == ""
+
+    def test_valid_key_returns_real_media_url(
+        self, person: models.Person, valid_key: models.AccessKey
+    ) -> None:
+        media = MediaAssetFactory()
+        edu = EducationFactory(person=person, media=media, is_published=True)
+        data = APIClient().get(f"/api/educations/{edu.id}/?key={valid_key.token}").json()
+        assert data["media"]["url"]
+        assert data["media"]["url"] != ""
+
+    def test_staff_sees_real_media_url(
+        self, person: models.Person, django_user_model: type
+    ) -> None:
+        media = MediaAssetFactory()
+        edu = EducationFactory(person=person, media=media, is_published=True)
+        staff = django_user_model.objects.create_user(
+            username="admin", password="pass", is_staff=True
+        )
+        client = APIClient()
+        client.force_authenticate(user=staff)
+        data = client.get(f"/api/educations/{edu.id}/").json()
         assert data["media"]["url"]
         assert data["media"]["url"] != ""
 

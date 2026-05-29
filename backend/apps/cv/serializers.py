@@ -88,6 +88,7 @@ class ExperienceSerializer(serializers.ModelSerializer[models.Experience]):
 
 class EducationSerializer(serializers.ModelSerializer[models.Education]):
     technologies = TechnologySerializer(many=True, read_only=True)
+    media = MediaAssetSerializer(read_only=True)
 
     class Meta:
         model = models.Education
@@ -102,9 +103,17 @@ class EducationSerializer(serializers.ModelSerializer[models.Education]):
             "description",
             "description_de",
             "technologies",
+            "media",
             "order",
             "is_published",
         ]
+
+    def to_representation(self, instance: models.Education) -> Any:
+        data = super().to_representation(instance)
+        granted: bool = self.context.get("access_granted", False)
+        if not granted and data.get("media"):
+            data["media"]["url"] = ""
+        return data
 
 
 class CertificateSerializer(serializers.ModelSerializer[models.Certificate]):
@@ -389,6 +398,7 @@ class EducationWriteSerializer(serializers.ModelSerializer[models.Education]):
             "description",
             "description_de",
             "technologies",
+            "media",
             "order",
             "is_published",
         ]

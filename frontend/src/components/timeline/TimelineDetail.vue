@@ -65,6 +65,11 @@ function fmt(iso: string): string {
       <ul v-if="row.data.technologies.length" class="timeline-detail__tags">
         <li v-for="tech in row.data.technologies" :key="tech.id" class="tag">{{ tech.name }}</li>
       </ul>
+      <MediaPreview
+        v-if="row.data.media"
+        :media="row.data.media"
+        :alt="pickLocalized(row.data, 'degree', locale)"
+      />
       <div v-if="row.certs.length" class="timeline-detail__certs">
         <h4>{{ t("timeline.linked_certificates") }}</h4>
         <ul>

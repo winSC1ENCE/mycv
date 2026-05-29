@@ -179,6 +179,13 @@ class Education(Orderable):
     description = models.TextField(blank=True)
     description_de = models.TextField(blank=True)
     technologies = models.ManyToManyField(Technology, blank=True, related_name="educations")
+    media = models.ForeignKey(
+        MediaAsset,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="educations",
+    )
 
     class Meta(Orderable.Meta):
         ordering = ["-start_date", "order"]

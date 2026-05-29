@@ -7,6 +7,7 @@ import { useI18n } from "vue-i18n";
 import { useCvStore, type TimelineRow } from "@/stores/cv";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
+import { useEscClose } from "@/composables/useEscClose";
 import { formatMonthYear } from "@/utils/dateFormat";
 import { dogIconFor } from "@/composables/useDogIcon";
 import { petCount, spawnBubble } from "@/composables/useDogBubbles";
@@ -24,6 +25,13 @@ const { t } = useI18n();
 
 const openId = ref<string | null>(null);
 const root = ref<HTMLElement | null>(null);
+
+useEscClose(
+  () => {
+    openId.value = null;
+  },
+  computed(() => openId.value !== null),
+);
 
 function uid(row: TimelineRow): string {
   return `${row.kind}-${row.data.id}`;

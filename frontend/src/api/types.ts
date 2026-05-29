@@ -71,6 +71,7 @@ export interface Education {
   description: string;
   description_de: string;
   technologies: Technology[];
+  media: MediaAsset | null;
   order: number;
   is_published: boolean;
 }
@@ -148,8 +149,9 @@ export type ExperienceWrite = Omit<Experience, "technologies" | "media"> & {
   media?: number | null;
   person?: number;
 };
-export type EducationWrite = Omit<Education, "technologies"> & {
+export type EducationWrite = Omit<Education, "technologies" | "media"> & {
   technologies: number[];
+  media?: number | null;
   person?: number;
 };
 export type CertificateWrite = Omit<Certificate, "media" | "technologies"> & {

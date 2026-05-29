@@ -82,7 +82,7 @@ class PersonViewSet(viewsets.ModelViewSet[models.Person]):
     queryset = models.Person.objects.prefetch_related(
         "experiences__technologies",
         "experiences__media",
-        "educations",
+        "educations__media",
         "certificates__media",
         "projects__technologies",
         "projects__media",
@@ -191,6 +191,12 @@ class EducationViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Educ
         if self.action in ("create", "update", "partial_update"):
             return serializers.EducationWriteSerializer
         return serializers.EducationSerializer
+
+    def get_serializer_context(self) -> dict[str, Any]:
+        return {
+            **super().get_serializer_context(),
+            "access_granted": _resolve_access(self.request) or _is_staff(self.request),
+        }
 
 
 class CertificateViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Certificate]):

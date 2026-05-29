@@ -38,7 +38,8 @@ def _populated_person() -> models.Person:
     exp_media = MediaAssetFactory()
     exp = ExperienceFactory(person=person, media=exp_media)
     exp.technologies.add(tech)
-    EducationFactory(person=person)
+    edu_media = MediaAssetFactory()
+    EducationFactory(person=person, media=edu_media)
     media = MediaAssetFactory()
     CertificateFactory(person=person, media=media)
     project = ProjectFactory(person=person)
@@ -68,6 +69,9 @@ def test_cv_list_returns_primary_person(api_client: APIClient) -> None:
     assert exp_payload["media"] is not None
     assert exp_payload["media"]["kind"] == "image"
     assert exp_payload["media"]["url"] == ""  # gated behind AccessKey for anonymous
+    edu_payload = body["educations"][0]
+    assert edu_payload["media"] is not None
+    assert edu_payload["media"]["url"] == ""  # gated behind AccessKey for anonymous
 
 
 def test_cv_list_404_when_no_published_person(api_client: APIClient) -> None:

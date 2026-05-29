@@ -93,6 +93,7 @@ describe("stores", () => {
           description: "",
           description_de: "",
           technologies: [],
+          media: null,
           order: 0,
           is_published: true,
         },

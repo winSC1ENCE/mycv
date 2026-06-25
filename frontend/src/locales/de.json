@@ -17,6 +17,32 @@
   "projects": {
     "source_code": "Quellcode"
   },
+  "themes": {
+    "virus": {
+      "counter": "{n} Infektionen",
+      "profile": {
+        "lead": "Spezialist für die Eindämmung von:",
+        "items": [
+          "Datenchaos",
+          "Legacy-Systemen",
+          "Manuellen Excel-Prozessen",
+          "Unbekannten Datenquellen"
+        ]
+      },
+      "egg": {
+        "button": "🦠 Erreger verfolgen",
+        "title": "National Surveillance System",
+        "intro": "R₀ (Reproduktionszahl) — Verbreitung von Best Practices:",
+        "valueHead": "R₀",
+        "footnote": "Achtung: Der Kandidat verbreitet Best Practices mit epidemischer Geschwindigkeit.",
+        "rows": {
+          "python": "Python-Wissen",
+          "sql": "SQL-Kenntnisse",
+          "automation": "Automatisierung"
+        }
+      }
+    }
+  },
   "skills": {
     "levels": {
       "1": "Neuling",
@@ -88,6 +114,9 @@
     "chooseFile": "Datei auswählen…",
     "viewPublicCv": "Öffentlichen CV anzeigen",
     "multiSelectHint": "Cmd/Strg gedrückt halten für Mehrfachauswahl",
+    "funnyTheme": {
+      "none": "Keiner (nur Normal)"
+    },
     "nav": {
       "dashboard": "Übersicht",
       "person": "Profil",
@@ -124,6 +153,7 @@
       "categoryHelp": "Optionale Gruppierung (z. B. Sprache, Framework). Wird nicht öffentlich angezeigt.",
       "summary": "Zusammenfassung",
       "summary_de": "Zusammenfassung (DE)",
+      "active_funny_theme": "Spass-Modus",
       "url": "URL",
       "repo_url": "Repository-URL",
       "published": "Veröffentlicht",

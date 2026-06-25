@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { bubbles } from "@/composables/useDogBubbles";
+import { bubbles } from "@/composables/useFunBubbles";
 </script>
 
 <template>
   <Teleport to="body">
-    <TransitionGroup name="dog-bubble" tag="div" class="dog-bubble-layer">
+    <TransitionGroup name="fun-bubble" tag="div" class="fun-bubble-layer">
       <span
         v-for="b in bubbles"
         :key="b.id"
-        class="dog-bubble"
-        :class="b.size === 'big' ? 'dog-bubble--big' : ''"
+        class="fun-bubble"
+        :class="b.size === 'big' ? 'fun-bubble--big' : ''"
         :style="{
           left: `${b.x}px`,
           top: `${b.y}px`,
@@ -24,14 +24,14 @@ import { bubbles } from "@/composables/useDogBubbles";
 </template>
 
 <style>
-.dog-bubble-layer {
+.fun-bubble-layer {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 1000;
 }
 
-.dog-bubble {
+.fun-bubble {
   position: fixed;
   transform: translate(-50%, -100%) rotate(var(--bubble-rotate, 0deg));
   background: #ffffff;
@@ -47,10 +47,10 @@ import { bubbles } from "@/composables/useDogBubbles";
   white-space: nowrap;
   pointer-events: none;
   user-select: none;
-  animation: dog-bubble-drift 1500ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+  animation: fun-bubble-drift 1500ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
 }
 
-.dog-bubble::after {
+.fun-bubble::after {
   content: "";
   position: absolute;
   bottom: -16px;
@@ -63,7 +63,7 @@ import { bubbles } from "@/composables/useDogBubbles";
   border-top: 14px solid #0a0a0a;
 }
 
-.dog-bubble::before {
+.fun-bubble::before {
   content: "";
   position: absolute;
   bottom: -10px;
@@ -77,7 +77,7 @@ import { bubbles } from "@/composables/useDogBubbles";
   z-index: 1;
 }
 
-.dog-bubble--big {
+.fun-bubble--big {
   font-size: 1.75rem;
   padding: 14px 28px;
   border-width: 4px;
@@ -85,7 +85,7 @@ import { bubbles } from "@/composables/useDogBubbles";
   animation-duration: 2000ms;
 }
 
-@keyframes dog-bubble-drift {
+@keyframes fun-bubble-drift {
   0% {
     opacity: 0;
     transform: translate(-50%, -100%) rotate(var(--bubble-rotate, 0deg)) scale(0.3);
@@ -104,13 +104,13 @@ import { bubbles } from "@/composables/useDogBubbles";
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dog-bubble {
-    animation: dog-bubble-fade 1500ms ease forwards;
+  .fun-bubble {
+    animation: fun-bubble-fade 1500ms ease forwards;
   }
-  .dog-bubble--big {
+  .fun-bubble--big {
     animation-duration: 2000ms;
   }
-  @keyframes dog-bubble-fade {
+  @keyframes fun-bubble-fade {
     0% {
       opacity: 0;
     }

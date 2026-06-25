@@ -1,0 +1,130 @@
+/* "Virus Mode" — clinical / national-surveillance lab aesthetic.
+   White lab surfaces, biohazard-green accents, mono labels, microscope cursor. */
+
+[data-theme="virus"] {
+  --color-bg: #f3f7f4;
+  --color-bg-elevated: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #e8f1ea;
+  --color-fg: #11241a;
+  --color-fg-muted: #3c5a48;
+  --color-muted: #5a7464;
+  --color-accent: #1b7a3d;
+  --color-accent-soft: #d7efdd;
+  --color-border: #1b7a3d;
+  --color-timeline: #1b7a3d;
+
+  --shadow-card-rest: 0 2px 6px rgba(17, 36, 26, 0.1), 0 12px 28px rgba(17, 36, 26, 0.1);
+  --shadow-card-hover: 0 4px 10px rgba(17, 36, 26, 0.14), 0 18px 40px rgba(17, 36, 26, 0.16);
+
+  --pattern-comic: none;
+  --font-display: var(--font-sans);
+
+  cursor:
+    url("/icons/virus/cursor.svg") 16 16,
+    auto;
+}
+
+/* Make interactive targets keep the playful cursor too. */
+[data-theme="virus"] a,
+[data-theme="virus"] button,
+[data-theme="virus"] .timeline__node {
+  cursor:
+    url("/icons/virus/cursor.svg") 16 16,
+    pointer;
+}
+
+/* Thin biohazard tape across the very top of the page. */
+[data-theme="virus"] body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  z-index: 50;
+  pointer-events: none;
+  background: repeating-linear-gradient(45deg, #1b7a3d 0 14px, #f4d000 14px 28px);
+}
+
+/* Section headings get a clinical mono treatment. */
+[data-theme="virus"] .section__title {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 0.04em;
+}
+
+/* Timeline node = white disc carrying the inline --node-icon (virus glyphs). */
+[data-theme="virus"] .timeline__node {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--color-accent-soft);
+  -webkit-mask-image: none;
+  mask-image: none;
+  cursor:
+    url("/icons/virus/cursor.svg") 16 16,
+    pointer;
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
+}
+
+[data-theme="virus"] .timeline__node:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 6px var(--color-accent-soft);
+}
+
+[data-theme="virus"] .timeline__node::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  background-image: var(--node-icon);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+[data-theme="virus"] .timeline__card {
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+}
+
+[data-theme="virus"] .timeline__kind,
+[data-theme="virus"] .kind-badge {
+  font-family: var(--font-mono, monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Infection counter chip — bottom-center, mirrors the dog pet-counter. */
+[data-theme="virus"] .dog-pet-counter {
+  position: fixed;
+  bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: #ffffff;
+  color: var(--color-fg);
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-card-rest);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Profile hero containment checklist. */
+[data-theme="virus"] .profile-hero__lead {
+  font-family: var(--font-mono, monospace);
+}
+
+[data-theme="virus"] .profile-hero__item span[aria-hidden="true"] {
+  color: var(--color-accent);
+  font-weight: 800;
+}

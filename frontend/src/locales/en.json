@@ -17,6 +17,27 @@
   "projects": {
     "source_code": "Source code"
   },
+  "themes": {
+    "virus": {
+      "counter": "{n} infections",
+      "profile": {
+        "lead": "Specialist in containing:",
+        "items": ["Data chaos", "Legacy systems", "Manual Excel processes", "Unknown data sources"]
+      },
+      "egg": {
+        "button": "🦠 Trace pathogens",
+        "title": "National Surveillance System",
+        "intro": "R₀ (reproduction number) — spread of best practices:",
+        "valueHead": "R₀",
+        "footnote": "Warning: the candidate spreads best practices at epidemic speed.",
+        "rows": {
+          "python": "Python knowledge",
+          "sql": "SQL skills",
+          "automation": "Automation"
+        }
+      }
+    }
+  },
   "skills": {
     "levels": {
       "1": "Novice",
@@ -88,6 +109,9 @@
     "chooseFile": "Choose file…",
     "viewPublicCv": "View public CV",
     "multiSelectHint": "Hold Cmd/Ctrl to select multiple",
+    "funnyTheme": {
+      "none": "None (normal only)"
+    },
     "nav": {
       "dashboard": "Dashboard",
       "person": "Profile",
@@ -124,6 +148,7 @@
       "categoryHelp": "Optional grouping (e.g. Language, Framework). Not shown publicly.",
       "summary": "Summary",
       "summary_de": "Summary (DE)",
+      "active_funny_theme": "Funny theme",
       "url": "URL",
       "repo_url": "Repository URL",
       "published": "Published",

@@ -9,11 +9,11 @@ import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
 import { useEscClose } from "@/composables/useEscClose";
 import { formatMonthYear } from "@/utils/dateFormat";
-import { dogIconFor } from "@/composables/useDogIcon";
-import { petCount, spawnBubble } from "@/composables/useDogBubbles";
+import { iconForTheme } from "@/composables/useThemeIcon";
+import { petCount, spawnBubble } from "@/composables/useFunBubbles";
 import { useThemeStore } from "@/stores/theme";
+import { packFor } from "@/themes/registry";
 import TimelineDetail from "./TimelineDetail.vue";
-import DogBubbles from "./DogBubbles.vue";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,14 +37,28 @@ function uid(row: TimelineRow): string {
   return `${row.kind}-${row.data.id}`;
 }
 
+const funPack = computed(() => packFor(theme.value));
+
 function nodeStyle(row: TimelineRow): Record<string, string> {
-  return { "--node-icon": `url('${dogIconFor(uid(row))}')` };
+  return { "--node-icon": `url('${iconForTheme(theme.value, uid(row))}')` };
 }
 
 function onNodeClick(ev: MouseEvent, row: TimelineRow): void {
-  if (theme.value !== "dog") return;
-  spawnBubble(ev.clientX, ev.clientY, dogIconFor(uid(row)));
+  if (!funPack.value) return;
+  spawnBubble(
+    theme.value,
+    locale.value,
+    ev.clientX,
+    ev.clientY,
+    iconForTheme(theme.value, uid(row)),
+  );
 }
+
+const counterText = computed(() => {
+  const pack = funPack.value;
+  if (!pack) return "";
+  return `${pack.emoji} ${t(pack.counterKey, { n: petCount.value })}`;
+});
 
 function headline(row: TimelineRow): string {
   switch (row.kind) {
@@ -189,10 +203,9 @@ const hasItems = computed(() => timelineItems.value.length > 0);
         </li>
       </ol>
       <p v-else class="timeline__empty">{{ t("timeline.empty") }}</p>
-      <div v-if="theme === 'dog' && petCount > 0" class="dog-pet-counter" aria-hidden="true">
-        🐾 {{ t("timeline.pet_counter", { n: petCount }) }}
+      <div v-if="funPack && petCount > 0" class="dog-pet-counter" aria-hidden="true">
+        {{ counterText }}
       </div>
     </div>
-    <DogBubbles v-if="theme === 'dog'" />
   </section>
 </template>

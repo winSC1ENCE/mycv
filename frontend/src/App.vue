@@ -1,22 +1,39 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useI18n } from "vue-i18n";
 import { useCvStore } from "@/stores/cv";
 import { useThemeStore } from "@/stores/theme";
 import { useLocaleStore } from "@/stores/locale";
+import { packFor } from "@/themes/registry";
 // PDF export disabled (refactoring_12) — uncomment to re-enable.
 // import { buildPdfUrl } from "@/api/exports";
 import { useAccessKey } from "@/composables/useAccessKey";
 import ErrorBoundary from "@/components/base/ErrorBoundary.vue";
+import FunBubbles from "@/components/timeline/FunBubbles.vue";
+import EasterEggButton from "@/components/base/EasterEggButton.vue";
 
 const cvStore = useCvStore();
 const themeStore = useThemeStore();
 const localeStore = useLocaleStore();
 const { cv } = storeToRefs(cvStore);
-const { theme } = storeToRefs(themeStore);
+const { theme, activeFunny, funnyAvailable } = storeToRefs(themeStore);
 const { locale } = storeToRefs(localeStore);
 const { t, locale: i18nLocale } = useI18n();
+
+// The funny theme the public site exposes is admin-controlled (server value).
+watch(
+  () => cv.value?.active_funny_theme,
+  (value) => themeStore.setAvailableFunny(value),
+  { immediate: true },
+);
+
+// Toggle button shows the available funny theme when in normal mode, else "Normal".
+const toggleLabel = computed(() => {
+  if (theme.value !== "normal") return "🌞 Normal";
+  const pack = packFor(activeFunny.value);
+  return pack ? `${pack.emoji} ${pack.label}` : "";
+});
 
 // PDF export disabled (refactoring_12) — uncomment to re-enable.
 // const pdfUrl = computed(() => buildPdfUrl(locale.value, theme.value));
@@ -58,12 +75,13 @@ onMounted(() => {
           {{ locale === "en" ? "DE" : "EN" }}
         </button>
         <button
+          v-if="funnyAvailable || theme !== 'normal'"
           type="button"
           class="button button--ghost"
           :aria-label="t('actions.toggle_theme')"
-          @click="themeStore.toggle()"
+          @click="themeStore.toggleFunny()"
         >
-          {{ theme === "normal" ? "🐕 Dog" : "🌞 Normal" }}
+          {{ toggleLabel }}
         </button>
       </div>
     </div>
@@ -80,4 +98,7 @@ onMounted(() => {
       <p>© {{ new Date().getFullYear() }} {{ cv ? cv.full_name : "" }}</p>
     </div>
   </footer>
+
+  <FunBubbles v-if="theme !== 'normal'" />
+  <EasterEggButton v-if="theme !== 'normal'" :theme="theme" />
 </template>

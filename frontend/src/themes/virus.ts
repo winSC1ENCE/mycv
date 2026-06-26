@@ -113,7 +113,7 @@ export const virusPack: ThemePack = {
     footnoteKey: "themes.virus.egg.footnote",
     valueHeadKey: "themes.virus.egg.valueHead",
     rows: [
-      { labelKey: "themes.virus.egg.rows.python", value: "3.4" },
+      { labelKey: "themes.virus.egg.rows.python", value: "6.9" },
       { labelKey: "themes.virus.egg.rows.sql", value: "4.1" },
       { labelKey: "themes.virus.egg.rows.automation", value: "5.7" },
     ],

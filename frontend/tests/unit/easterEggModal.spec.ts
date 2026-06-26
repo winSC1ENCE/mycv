@@ -46,7 +46,8 @@ describe("EasterEggModal", () => {
     expect(document.body.querySelectorAll(".egg-table tbody tr")).toHaveLength(
       virusPack.easterEgg!.rows.length,
     );
-    expect(document.body.textContent).toContain("3.4");
+    const pythonValue = virusPack.easterEgg!.rows.find((r) => r.labelKey.endsWith("python"))!.value;
+    expect(document.body.textContent).toContain(pythonValue);
   });
 
   it("renders nothing when closed", () => {

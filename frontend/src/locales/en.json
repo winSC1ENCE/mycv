@@ -19,7 +19,7 @@
   },
   "themes": {
     "virus": {
-      "counter": "{n} infections",
+      "counter": "{n} infections contained",
       "profile": {
         "lead": "Specialist in containing:",
         "items": ["Data chaos", "Legacy systems", "Manual Excel processes", "Unknown data sources"]

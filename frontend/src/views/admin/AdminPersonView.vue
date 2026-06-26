@@ -30,6 +30,15 @@
         {{ $t("admin.fields.summary_de") }}
         <MarkdownField v-model="form.summary_de" :rows="4" />
       </label>
+      <label>
+        {{ $t("admin.fields.active_funny_theme") }}
+        <select v-model="form.active_funny_theme">
+          <option value="none">{{ $t("admin.funnyTheme.none") }}</option>
+          <option v-for="opt in FUNNY_OPTIONS" :key="opt.id" :value="opt.id">
+            {{ opt.label }}
+          </option>
+        </select>
+      </label>
 
       <p v-if="saveError" class="form-error">{{ saveError }}</p>
       <p v-if="saved" class="form-success">{{ $t("admin.saved") }}</p>
@@ -47,6 +56,7 @@
 import { onMounted, ref } from "vue";
 import { personApi } from "@/api/admin";
 import type { Cv, PersonWrite } from "@/api/types";
+import { FUNNY_OPTIONS } from "@/themes/registry";
 import MarkdownField from "@/components/base/MarkdownField.vue";
 
 const form = ref<Partial<PersonWrite> | null>(null);
@@ -79,6 +89,7 @@ async function load(): Promise<void> {
       date_of_birth: cv.date_of_birth ?? undefined,
       summary: cv.summary,
       summary_de: cv.summary_de,
+      active_funny_theme: cv.active_funny_theme,
     };
   } catch {
     error.value = "Failed to load.";

@@ -12,18 +12,44 @@ describe("stores", () => {
     localStorage.clear();
   });
 
-  it("theme toggles between normal and dog", () => {
+  it("toggleFunny flips between normal and the available funny theme", () => {
     const store = useThemeStore();
     expect(store.theme).toBe("normal");
-    store.toggle();
+    expect(store.activeFunny).toBe("dog"); // default
+    store.toggleFunny();
     expect(store.theme).toBe("dog");
-    store.toggle();
+    store.toggleFunny();
     expect(store.theme).toBe("normal");
+  });
+
+  it("toggleFunny uses the admin-selected funny theme", () => {
+    const store = useThemeStore();
+    store.setAvailableFunny("virus");
+    store.toggleFunny();
+    expect(store.theme).toBe("virus");
+  });
+
+  it("setTheme ignores a funny id that isn't the available one", () => {
+    const store = useThemeStore();
+    store.setAvailableFunny("dog");
+    store.setTheme("virus"); // not the active funny theme → ignored
+    expect(store.theme).toBe("normal");
+    store.setTheme("dog");
+    expect(store.theme).toBe("dog");
+  });
+
+  it("setAvailableFunny('none') drops a now-disallowed funny theme to normal", () => {
+    const store = useThemeStore();
+    store.toggleFunny(); // → dog
+    expect(store.theme).toBe("dog");
+    store.setAvailableFunny("none");
+    expect(store.theme).toBe("normal");
+    expect(store.funnyAvailable).toBe(false);
   });
 
   it("theme persists to localStorage and document dataset", async () => {
     const store = useThemeStore();
-    store.toggle();
+    store.toggleFunny();
     await nextTick();
     expect(localStorage.getItem("mycv:theme")).toBe("dog");
     expect(document.documentElement.dataset.theme).toBe("dog");
@@ -64,6 +90,7 @@ describe("stores", () => {
       summary: "",
       summary_de: "",
       photo: null,
+      active_funny_theme: "dog",
       experiences: [
         {
           id: 10,
@@ -192,6 +219,7 @@ describe("stores", () => {
       summary: "",
       summary_de: "",
       photo: null,
+      active_funny_theme: "dog",
       experiences: [
         {
           id: 1,

@@ -59,6 +59,11 @@ class Technology(Orderable):
 
 
 class Person(Orderable):
+    class FunnyTheme(models.TextChoices):
+        NONE = "none", "None"
+        DOG = "dog", "Dog"
+        VIRUS = "virus", "Virus"
+
     slug = models.SlugField(max_length=80, unique=True, db_index=True)
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
@@ -75,6 +80,12 @@ class Person(Orderable):
     summary_de = models.TextField(blank=True)
     photo = models.ForeignKey(
         MediaAsset, null=True, blank=True, on_delete=models.PROTECT, related_name="people"
+    )
+    active_funny_theme = models.CharField(
+        max_length=20,
+        choices=FunnyTheme.choices,
+        default=FunnyTheme.DOG,
+        help_text="Which funny theme (besides Normal) is selectable on the public site.",
     )
 
     def __str__(self) -> str:

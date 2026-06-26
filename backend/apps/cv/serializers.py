@@ -235,6 +235,7 @@ class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
             "summary",
             "summary_de",
             "photo",
+            "active_funny_theme",
             "experiences",
             "educations",
             "certificates",
@@ -287,6 +288,7 @@ class PersonWriteSerializer(serializers.ModelSerializer[models.Person]):
             "summary",
             "summary_de",
             "photo",
+            "active_funny_theme",
             "order",
             "is_published",
         ]

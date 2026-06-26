@@ -86,6 +86,30 @@ def test_cv_detail_by_slug(api_client: APIClient) -> None:
     assert resp.json()["slug"] == "me"
 
 
+def test_cv_exposes_active_funny_theme_with_default(api_client: APIClient) -> None:
+    PersonFactory()
+    body = api_client.get("/api/cv/").json()
+    assert body["active_funny_theme"] == "dog"
+
+
+def test_admin_can_update_active_funny_theme(admin_client: APIClient) -> None:
+    person = PersonFactory(slug="me")
+    resp = admin_client.patch(
+        f"/api/cv/{person.slug}/", {"active_funny_theme": "virus"}, format="json"
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    person.refresh_from_db()
+    assert person.active_funny_theme == "virus"
+
+
+def test_admin_cannot_set_invalid_funny_theme(admin_client: APIClient) -> None:
+    person = PersonFactory(slug="me")
+    resp = admin_client.patch(
+        f"/api/cv/{person.slug}/", {"active_funny_theme": "cats"}, format="json"
+    )
+    assert resp.status_code == status.HTTP_400_BAD_REQUEST
+
+
 @pytest.mark.parametrize(
     "path,factory",
     [

@@ -107,6 +107,23 @@ class TestPdfRendering:
         assert "{{access_url}}" not in html
         assert f"?key={key.token}" in html
         assert "v3.1.4" in html
+        # access URL renders as a clickable anchor, not bare text
+        assert "<a " in html
+        assert f'href="http://testserver/?key={key.token}"' in html
+
+    def test_base_url_override(self, admin_client: APIClient) -> None:
+        person = PersonFactory(is_published=True)
+        key = AccessKeyFactory(person=person)
+        readme = ReadmeFactory(person=person, access_key=key, content="Open {{access_url}}")
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            admin_client.post(
+                _url(readme.pk),
+                {"lang": "en", "base_url": "https://cv.example.com/"},
+                format="json",
+            )
+        html = render.call_args.args[0]
+        assert f'href="https://cv.example.com/?key={key.token}"' in html
+        assert "testserver" not in html
 
 
 class TestRenderReadmeBodyHelper:

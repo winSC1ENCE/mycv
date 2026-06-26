@@ -334,7 +334,7 @@ async function exportPdf(target: "en" | "de"): Promise<void> {
     if (!saved?.id) return;
     const body = target === "de" ? (saved.content_de ?? "") : (saved.content ?? "");
     const svgs = await renderMermaidSvgs(body);
-    const blob = await readmeApi.pdf(saved.id, target, svgs);
+    const blob = await readmeApi.pdf(saved.id, target, svgs, `${window.location.origin}/`);
     downloadBlob(blob, `${slugify(saved.name ?? "readme") || "readme"}.pdf`);
   } catch {
     saveError.value = "Export failed.";

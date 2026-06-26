@@ -84,7 +84,10 @@ def _placeholder_context(readme: models.Readme, public_url: str) -> dict[str, st
     """
     key = readme.access_key
     return {
-        "{{access_url}}": f"{public_url}?key={key.token}" if key else "",
+        # Angle-bracket autolink so Python-markdown emits a clickable <a> (it does
+        # not linkify bare URLs the way the preview's markdown-it does). Valid both
+        # bare and inside `[label](<…>)`.
+        "{{access_url}}": f"<{public_url}?key={key.token}>" if key else "",
         "{{expires_at}}": (
             timezone.localtime(key.expires_at).strftime("%d.%m.%Y %H:%M") if key else ""
         ),
@@ -117,8 +120,9 @@ def _inject_mermaid(html: str, svgs: list[str]) -> str:
 class ReadmePdfView(APIView):
     """``POST /api/admin/readmes/<pk>/pdf/`` — stream a rendered README PDF.
 
-    Body: ``{"lang": "en"|"de", "svgs": ["<svg…>", …]}`` where ``svgs`` are the
-    client-rendered Mermaid diagrams, ordered by appearance in the document.
+    Body: ``{"lang": "en"|"de", "svgs": ["<svg…>", …], "base_url": "https://…/"}``
+    where ``svgs`` are the client-rendered Mermaid diagrams (ordered by appearance)
+    and ``base_url`` is the visitor-facing origin used to build the access link.
     """
 
     permission_classes = [IsAdminUser]
@@ -135,7 +139,12 @@ class ReadmePdfView(APIView):
             models.Readme.objects.select_related("access_key", "person"), pk=pk
         )
 
-        public_url = request.build_absolute_uri("/")
+        # Prefer the client's public origin: behind the dev proxy the request Host
+        # is the internal "backend:8000", not what the visitor's browser sees.
+        base_url = request.data.get("base_url")
+        if not (isinstance(base_url, str) and base_url.startswith(("http://", "https://"))):
+            base_url = request.build_absolute_uri("/")
+        public_url = base_url
         ctx = _placeholder_context(readme, public_url)
         body = render_readme_body(readme, lang, public_url)
         raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)

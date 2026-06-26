@@ -241,3 +241,31 @@ export interface AccessKeyWrite {
   expires_at: string;
   is_active: boolean;
 }
+
+export interface Readme {
+  id: number;
+  name: string;
+  content: string;
+  content_de: string;
+  version: string;
+  access_key: number | null;
+  access_url: string;
+  expires_display: string;
+  updated_display: string;
+  order: number;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ReadmeWrite {
+  id?: number;
+  person?: number;
+  name: string;
+  content: string;
+  content_de: string;
+  version: string;
+  access_key: number | null;
+  order: number;
+  is_published: boolean;
+}

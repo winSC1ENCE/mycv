@@ -118,3 +118,23 @@ class MediaAssetFactory(DjangoModelFactory):
     file = factory.django.FileField(filename="example.png")
     alt_text = "Example"
     kind = models.MediaAsset.Kind.IMAGE
+
+
+class AccessKeyFactory(DjangoModelFactory):
+    class Meta:
+        model = models.AccessKey
+
+    person = factory.SubFactory(PersonFactory)
+    label = "Test key"
+    expires_at = dt.datetime(2026, 6, 30, 23, 59, tzinfo=dt.UTC)
+    is_active = True
+
+
+class ReadmeFactory(DjangoModelFactory):
+    class Meta:
+        model = models.Readme
+
+    person = factory.SubFactory(PersonFactory)
+    name = factory.Sequence(lambda n: f"Application {n}")
+    content = "# Readme\n\nHello."
+    version = "v1.0.0"

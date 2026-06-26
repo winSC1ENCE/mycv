@@ -77,6 +77,11 @@ const router = createRouter({
           name: "admin-access-keys",
           component: () => import("@/views/admin/AdminAccessKeysView.vue"),
         },
+        {
+          path: "readmes",
+          name: "admin-readmes",
+          component: () => import("@/views/admin/AdminReadmesView.vue"),
+        },
       ],
     },
     {

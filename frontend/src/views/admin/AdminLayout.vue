@@ -40,6 +40,9 @@
         <RouterLink class="admin-nav__link" :to="{ name: 'admin-access-keys' }">
           {{ $t("admin.nav.accessKeys") }}
         </RouterLink>
+        <RouterLink class="admin-nav__link" :to="{ name: 'admin-readmes' }">
+          {{ $t("admin.nav.readmes") }}
+        </RouterLink>
       </nav>
 
       <div class="admin-sidebar__footer">

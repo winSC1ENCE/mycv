@@ -124,6 +124,35 @@ class AccessKey(models.Model):
         return self.is_active and self.expires_at > timezone.now()
 
 
+class Readme(Orderable):
+    """A per-application "README" cover document, authored in Markdown.
+
+    Each job application gets its own named document. The body supports
+    Mermaid diagrams (rendered client-side to SVG for the PDF export) and a
+    small set of ``{{placeholder}}`` tokens resolved at render time:
+    ``{{access_url}}``, ``{{expires_at}}``, ``{{version}}`` and ``{{updated}}``.
+    Bodies are bilingual (``content`` = English, ``content_de`` = German),
+    mirroring the dual-field strategy used across the CV models.
+    """
+
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="readmes")
+    name = models.CharField(max_length=160, help_text="Application/company label.")
+    content = models.TextField(blank=True)
+    content_de = models.TextField(blank=True)
+    version = models.CharField(max_length=40, default="v1.0.0")
+    access_key = models.ForeignKey(
+        AccessKey,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="readmes",
+        help_text="Source for the auto-filled access URL and expiry date.",
+    )
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class SkillCategory(Orderable):
     name = models.CharField(max_length=80, unique=True)
     name_de = models.CharField(max_length=80, blank=True)

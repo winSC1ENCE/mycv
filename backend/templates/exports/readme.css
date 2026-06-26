@@ -1,0 +1,156 @@
+/* README PDF stylesheet — A4, print-tuned. Mirrors cv.css conventions. */
+
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("file://__FONTS__/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@page {
+  size: A4;
+  margin: 18mm 16mm 22mm 16mm;
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: "Inter", sans-serif;
+    font-size: 9pt;
+    color: #94a3b8;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: "Inter", sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  color: #0f172a;
+  background: white;
+}
+
+/* --- Header + badges --- */
+.rm-header {
+  border-bottom: 1.5px solid #0f172a;
+  padding-bottom: 5mm;
+  margin-bottom: 6mm;
+  break-after: avoid;
+}
+
+.rm-name {
+  font-size: 22pt;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.rm-badges {
+  display: flex;
+  gap: 6px;
+  margin-top: 3mm;
+}
+
+.rm-badge {
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: 4px;
+  font-size: 8pt;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.rm-badge__key {
+  background: #334155;
+  color: white;
+  padding: 2px 7px;
+}
+
+.rm-badge__val {
+  background: #2563eb;
+  color: white;
+  padding: 2px 7px;
+}
+
+.rm-badge--muted .rm-badge__val { background: #94a3b8; }
+
+/* --- Body --- */
+.rm-body h1 { font-size: 18pt; font-weight: 700; margin: 6mm 0 3mm; }
+.rm-body h2 { font-size: 14pt; font-weight: 700; margin: 5mm 0 2.5mm; }
+.rm-body h3 { font-size: 11.5pt; font-weight: 700; margin: 4mm 0 2mm; }
+.rm-body h4, .rm-body h5, .rm-body h6 { font-size: 10.5pt; font-weight: 700; margin: 3mm 0 1.5mm; }
+
+.rm-body p { margin: 0 0 2.5mm; }
+.rm-body ul, .rm-body ol { margin: 0 0 2.5mm 6mm; }
+.rm-body li { margin: 0 0 1mm; }
+
+.rm-body a { color: #2563eb; text-decoration: none; word-break: break-all; }
+
+.rm-body blockquote {
+  border-left: 3px solid #cbd5e1;
+  padding-left: 4mm;
+  color: #475569;
+  margin: 0 0 2.5mm;
+}
+
+.rm-body code {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9pt;
+  background: #f1f5f9;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.rm-body pre {
+  background: #f1f5f9;
+  border-radius: 5px;
+  padding: 3mm 4mm;
+  margin: 0 0 3mm;
+  overflow: hidden;
+}
+
+.rm-body pre code { background: none; padding: 0; }
+
+.rm-body hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 5mm 0;
+}
+
+.rm-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 3mm;
+  font-size: 9.5pt;
+}
+
+.rm-body th, .rm-body td {
+  border: 1px solid #e2e8f0;
+  padding: 2mm 3mm;
+  text-align: left;
+}
+
+.rm-body th { background: #f8fafc; font-weight: 700; }
+
+/* Mermaid SVGs are injected inline; keep them on-page. */
+.rm-body svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 4mm;
+  break-inside: avoid;
+}

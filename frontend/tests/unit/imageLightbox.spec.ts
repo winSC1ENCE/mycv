@@ -28,11 +28,7 @@ function makeImage(id: number, url = `https://example.com/${id}.jpg`): MediaAsse
   };
 }
 
-function mountLightbox(props: {
-  images: MediaAsset[];
-  open: boolean;
-  initialIndex?: number;
-}) {
+function mountLightbox(props: { images: MediaAsset[]; open: boolean; initialIndex?: number }) {
   return mount(ImageLightbox, {
     global: { plugins: [i18n] },
     props,
@@ -73,9 +69,7 @@ describe("ImageLightbox.vue", () => {
   it("emits update:open=false when the backdrop is clicked", async () => {
     const wrapper = mountLightbox({ images: [makeImage(1)], open: true });
     const backdrop = document.body.querySelector(".image-lightbox") as HTMLElement;
-    backdrop.dispatchEvent(
-      new MouseEvent("click", { bubbles: true, cancelable: true }),
-    );
+    backdrop.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
     await wrapper.vm.$nextTick();
     expect(wrapper.emitted("update:open")).toBeTruthy();
   });

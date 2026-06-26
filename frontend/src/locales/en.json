@@ -118,7 +118,17 @@
       "timeline": "Timeline",
       "technologies": "Technologies",
       "socialLinks": "Social links",
-      "accessKeys": "Access keys"
+      "accessKeys": "Access keys",
+      "readmes": "READMEs"
+    },
+    "readme": {
+      "version": "Version",
+      "accessKey": "Access key",
+      "noKey": "— none —",
+      "newFromTemplate": "New from template",
+      "exportEn": "Export PDF (EN)",
+      "exportDe": "Export PDF (DE)",
+      "saveFirst": "Save before exporting"
     },
     "fields": {
       "name": "Name",
@@ -134,6 +144,9 @@
       "end_date": "End date",
       "description": "Description",
       "description_de": "Description (DE)",
+      "content": "Content",
+      "content_de": "Content (DE)",
+      "created": "Created",
       "degree": "Degree",
       "degree_de": "Degree (DE)",
       "institution": "Institution",

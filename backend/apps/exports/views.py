@@ -40,9 +40,9 @@ def _build_qr_svg(url: str) -> str:
     return buf.getvalue().decode("utf-8")
 
 
-def _read_css() -> str:
-    """Load the PDF stylesheet and substitute the absolute font directory."""
-    css_path = Path(settings.BASE_DIR) / "templates" / "exports" / "cv.css"
+def _read_css(filename: str = "cv.css") -> str:
+    """Load a PDF stylesheet and substitute the absolute font directory."""
+    css_path = Path(settings.BASE_DIR) / "templates" / "exports" / filename
     fonts_dir = (Path(settings.BASE_DIR) / "static" / "fonts").resolve()
     return css_path.read_text(encoding="utf-8").replace("__FONTS__", str(fonts_dir))
 

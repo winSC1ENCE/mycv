@@ -14,6 +14,8 @@ import type {
   PersonWrite,
   Project,
   ProjectWrite,
+  Readme,
+  ReadmeWrite,
   Skill,
   SkillCategory,
   SkillCategoryWrite,
@@ -78,6 +80,19 @@ export const personApi = {
 };
 
 export const accessKeyApi = crud<AccessKey, AccessKeyWrite>("/access-keys");
+
+export const readmeApi = {
+  ...crud<Readme, ReadmeWrite>("/admin/readmes"),
+  /** Export a README as PDF. `svgs` are the client-rendered Mermaid diagrams. */
+  async pdf(id: Id, lang: "en" | "de", svgs: string[]): Promise<Blob> {
+    const { data } = await http.post<Blob>(
+      `/admin/readmes/${id}/pdf/`,
+      { lang, svgs },
+      { responseType: "blob" },
+    );
+    return data;
+  },
+};
 
 export async function uploadMedia(file: File): Promise<MediaAsset> {
   const form = new FormData();

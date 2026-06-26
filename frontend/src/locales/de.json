@@ -123,7 +123,17 @@
       "timeline": "Zeitleiste",
       "technologies": "Technologien",
       "socialLinks": "Social-Links",
-      "accessKeys": "Zugriffsschlüssel"
+      "accessKeys": "Zugriffsschlüssel",
+      "readmes": "READMEs"
+    },
+    "readme": {
+      "version": "Version",
+      "accessKey": "Zugriffsschlüssel",
+      "noKey": "— kein —",
+      "newFromTemplate": "Aus Vorlage erstellen",
+      "exportEn": "PDF exportieren (EN)",
+      "exportDe": "PDF exportieren (DE)",
+      "saveFirst": "Vor dem Export speichern"
     },
     "fields": {
       "name": "Name",
@@ -139,6 +149,9 @@
       "end_date": "Enddatum",
       "description": "Beschreibung",
       "description_de": "Beschreibung (DE)",
+      "content": "Inhalt",
+      "content_de": "Inhalt (DE)",
+      "created": "Erstellt",
       "degree": "Abschluss",
       "degree_de": "Abschluss (DE)",
       "institution": "Institution",

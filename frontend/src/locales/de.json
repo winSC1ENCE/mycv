@@ -17,6 +17,32 @@
   "projects": {
     "source_code": "Quellcode"
   },
+  "themes": {
+    "virus": {
+      "counter": "{n} Infektionen eingedämmt",
+      "profile": {
+        "lead": "Spezialist für die Eindämmung von:",
+        "items": [
+          "Datenchaos",
+          "Legacy-Systemen",
+          "Manuellen Excel-Prozessen",
+          "Unbekannten Datenquellen"
+        ]
+      },
+      "egg": {
+        "button": "🦠 Erreger verfolgen",
+        "title": "National Surveillance System",
+        "intro": "R₀ (Reproduktionszahl) — Verbreitung von Best Practices:",
+        "valueHead": "R₀",
+        "footnote": "Achtung: Der Kandidat verbreitet Best Practices mit epidemischer Geschwindigkeit.",
+        "rows": {
+          "python": "Python-Wissen",
+          "sql": "SQL-Kenntnisse",
+          "automation": "Automatisierung"
+        }
+      }
+    }
+  },
   "skills": {
     "levels": {
       "1": "Neuling",
@@ -88,13 +114,38 @@
     "chooseFile": "Datei auswählen…",
     "viewPublicCv": "Öffentlichen CV anzeigen",
     "multiSelectHint": "Cmd/Strg gedrückt halten für Mehrfachauswahl",
+    "funnyTheme": {
+      "none": "Keiner (nur Normal)"
+    },
     "nav": {
       "dashboard": "Übersicht",
       "person": "Profil",
       "timeline": "Zeitleiste",
       "technologies": "Technologien",
       "socialLinks": "Social-Links",
-      "accessKeys": "Zugriffsschlüssel"
+      "accessKeys": "Zugriffsschlüssel",
+      "readmes": "Bewerbungen",
+      "letters": "Motivationsschreiben"
+    },
+    "exports": {
+      "title": "Exporte",
+      "cv": "Lebenslauf",
+      "certificates": "Zertifikate",
+      "en": "EN",
+      "de": "DE",
+      "failed": "Export fehlgeschlagen.",
+      "emptyCv": "Kein veröffentlichter Lebenslauf vorhanden.",
+      "emptyCerts": "Noch keine Dokumente an Erfahrung/Ausbildung angehängt."
+    },
+    "readme": {
+      "version": "Version",
+      "accessKey": "Zugriffsschlüssel",
+      "noKey": "— kein —",
+      "newFromTemplate": "Aus Vorlage erstellen",
+      "exportEn": "PDF EN",
+      "exportDe": "PDF DE",
+      "saveFirst": "Vor dem Export speichern",
+      "goToLetter": "Motivationsschreiben öffnen"
     },
     "fields": {
       "name": "Name",
@@ -110,6 +161,10 @@
       "end_date": "Enddatum",
       "description": "Beschreibung",
       "description_de": "Beschreibung (DE)",
+      "content": "Inhalt",
+      "content_de": "Inhalt (DE)",
+      "created": "Erstellt",
+      "reference": "Referenz",
       "degree": "Abschluss",
       "degree_de": "Abschluss (DE)",
       "institution": "Institution",
@@ -124,6 +179,7 @@
       "categoryHelp": "Optionale Gruppierung (z. B. Sprache, Framework). Wird nicht öffentlich angezeigt.",
       "summary": "Zusammenfassung",
       "summary_de": "Zusammenfassung (DE)",
+      "active_funny_theme": "Spass-Modus",
       "url": "URL",
       "repo_url": "Repository-URL",
       "published": "Veröffentlicht",

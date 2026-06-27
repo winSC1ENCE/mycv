@@ -40,7 +40,7 @@ repos:
         name: mypy (backend)
         language: system
         files: ^backend/.*\.py$
-        entry: bash -c 'cd backend && uv run mypy .' --
+        entry: bash -c 'docker compose run --rm --no-deps -T backend uv run mypy .' --
         pass_filenames: false
 
       - id: frontend-prettier

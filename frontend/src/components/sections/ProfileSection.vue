@@ -1,29 +1,39 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { storeToRefs } from "pinia";
+import { useI18n } from "vue-i18n";
 import type { Cv } from "@/api/types";
 import { useThemeStore } from "@/stores/theme";
 import { useLocaleStore } from "@/stores/locale";
 import { pickLocalized } from "@/composables/useLocalized";
 import { formatDate } from "@/utils/dateFormat";
+import { packFor } from "@/themes/registry";
 import Sensitive from "@/components/base/Sensitive.vue";
 import Icon from "@/components/base/Icon.vue";
 
 const props = defineProps<{ cv: Cv }>();
 
 const { locale } = storeToRefs(useLocaleStore());
+const { tm, rt } = useI18n();
 const zivilstand = computed(() => pickLocalized(props.cv, "zivilstand", locale.value));
 const birthDate = computed(() =>
   props.cv.date_of_birth ? formatDate(props.cv.date_of_birth, locale.value) : "",
 );
 
 const themeStore = useThemeStore();
-const profilePhoto = computed(() =>
-  themeStore.theme === "dog" ? "/profile-dog.png" : "/profile-normal.jpg",
-);
+const pack = computed(() => packFor(themeStore.theme));
+const profilePhoto = computed(() => pack.value?.profilePhoto ?? "/profile-normal.jpg");
 const photoAlt = computed(() =>
   themeStore.theme === "dog" ? "Nicolas Mischler — comic portrait" : "Nicolas Mischler",
 );
+
+// Optional themed hero block (e.g. Virus Mode's containment checklist).
+const hero = computed(() => pack.value?.hero ?? null);
+const heroItems = computed<string[]>(() => {
+  if (!hero.value) return [];
+  const raw = tm(hero.value.itemsKey) as unknown[];
+  return Array.isArray(raw) ? raw.map((m) => rt(m as string)) : [];
+});
 </script>
 
 <template>
@@ -54,6 +64,14 @@ const photoAlt = computed(() =>
             <Sensitive :blurred="!cv.access_granted">{{ birthDate }}</Sensitive>
           </p>
         </div>
+      </div>
+      <div v-if="hero" class="profile-hero">
+        <p class="profile-hero__lead">{{ $t(hero.leadKey) }}</p>
+        <ul class="profile-hero__list">
+          <li v-for="(item, i) in heroItems" :key="i" class="profile-hero__item">
+            <span aria-hidden="true">☑</span> {{ item }}
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -99,6 +117,29 @@ const photoAlt = computed(() =>
 
 .profile-card__row .icon {
   color: var(--color-fg-muted);
+}
+
+.profile-hero {
+  margin-top: var(--space-4);
+}
+
+.profile-hero__lead {
+  margin: 0 0 var(--space-2) 0;
+  font-weight: 600;
+}
+
+.profile-hero__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.profile-hero__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 @media (max-width: 480px) {

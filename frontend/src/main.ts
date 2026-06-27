@@ -12,6 +12,7 @@ import { useAuthStore } from "./stores/auth";
 import "./styles/tokens.css";
 import "./styles/normal.css";
 import "./styles/dog.css";
+import "./styles/virus.css";
 import "./styles/app.css";
 
 const i18n = createI18n({

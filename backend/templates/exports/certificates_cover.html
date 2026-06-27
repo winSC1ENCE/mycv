@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <title>{{ person.full_name }} — Certificates</title>
+  <style>{{ css|safe }}</style>
+</head>
+<body>
+  <div class="cover">
+    <p class="cover__kicker">{{ person.full_name }}</p>
+    <h1 class="cover__title">{% if lang == "de" %}Zertifikate &amp; Nachweise{% else %}Certificates &amp; Credentials{% endif %}</h1>
+    <p class="cover__sub">
+      {% if lang == "de" %}{{ count }} Nachweis{{ count|pluralize:"e" }} aus Erfahrung &amp; Ausbildung{% else %}{{ count }} document{{ count|pluralize }} from experience &amp; education{% endif %}
+    </p>
+    <div class="cover__rule"></div>
+  </div>
+</body>
+</html>

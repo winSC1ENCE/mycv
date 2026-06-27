@@ -2,10 +2,14 @@
 import { ref } from "vue";
 import RichText from "@/components/base/RichText.vue";
 
-const props = withDefaults(defineProps<{ modelValue?: string; rows?: number }>(), {
-  modelValue: "",
-  rows: 3,
-});
+const props = withDefaults(
+  defineProps<{ modelValue?: string; rows?: number; hidePreview?: boolean }>(),
+  {
+    modelValue: "",
+    rows: 3,
+    hidePreview: false,
+  },
+);
 const emit = defineEmits<{ "update:modelValue": [value: string] }>();
 
 const textarea = ref<HTMLTextAreaElement | null>(null);
@@ -88,6 +92,7 @@ function onInput(event: Event): void {
         🔗
       </button>
       <button
+        v-if="!hidePreview"
         type="button"
         class="md-field__toggle"
         :class="{ 'md-field__toggle--active': preview }"
@@ -97,7 +102,7 @@ function onInput(event: Event): void {
       </button>
     </div>
 
-    <RichText v-if="preview" :text="modelValue" class="md-field__preview" />
+    <RichText v-if="preview && !hidePreview" :text="modelValue" class="md-field__preview" />
     <textarea
       v-else
       ref="textarea"

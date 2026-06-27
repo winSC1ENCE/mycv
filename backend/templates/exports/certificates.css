@@ -1,0 +1,139 @@
+/* Certificates PDF — A4, full-bleed. Same corporate identity as cv.css. */
+
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("file://__FONTS__/Inter-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("file://__FONTS__/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --accent: #0e7490;
+  --accent-dark: #0b3a4a;
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: "Inter", sans-serif;
+  color: var(--ink);
+  background: #fff;
+}
+
+/* --- Cover page --- */
+.cover {
+  height: 297mm;
+  background: linear-gradient(165deg, var(--accent-dark), var(--accent));
+  color: #fff;
+  padding: 40mm 24mm;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cover__kicker {
+  font-size: 11pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6mm;
+}
+.cover__title { font-size: 34pt; font-weight: 700; line-height: 1.1; }
+.cover__sub {
+  font-size: 12pt;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 6mm;
+}
+.cover__rule {
+  width: 28mm;
+  height: 1.5mm;
+  background: #fff;
+  border-radius: 1mm;
+  margin-top: 10mm;
+}
+
+/* --- Entry page: accent header band + the certificate below --- */
+.cert-head {
+  background: linear-gradient(165deg, var(--accent-dark), var(--accent));
+  color: #fff;
+  padding: 18mm 20mm 12mm 20mm;
+}
+.cert-kicker {
+  display: inline-block;
+  font-size: 8.5pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 3mm;
+}
+.cert-title { font-size: 20pt; font-weight: 700; line-height: 1.15; }
+.cert-sub {
+  font-size: 11pt;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 2mm;
+}
+.cert-dates {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9pt;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 4mm;
+}
+
+.cert-body { padding: 14mm 20mm; }
+
+.cert-img-wrap { text-align: center; }
+.cert-img {
+  max-width: 100%;
+  max-height: 218mm;
+  border: 0.5px solid var(--line);
+  border-radius: 1.5mm;
+}
+
+.cert-doc-note {
+  border: 0.5px dashed var(--line);
+  border-radius: 2mm;
+  padding: 10mm;
+  text-align: center;
+  color: var(--muted);
+}
+.cert-doc-note__badge {
+  display: inline-block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--accent);
+  padding: 1.5mm 3mm;
+  border-radius: 1.5mm;
+  margin-bottom: 4mm;
+}
+.cert-doc-note p { font-size: 10.5pt; }

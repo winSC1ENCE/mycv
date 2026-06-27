@@ -1,8 +1,11 @@
-from django.urls import path  # noqa: F401 — kept for re-enable; PDF route disabled (refactoring_12)
+from django.urls import path
 
-# PDF export disabled (refactoring_12) — uncomment both lines below to re-enable.
-# from .views import CvPdfView
+from .readme import ReadmePdfView
+from .views import CertificatesPdfView, CvPdfView
 
 urlpatterns: list[object] = [
-    # path("cv/pdf/", CvPdfView.as_view(), name="cv-pdf"),
+    # Specific paths must precede the cv router's detail routes.
+    path("cv/pdf/", CvPdfView.as_view(), name="cv-pdf"),
+    path("cv/certificates/pdf/", CertificatesPdfView.as_view(), name="cv-certificates-pdf"),
+    path("admin/readmes/<int:pk>/pdf/", ReadmePdfView.as_view(), name="readme-pdf"),
 ]

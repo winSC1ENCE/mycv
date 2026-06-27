@@ -59,6 +59,11 @@ class Technology(Orderable):
 
 
 class Person(Orderable):
+    class FunnyTheme(models.TextChoices):
+        NONE = "none", "None"
+        DOG = "dog", "Dog"
+        VIRUS = "virus", "Virus"
+
     slug = models.SlugField(max_length=80, unique=True, db_index=True)
     first_name = models.CharField(max_length=80)
     last_name = models.CharField(max_length=80)
@@ -75,6 +80,12 @@ class Person(Orderable):
     summary_de = models.TextField(blank=True)
     photo = models.ForeignKey(
         MediaAsset, null=True, blank=True, on_delete=models.PROTECT, related_name="people"
+    )
+    active_funny_theme = models.CharField(
+        max_length=20,
+        choices=FunnyTheme.choices,
+        default=FunnyTheme.DOG,
+        help_text="Which funny theme (besides Normal) is selectable on the public site.",
     )
 
     def __str__(self) -> str:
@@ -111,6 +122,40 @@ class AccessKey(models.Model):
     @property
     def is_valid(self) -> bool:
         return self.is_active and self.expires_at > timezone.now()
+
+
+class Readme(Orderable):
+    """A per-application "README" cover document, authored in Markdown.
+
+    Each job application gets its own named document. The body supports
+    Mermaid diagrams (rendered client-side to SVG for the PDF export) and a
+    small set of ``{{placeholder}}`` tokens resolved at render time:
+    ``{{access_url}}``, ``{{expires_at}}``, ``{{version}}`` and ``{{updated}}``.
+    Bodies are bilingual (``content`` = English, ``content_de`` = German),
+    mirroring the dual-field strategy used across the CV models.
+    """
+
+    person = models.ForeignKey(Person, on_delete=models.PROTECT, related_name="readmes")
+    name = models.CharField(max_length=160, help_text="Application/company label.")
+    content = models.TextField(blank=True)
+    content_de = models.TextField(blank=True)
+    version = models.CharField(max_length=40, default="v1.0.0")
+    # Motivation letter — a second per-application document (same {{badges}} token,
+    # whose first chip is the editable application reference below).
+    letter_content = models.TextField(blank=True)
+    letter_content_de = models.TextField(blank=True)
+    letter_reference = models.CharField(max_length=120, blank=True)
+    access_key = models.ForeignKey(
+        AccessKey,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="readmes",
+        help_text="Source for the auto-filled access URL and expiry date.",
+    )
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class SkillCategory(Orderable):

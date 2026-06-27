@@ -122,9 +122,13 @@
       "readmes": "Applications",
       "letters": "Motivation Letters"
     },
-    "timeline": {
-      "exportEn": "PDF EN",
-      "exportDe": "PDF DE"
+    "exports": {
+      "title": "Exports",
+      "cv": "CV",
+      "certificates": "Certificates",
+      "en": "EN",
+      "de": "DE",
+      "failed": "Export failed."
     },
     "readme": {
       "version": "Version",

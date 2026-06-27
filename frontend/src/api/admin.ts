@@ -94,6 +94,18 @@ export const cvApi = {
     });
     return data;
   },
+  /**
+   * Bundle the certificate scans attached to Experience/Education entries into one
+   * PDF (staff-only). Image attachments are embedded inline; PDF attachments are
+   * merged in after their header.
+   */
+  async certificatesPdf(lang: "en" | "de", baseUrl: string): Promise<Blob> {
+    const { data } = await http.get<Blob>(`/cv/certificates/pdf/`, {
+      params: { lang, base_url: baseUrl },
+      responseType: "blob",
+    });
+    return data;
+  },
 };
 
 export const readmeApi = {

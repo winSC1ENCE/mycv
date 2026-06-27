@@ -127,9 +127,13 @@
       "readmes": "Bewerbungen",
       "letters": "Motivationsschreiben"
     },
-    "timeline": {
-      "exportEn": "PDF EN",
-      "exportDe": "PDF DE"
+    "exports": {
+      "title": "Exporte",
+      "cv": "Lebenslauf",
+      "certificates": "Zertifikate",
+      "en": "EN",
+      "de": "DE",
+      "failed": "Export fehlgeschlagen."
     },
     "readme": {
       "version": "Version",

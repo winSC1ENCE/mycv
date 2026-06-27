@@ -2,15 +2,7 @@
   <div class="admin-page">
     <div class="admin-page__header">
       <h1 class="admin-page__title">{{ $t("admin.nav.timeline") }}</h1>
-      <div class="admin-page__actions">
-        <button class="btn" :disabled="exporting" @click="exportPdf('en')">
-          📄 {{ $t("admin.timeline.exportEn") }}
-        </button>
-        <button class="btn" :disabled="exporting" @click="exportPdf('de')">
-          📄 {{ $t("admin.timeline.exportDe") }}
-        </button>
-        <button class="btn btn--primary" @click="openNew">+ {{ $t("admin.add") }}</button>
-      </div>
+      <button class="btn btn--primary" @click="openNew">+ {{ $t("admin.add") }}</button>
     </div>
 
     <p v-if="loading" class="admin-page__status">{{ $t("common.loading") }}</p>
@@ -80,9 +72,8 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
-import { cvApi, timelineApi } from "@/api/admin";
+import { timelineApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import { downloadBlob } from "@/utils/downloadBlob";
 import type { TimelineEntry } from "@/api/types";
 import SortableList from "@/components/admin/SortableList.vue";
 import MarkdownField from "@/components/base/MarkdownField.vue";
@@ -94,7 +85,6 @@ const loading = ref(false);
 const error = ref<string | null>(null);
 const editing = ref<Draft | null>(null);
 const saveError = ref<string | null>(null);
-const exporting = ref(false);
 
 onMounted(load);
 
@@ -150,19 +140,6 @@ async function remove(id: number): Promise<void> {
 
 async function onReorder(ids: number[]): Promise<void> {
   await timelineApi.reorder(ids);
-}
-
-async function exportPdf(lang: "en" | "de"): Promise<void> {
-  exporting.value = true;
-  error.value = null;
-  try {
-    const blob = await cvApi.pdf(lang, `${window.location.origin}/`);
-    downloadBlob(blob, `Nicolas_Mischler_CV_${lang.toUpperCase()}.pdf`);
-  } catch {
-    error.value = "Export failed.";
-  } finally {
-    exporting.value = false;
-  }
 }
 </script>
 

@@ -17,6 +17,7 @@ dependencies = [
     "pillow>=11.0",
     "django-axes>=8.0",
     "weasyprint>=63.0",
+    "pypdf>=5.0",
     "segno>=1.6.0",
     "markdown>=3.7",
     "nh3>=0.2.18",

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <title>{{ entry.title }}</title>
+  <style>{{ css|safe }}</style>
+</head>
+<body>
+  <header class="cert-head">
+    <span class="cert-kicker">{{ entry.kicker }}</span>
+    <h1 class="cert-title">{{ entry.title }}</h1>
+    {% if entry.subtitle %}<p class="cert-sub">{{ entry.subtitle }}</p>{% endif %}
+    <span class="cert-dates">{{ entry.dates }}</span>
+  </header>
+  <div class="cert-body">
+    {% if is_image %}
+      <div class="cert-img-wrap">
+        <img class="cert-img" src="file://{{ media_path }}" alt="{{ entry.title }}">
+      </div>
+    {% else %}
+      <div class="cert-doc-note">
+        <span class="cert-doc-note__badge">PDF</span>
+        <p>{% if lang == "de" %}Originaldokument auf den folgenden Seiten.{% else %}Original document on the following page(s).{% endif %}</p>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>

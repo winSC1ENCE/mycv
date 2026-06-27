@@ -123,6 +123,14 @@ Session-based, browser-native:
 
 WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`) rather than reusing the web CSS — the print engine has different layout semantics (page breaks, `@page` rules). The CV uses a **two-column layout**: a `position: fixed` accent sidebar (name, contact, skills, certificates) that WeasyPrint repeats on every page, beside the flowing main column (summary, experience, education). Fonts (Inter + JetBrains Mono) are embedded via `@font-face` with absolute file paths so WeasyPrint can resolve them without a base URL.
 
+Both export endpoints (`/api/cv/pdf/`, `/api/cv/certificates/pdf/`) are staff-only and
+triggered from the admin Dashboard **Exports** card (EN/DE). The **Certificates PDF**
+(`CertificatesPdfView`) bundles the scans attached to Experience/Education entries: a
+full-bleed cover, then a CI header page per entry. Image attachments embed inline via
+`file://` paths (`base_url = BASE_DIR`); WeasyPrint cannot embed external PDF pages, so
+`document` attachments are rendered per-entry as header pages and then the real PDF pages
+are appended right after, with everything concatenated by **`pypdf`** (`_assemble_pdf`).
+
 ## Testing
 
 | Layer | Tool | Purpose | Gate |

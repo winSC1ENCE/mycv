@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   extractMermaid,
   renderBadges,
+  renderMermaidImages,
   renderMermaidSvgs,
   renderReadmeHtml,
   substitutePlaceholders,
@@ -65,6 +66,19 @@ describe("renderMermaidSvgs", () => {
 
   it("returns empty array without diagrams", async () => {
     expect(await renderMermaidSvgs("plain")).toEqual([]);
+  });
+});
+
+describe("renderMermaidImages", () => {
+  it("returns one entry per diagram (SVG fallback when canvas is unavailable)", async () => {
+    const out = await renderMermaidImages("```mermaid\nflowchart TD\nA-->B\n```");
+    expect(out).toHaveLength(1);
+    // jsdom has no 2d canvas → falls back to the raw SVG string
+    expect(out[0]).toContain("<svg");
+  });
+
+  it("returns empty array without diagrams", async () => {
+    expect(await renderMermaidImages("plain")).toEqual([]);
   });
 });
 

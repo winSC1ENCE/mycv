@@ -132,8 +132,9 @@ html, body {
 
 .rm-body th { background: #f8fafc; font-weight: 700; }
 
-/* Mermaid SVGs are injected inline; keep them on-page. */
-.rm-body svg {
+/* Mermaid diagrams are injected inline (PNG <img> for the PDF); keep on-page. */
+.rm-body svg,
+.rm-body img {
   max-width: 100%;
   height: auto;
   display: block;

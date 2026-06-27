@@ -62,10 +62,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import { readmeApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import { renderMermaidSvgs } from "@/utils/readme";
+import { renderMermaidImages } from "@/utils/readme";
 import { slugify } from "@/utils/slugify";
 import type { Readme, ReadmeWrite } from "@/api/types";
 import AdminDocEditor from "@/components/admin/AdminDocEditor.vue";
@@ -140,7 +141,21 @@ useEscClose(
   computed(() => editing.value !== null),
 );
 
-onMounted(load);
+const route = useRoute();
+
+onMounted(async () => {
+  await load();
+  // Deep-link from the Applications section: ?edit=<id> opens that letter.
+  const editId = Number(route.query.edit);
+  if (!editId) return;
+  const item = items.value.find((i) => i.id === editId);
+  if (!item) return;
+  openEdit(item);
+  await nextTick();
+  document
+    .querySelector(".readme-table__editor-row")
+    ?.scrollIntoView({ behavior: "smooth", block: "center" });
+});
 
 async function load(): Promise<void> {
   loading.value = true;
@@ -201,8 +216,13 @@ async function exportPdf(target: "en" | "de"): Promise<void> {
   try {
     const saved = await persist();
     if (!saved?.id) return;
-    const body = target === "de" ? (saved.letter_content_de ?? "") : (saved.letter_content ?? "");
-    const svgs = await renderMermaidSvgs(body);
+    // Mirror the backend's DE→EN fallback so the diagrams we rasterize line up
+    // with the body the server actually renders.
+    const body =
+      target === "de"
+        ? saved.letter_content_de || saved.letter_content || ""
+        : (saved.letter_content ?? "");
+    const svgs = await renderMermaidImages(body);
     const blob = await readmeApi.pdf(
       saved.id,
       target,

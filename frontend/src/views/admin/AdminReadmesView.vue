@@ -56,6 +56,13 @@
               </td>
               <td class="readme-table__actions">
                 <button class="btn-icon" @click="openEdit(item)">✏</button>
+                <RouterLink
+                  class="btn-icon"
+                  :to="{ name: 'admin-letters', query: { edit: item.id } }"
+                  :title="$t('admin.readme.goToLetter')"
+                >
+                  ✉
+                </RouterLink>
                 <button class="btn-icon btn-icon--danger" @click="remove(item.id)">✕</button>
               </td>
             </tr>
@@ -85,7 +92,7 @@
 import { computed, onMounted, ref } from "vue";
 import { readmeApi, accessKeyApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
-import { renderMermaidSvgs } from "@/utils/readme";
+import { renderMermaidImages } from "@/utils/readme";
 import { slugify } from "@/utils/slugify";
 import type { AccessKey, Readme, ReadmeWrite } from "@/api/types";
 import AdminDocEditor from "@/components/admin/AdminDocEditor.vue";
@@ -259,8 +266,10 @@ async function exportPdf(target: "en" | "de"): Promise<void> {
     // Save first so the server renders exactly the body we render diagrams for.
     const saved = await persist();
     if (!saved?.id) return;
-    const body = target === "de" ? (saved.content_de ?? "") : (saved.content ?? "");
-    const svgs = await renderMermaidSvgs(body);
+    // Mirror the backend's DE→EN fallback so the diagrams we rasterize line up
+    // with the body the server actually renders.
+    const body = target === "de" ? saved.content_de || saved.content || "" : (saved.content ?? "");
+    const svgs = await renderMermaidImages(body);
     const blob = await readmeApi.pdf(saved.id, target, svgs, `${window.location.origin}/`);
     downloadBlob(blob, `${slugify(saved.name ?? "readme") || "readme"}.pdf`);
   } catch {

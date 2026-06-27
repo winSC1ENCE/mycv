@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import {
+  renderBadges,
   renderMermaidSvgs,
   renderReadmeHtml,
   substitutePlaceholders,
   type ReadmeContext,
 } from "@/utils/readme";
 
-const props = defineProps<{ name: string; markdown: string; ctx: ReadmeContext }>();
+const props = defineProps<{ markdown: string; ctx: ReadmeContext }>();
 
 const html = ref("");
 
 async function rerender(): Promise<void> {
   const text = substitutePlaceholders(props.markdown, props.ctx);
   const svgs = await renderMermaidSvgs(text);
-  html.value = renderReadmeHtml(text, svgs);
+  html.value = renderReadmeHtml(text, svgs, renderBadges(props.ctx.version, props.ctx.updated));
 }
 
 watch(
@@ -28,20 +29,7 @@ watch(
 
 <template>
   <div class="readme-preview">
-    <header class="readme-preview__header">
-      <h1 class="readme-preview__name">{{ name }}</h1>
-      <div class="readme-preview__badges">
-        <span class="readme-badge">
-          <span class="readme-badge__key">version</span>
-          <span class="readme-badge__val">{{ ctx.version }}</span>
-        </span>
-        <span class="readme-badge readme-badge--muted">
-          <span class="readme-badge__key">updated</span>
-          <span class="readme-badge__val">{{ ctx.updated }}</span>
-        </span>
-      </div>
-    </header>
-    <!-- eslint-disable-next-line vue/no-v-html -- sanitized in renderReadmeHtml + renderMermaidSvgs (DOMPurify) -->
+    <!-- eslint-disable-next-line vue/no-v-html -- sanitized in renderReadmeHtml + renderMermaidSvgs (DOMPurify); badges are locally generated -->
     <div class="readme-preview__body" v-html="html"></div>
   </div>
 </template>
@@ -58,24 +46,12 @@ watch(
   overflow-x: auto;
 }
 
-.readme-preview__header {
-  border-bottom: 1.5px solid #0f172a;
-  padding-bottom: var(--space-3);
-  margin-bottom: var(--space-4);
-}
-
-.readme-preview__name {
-  font-size: 1.6rem;
-  font-weight: 700;
-}
-
-.readme-preview__badges {
-  display: flex;
+.readme-preview__body :deep(.readme-badges) {
+  display: inline-flex;
   gap: 6px;
-  margin-top: var(--space-2);
 }
 
-.readme-badge {
+.readme-preview__body :deep(.readme-badge) {
   display: inline-flex;
   overflow: hidden;
   border-radius: 4px;
@@ -83,19 +59,19 @@ watch(
   font-size: 0.7rem;
 }
 
-.readme-badge__key {
+.readme-preview__body :deep(.readme-badge__key) {
   background: #334155;
   color: #fff;
   padding: 2px 7px;
 }
 
-.readme-badge__val {
+.readme-preview__body :deep(.readme-badge__val) {
   background: #2563eb;
   color: #fff;
   padding: 2px 7px;
 }
 
-.readme-badge--muted .readme-badge__val {
+.readme-preview__body :deep(.readme-badge--muted .readme-badge__val) {
   background: #94a3b8;
 }
 

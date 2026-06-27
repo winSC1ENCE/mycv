@@ -21,6 +21,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
 from rest_framework.exceptions import ValidationError
@@ -104,6 +105,20 @@ def render_readme_body(readme: models.Readme, lang: str, public_url: str) -> str
     return text
 
 
+def _badges_html(version: str, updated: str) -> str:
+    """Build the version/updated badge chips injected at the ``{{badges}}`` token."""
+    return (
+        '<span class="rm-badges">'
+        '<span class="rm-badge">'
+        '<span class="rm-badge__key">version</span>'
+        f'<span class="rm-badge__val">{escape(version)}</span></span>'
+        '<span class="rm-badge rm-badge--muted">'
+        '<span class="rm-badge__key">updated</span>'
+        f'<span class="rm-badge__val">{escape(updated)}</span></span>'
+        "</span>"
+    )
+
+
 def _inject_mermaid(html: str, svgs: list[str]) -> str:
     """Replace each ``language-mermaid`` code block with the matching SVG, in order."""
     svg_iter = iter(svgs)
@@ -150,13 +165,12 @@ class ReadmePdfView(APIView):
         raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)
         clean = nh3.clean(raw_html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
         clean = _inject_mermaid(clean, [str(svg) for svg in svgs])
+        clean = clean.replace("{{badges}}", _badges_html(ctx["{{version}}"], ctx["{{updated}}"]))
 
         html = render_to_string(
             "exports/readme.html",
             {
                 "name": readme.name,
-                "version": readme.version,
-                "updated": ctx["{{updated}}"],
                 "body": mark_safe(clean),  # nosec B308 B703 # noqa: S308
                 "css": _read_css("readme.css"),
                 "lang": lang,

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   extractMermaid,
+  renderBadges,
   renderMermaidSvgs,
   renderReadmeHtml,
   substitutePlaceholders,
@@ -87,5 +88,28 @@ describe("renderReadmeHtml", () => {
   it("leaves the code block when no svg is supplied", () => {
     const html = renderReadmeHtml("```mermaid\nflowchart TD\nA-->B\n```", []);
     expect(html).toContain("language-mermaid");
+  });
+
+  it("expands the {{badges}} token with the supplied badge markup", () => {
+    const badges = renderBadges("v1.2.3", "26.06.2026");
+    const html = renderReadmeHtml("# Title\n\n{{badges}}\n\nbody", [], badges);
+    expect(html).toContain("<h1>Title</h1>");
+    expect(html).toContain("readme-badges");
+    expect(html).toContain("v1.2.3");
+    expect(html).not.toContain("{{badges}}");
+  });
+});
+
+describe("renderBadges", () => {
+  it("outputs version and updated chips", () => {
+    const html = renderBadges("v2.0.0", "01.01.2026");
+    expect(html).toContain("readme-badge");
+    expect(html).toContain("v2.0.0");
+    expect(html).toContain("01.01.2026");
+  });
+
+  it("escapes HTML in the values", () => {
+    expect(renderBadges("<script>", "x")).not.toContain("<script>");
+    expect(renderBadges("<script>", "x")).toContain("&lt;script&gt;");
   });
 });

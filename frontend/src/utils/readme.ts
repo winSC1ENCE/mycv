@@ -106,15 +106,40 @@ export async function renderMermaidSvgs(src: string): Promise<string[]> {
   return svgs;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+/** Build the version/updated badge chips injected at the `{{badges}}` token. */
+export function renderBadges(version: string, updated: string): string {
+  return (
+    `<span class="readme-badges">` +
+    `<span class="readme-badge">` +
+    `<span class="readme-badge__key">version</span>` +
+    `<span class="readme-badge__val">${escapeHtml(version)}</span></span>` +
+    `<span class="readme-badge readme-badge--muted">` +
+    `<span class="readme-badge__key">updated</span>` +
+    `<span class="readme-badge__val">${escapeHtml(updated)}</span></span>` +
+    `</span>`
+  );
+}
+
 /**
  * Render README markdown to sanitized HTML, splicing the pre-rendered Mermaid
- * SVGs back in (in order). Extra blocks without an SVG are left as code.
+ * SVGs back in (in order) and expanding the `{{badges}}` token. Both are injected
+ * after sanitizing because they are HTML the markdown renderer would escape; the
+ * SVGs are already DOMPurify-sanitized and `badgesHtml` is locally generated.
  */
-export function renderReadmeHtml(src: string, svgs: string[]): string {
+export function renderReadmeHtml(src: string, svgs: string[], badgesHtml = ""): string {
   const html = DOMPurify.sanitize(md.render(src), {
     ALLOWED_TAGS,
     ALLOWED_ATTR: ["href", "target", "rel", "class"],
   });
   let i = 0;
-  return html.replace(MERMAID_HTML, (block) => (i < svgs.length ? svgs[i++] : block));
+  const withSvgs = html.replace(MERMAID_HTML, (block) => (i < svgs.length ? svgs[i++] : block));
+  return withSvgs.replaceAll("{{badges}}", badgesHtml);
 }

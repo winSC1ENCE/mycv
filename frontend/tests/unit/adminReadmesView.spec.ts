@@ -38,7 +38,7 @@ describe("AdminReadmesView", () => {
     const wrapper = mountView();
     await flushPromises();
     expect(readmeApi.list).toHaveBeenCalled();
-    expect(wrapper.text()).toContain("READMEs");
+    expect(wrapper.text()).toContain("Applications");
   });
 
   it("prefills the body from the starter template", async () => {

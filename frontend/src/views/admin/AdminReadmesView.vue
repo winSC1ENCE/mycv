@@ -130,7 +130,7 @@
       </div>
 
       <div class="readme-editor__pane">
-        <ReadmePreview :name="editing.name || ''" :markdown="bodyModel" :ctx="previewCtx" />
+        <ReadmePreview :markdown="bodyModel" :ctx="previewCtx" />
       </div>
     </div>
   </div>
@@ -185,7 +185,11 @@ function sortIndicator(field: SortField): string {
   return sortDir.value === "asc" ? " ▲" : " ▼";
 }
 
-const STARTER = `## Quick Start
+const STARTER = `# Application
+
+{{badges}}
+
+## Quick Start
 
 1. Open: {{access_url}}
 2. Explore experience, education & projects

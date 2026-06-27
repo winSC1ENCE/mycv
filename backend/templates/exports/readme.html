@@ -6,18 +6,6 @@
   <style>{{ css|safe }}</style>
 </head>
 <body>
-  <header class="rm-header">
-    <h1 class="rm-name">{{ name }}</h1>
-    <div class="rm-badges">
-      <span class="rm-badge">
-        <span class="rm-badge__key">version</span><span class="rm-badge__val">{{ version }}</span>
-      </span>
-      <span class="rm-badge rm-badge--muted">
-        <span class="rm-badge__key">updated</span><span class="rm-badge__val">{{ updated }}</span>
-      </span>
-    </div>
-  </header>
-
   <main class="rm-body">{{ body|safe }}</main>
 </body>
 </html>

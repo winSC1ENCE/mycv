@@ -111,6 +111,25 @@ class TestPdfRendering:
         assert "<a " in html
         assert f'href="http://testserver/?key={key.token}"' in html
 
+    def test_badges_token_renders_chips_and_name_is_not_a_heading(
+        self, admin_client: APIClient
+    ) -> None:
+        readme = ReadmeFactory(
+            name="ACME GmbH",
+            version="v4.2.0",
+            content="# My Manual Title\n\n{{badges}}\n\nbody",
+        )
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            admin_client.post(_url(readme.pk), {"lang": "en"}, format="json")
+        html = render.call_args.args[0]
+        assert "{{badges}}" not in html
+        assert "rm-badge" in html
+        assert "v4.2.0" in html  # version chip value
+        assert "<h1>My Manual Title</h1>" in html  # author's heading is the H1
+        # name is only PDF metadata (<title>), never a rendered heading/band
+        assert "<h1>ACME GmbH</h1>" not in html
+        assert "rm-name" not in html
+
     def test_base_url_override(self, admin_client: APIClient) -> None:
         person = PersonFactory(is_published=True)
         key = AccessKeyFactory(person=person)

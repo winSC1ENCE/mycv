@@ -46,24 +46,10 @@ html, body {
   background: white;
 }
 
-/* --- Header + badges --- */
-.rm-header {
-  border-bottom: 1.5px solid #0f172a;
-  padding-bottom: 5mm;
-  margin-bottom: 6mm;
-  break-after: avoid;
-}
-
-.rm-name {
-  font-size: 22pt;
-  font-weight: 700;
-  line-height: 1.15;
-}
-
+/* --- Badges (injected where the badges token appears) --- */
 .rm-badges {
-  display: flex;
+  display: inline-flex;
   gap: 6px;
-  margin-top: 3mm;
 }
 
 .rm-badge {

@@ -13,7 +13,6 @@ from apps.cv.tests.factories import (
     EducationFactory,
     ExperienceFactory,
     PersonFactory,
-    ProjectFactory,
     SkillCategoryFactory,
     SkillFactory,
     SocialLinkFactory,
@@ -45,7 +44,6 @@ def _populated_person():
     exp.technologies.add(tech)
     EducationFactory(person=person)
     CertificateFactory(person=person)
-    ProjectFactory(person=person)
     SocialLinkFactory(person=person)
     return person
 

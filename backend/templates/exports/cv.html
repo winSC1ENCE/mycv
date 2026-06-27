@@ -115,24 +115,6 @@
       {% endif %}
     {% endwith %}
 
-    {% with projects=person.projects.all %}
-      {% if projects %}
-        <section class="section">
-          <h2 class="section__title">{% if lang == "de" %}Projekte{% else %}Projects{% endif %}</h2>
-          {% for proj in projects %}
-            {% if proj.is_published %}
-              <article class="entry">
-                <h3 class="entry__title">{% localized proj "name" lang %}</h3>
-                {% if proj.summary %}<p class="entry__sub">{% localized proj "summary" lang %}</p>{% endif %}
-                {% if proj.url %}<p class="entry__url">{{ proj.url }}</p>{% endif %}
-                {% if proj.description %}<div class="prose">{% markdown proj "description" lang %}</div>{% endif %}
-              </article>
-            {% endif %}
-          {% endfor %}
-        </section>
-      {% endif %}
-    {% endwith %}
-
     <footer class="cv-footer">
       <div class="qr">{{ qr_svg|safe }}</div>
       <div class="qr__cap">

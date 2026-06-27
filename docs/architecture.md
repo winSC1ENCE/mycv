@@ -121,7 +121,7 @@ Session-based, browser-native:
 
 ## PDF generation
 
-WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`) rather than reusing the web CSS — the print engine has different layout semantics (page breaks, `@page` rules). The CV uses a **two-column layout**: a `position: fixed` accent sidebar (name, contact, skills, certificates) that WeasyPrint repeats on every page, beside the flowing main column (summary, experience, education, projects). Fonts (Inter + JetBrains Mono) are embedded via `@font-face` with absolute file paths so WeasyPrint can resolve them without a base URL.
+WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`) rather than reusing the web CSS — the print engine has different layout semantics (page breaks, `@page` rules). The CV uses a **two-column layout**: a `position: fixed` accent sidebar (name, contact, skills, certificates) that WeasyPrint repeats on every page, beside the flowing main column (summary, experience, education). Fonts (Inter + JetBrains Mono) are embedded via `@font-face` with absolute file paths so WeasyPrint can resolve them without a base URL.
 
 ## Testing
 

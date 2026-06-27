@@ -66,7 +66,6 @@ class CvPdfView(APIView):
                 "experiences__technologies",
                 "educations",
                 "certificates",
-                "projects",
                 "social_links",
             )
             .first()

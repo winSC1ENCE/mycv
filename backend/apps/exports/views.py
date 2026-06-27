@@ -11,14 +11,13 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from apps.cv import models
 
 VALID_LANGS = {"en", "de"}
-VALID_THEMES = {"normal", "dog"}
 
 
 def _render_pdf(html: str, base_url: str, *, title: str, author: str) -> bytes:
@@ -48,17 +47,18 @@ def _read_css(filename: str = "cv.css") -> str:
 
 
 class CvPdfView(APIView):
-    """``GET /api/cv/pdf/?lang=en|de&theme=normal|dog`` — stream a CV PDF."""
+    """``GET /api/cv/pdf/?lang=en|de`` — stream the CV PDF (staff only).
 
-    permission_classes = [AllowAny]
+    Renders the normal-theme CV only. The admin SPA supplies ``base_url`` (the
+    visitor-facing origin) since the backend's request Host is the internal proxy.
+    """
+
+    permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> HttpResponse:
         lang = request.query_params.get("lang", "en")
-        theme = request.query_params.get("theme", "normal")
         if lang not in VALID_LANGS:
             raise ValidationError({"lang": f"Must be one of {sorted(VALID_LANGS)}."})
-        if theme not in VALID_THEMES:
-            raise ValidationError({"theme": f"Must be one of {sorted(VALID_THEMES)}."})
 
         person = (
             models.Person.objects.filter(is_published=True)
@@ -80,14 +80,13 @@ class CvPdfView(APIView):
             .order_by("order", "id")
         )
 
-        public_url = request.build_absolute_uri("/")
+        public_url = request.query_params.get("base_url") or request.build_absolute_uri("/")
         html = render_to_string(
             "exports/cv.html",
             {
                 "person": person,
                 "skill_categories": skill_categories,
                 "lang": lang,
-                "theme": theme,
                 "public_url": public_url,
                 "qr_svg": _build_qr_svg(public_url),
                 "css": _read_css(),
@@ -101,7 +100,7 @@ class CvPdfView(APIView):
             author=person.full_name,
         )
 
-        filename = f"{person.first_name}_{person.last_name}_CV.pdf"
+        filename = f"{person.first_name}_{person.last_name}_CV_{lang.upper()}.pdf"
         resp = HttpResponse(pdf_bytes, content_type="application/pdf")
         resp["Content-Disposition"] = f'attachment; filename="{filename}"'
         return resp

@@ -88,8 +88,6 @@ omit = [
     "*/tests/*",
     "*/__init__.py",
     "*/apps.py",
-    # PDF export currently disabled (refactoring_12) — remove this line to re-include.
-    "apps/exports/views.py",
 ]
 
 [tool.coverage.report]

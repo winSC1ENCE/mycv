@@ -127,6 +127,10 @@
       "readmes": "Bewerbungen",
       "letters": "Motivationsschreiben"
     },
+    "timeline": {
+      "exportEn": "PDF EN",
+      "exportDe": "PDF DE"
+    },
     "readme": {
       "version": "Version",
       "accessKey": "Zugriffsschlüssel",

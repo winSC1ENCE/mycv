@@ -68,6 +68,7 @@ import { readmeApi } from "@/api/admin";
 import { useEscClose } from "@/composables/useEscClose";
 import { renderMermaidImages } from "@/utils/readme";
 import { slugify } from "@/utils/slugify";
+import { downloadBlob } from "@/utils/downloadBlob";
 import type { Readme, ReadmeWrite } from "@/api/types";
 import AdminDocEditor from "@/components/admin/AdminDocEditor.vue";
 
@@ -236,15 +237,6 @@ async function exportPdf(target: "en" | "de"): Promise<void> {
   } finally {
     busy.value = false;
   }
-}
-
-function downloadBlob(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
 }
 </script>
 

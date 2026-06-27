@@ -81,6 +81,21 @@ export const personApi = {
 
 export const accessKeyApi = crud<AccessKey, AccessKeyWrite>("/access-keys");
 
+export const cvApi = {
+  /**
+   * Export the full CV as a PDF (staff-only, normal theme). `baseUrl` is the
+   * visitor-facing origin — the backend's request Host is the internal proxy,
+   * so the client supplies the real one (mirrors `readmeApi.pdf`).
+   */
+  async pdf(lang: "en" | "de", baseUrl: string): Promise<Blob> {
+    const { data } = await http.get<Blob>(`/cv/pdf/`, {
+      params: { lang, base_url: baseUrl },
+      responseType: "blob",
+    });
+    return data;
+  },
+};
+
 export const readmeApi = {
   ...crud<Readme, ReadmeWrite>("/admin/readmes"),
   /**

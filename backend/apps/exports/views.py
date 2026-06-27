@@ -25,7 +25,7 @@ CERT_KINDS: set[str] = {models.MediaAsset.Kind.IMAGE, models.MediaAsset.Kind.DOC
 
 @dataclass
 class _CertEntry:
-    """One certificate to render: a CI header plus its attached scan."""
+    """One attachment to render: a CI header plus its scan (image or PDF)."""
 
     kicker: str
     title: str
@@ -62,7 +62,7 @@ def _read_css(filename: str = "cv.css") -> str:
 
 def _localized(obj: object, field: str, lang: str) -> str:
     """Return ``obj.<field>_de`` for German (when non-empty), else ``obj.<field>``."""
-    base = getattr(obj, field, "") or ""
+    base = getattr(obj, field, "")
     if lang != "de":
         return base
     return getattr(obj, f"{field}_de", "") or base
@@ -140,10 +140,10 @@ class CvPdfView(APIView):
 
 
 def _cert_entries(person: models.Person, lang: str) -> list[_CertEntry]:
-    """Collect published Experience/Education entries that carry a certificate scan.
+    """Collect the scans attached to published Experience/Education entries.
 
-    The ``media`` is an image embedded inline or a PDF document whose pages are
-    appended after the header.
+    Experiences first, then education. Each ``media`` is an image (embedded inline,
+    i.e. converted to a page) or a PDF document whose pages are appended after the header.
     """
     present = "heute" if lang == "de" else "Present"
     entries: list[_CertEntry] = []

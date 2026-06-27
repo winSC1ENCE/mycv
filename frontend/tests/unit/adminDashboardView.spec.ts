@@ -53,12 +53,21 @@ describe("AdminDashboardView exports", () => {
     expect(cvApi.certificatesPdf).toHaveBeenCalledWith("en", expect.any(String));
   });
 
-  it("surfaces an error when an export fails", async () => {
+  it("surfaces a generic error when an export fails", async () => {
     vi.mocked(cvApi.certificatesPdf).mockRejectedValueOnce(new Error("boom"));
     const wrapper = mountView();
     const rows = wrapper.findAll(".dashboard-exports__row");
     await byText(rows[1].findAll("button"), "DE")!.trigger("click");
     await flushPromises();
     expect(wrapper.find(".admin-page__error").text()).toContain("Export failed.");
+  });
+
+  it("shows a 'nothing to export' message on a 404", async () => {
+    vi.mocked(cvApi.certificatesPdf).mockRejectedValueOnce({ response: { status: 404 } });
+    const wrapper = mountView();
+    const rows = wrapper.findAll(".dashboard-exports__row");
+    await byText(rows[1].findAll("button"), "EN")!.trigger("click");
+    await flushPromises();
+    expect(wrapper.find(".admin-page__error").text()).toContain("No documents attached");
   });
 });

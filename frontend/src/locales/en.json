@@ -128,7 +128,9 @@
       "certificates": "Certificates",
       "en": "EN",
       "de": "DE",
-      "failed": "Export failed."
+      "failed": "Export failed.",
+      "emptyCv": "No published CV to export.",
+      "emptyCerts": "No documents attached to your Experience/Education entries yet."
     },
     "readme": {
       "version": "Version",

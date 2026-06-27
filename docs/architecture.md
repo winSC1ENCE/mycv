@@ -125,11 +125,13 @@ WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`
 
 Both export endpoints (`/api/cv/pdf/`, `/api/cv/certificates/pdf/`) are staff-only and
 triggered from the admin Dashboard **Exports** card (EN/DE). The **Certificates PDF**
-(`CertificatesPdfView`) bundles the scans attached to Experience/Education entries: a
-full-bleed cover, then a CI header page per entry. Image attachments embed inline via
-`file://` paths (`base_url = BASE_DIR`); WeasyPrint cannot embed external PDF pages, so
-`document` attachments are rendered per-entry as header pages and then the real PDF pages
-are appended right after, with everything concatenated by **`pypdf`** (`_assemble_pdf`).
+(`CertificatesPdfView`) bundles the documents attached to published Experience/Education
+entries (`Experience.media` / `Education.media`): a full-bleed cover, then a CI header page
+per entry (role·company / degree·institution). Image attachments embed inline via `file://`
+paths (`base_url = BASE_DIR`), i.e. converted to a page; WeasyPrint cannot embed external
+PDF pages, so `document` attachments are rendered per-entry as header pages and then the
+real PDF pages are appended right after, with everything concatenated by **`pypdf`**
+(`_assemble_pdf`).
 
 ## Testing
 

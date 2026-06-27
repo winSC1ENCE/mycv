@@ -54,13 +54,19 @@ const { t } = useI18n();
 const busy = ref(false);
 const error = ref<string | null>(null);
 
-async function runExport(fn: () => Promise<Blob>, filename: string): Promise<void> {
+async function runExport(
+  fn: () => Promise<Blob>,
+  filename: string,
+  emptyMsg: string,
+): Promise<void> {
   busy.value = true;
   error.value = null;
   try {
     downloadBlob(await fn(), filename);
-  } catch {
-    error.value = t("admin.exports.failed");
+  } catch (e) {
+    // A 404 means there's nothing to export yet (no published CV / no attachments).
+    const status = (e as { response?: { status?: number } }).response?.status;
+    error.value = status === 404 ? emptyMsg : t("admin.exports.failed");
   } finally {
     busy.value = false;
   }
@@ -70,6 +76,7 @@ function exportCv(lang: "en" | "de"): Promise<void> {
   return runExport(
     () => cvApi.pdf(lang, `${window.location.origin}/`),
     `Nicolas_Mischler_CV_${lang.toUpperCase()}.pdf`,
+    t("admin.exports.emptyCv"),
   );
 }
 
@@ -77,6 +84,7 @@ function exportCerts(lang: "en" | "de"): Promise<void> {
   return runExport(
     () => cvApi.certificatesPdf(lang, `${window.location.origin}/`),
     `Nicolas_Mischler_Certificates_${lang.toUpperCase()}.pdf`,
+    t("admin.exports.emptyCerts"),
   );
 }
 

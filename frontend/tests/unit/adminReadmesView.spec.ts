@@ -22,7 +22,9 @@ import { readmeApi } from "@/api/admin";
 const i18n = createI18n({ legacy: false, locale: "en", messages: { en } });
 
 function mountView() {
-  return mount(AdminReadmesView, { global: { plugins: [i18n] } });
+  return mount(AdminReadmesView, {
+    global: { plugins: [i18n], stubs: { RouterLink: { template: "<a><slot/></a>" } } },
+  });
 }
 
 function byText(buttons: ReturnType<ReturnType<typeof mountView>["findAll"]>, text: string) {

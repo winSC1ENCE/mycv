@@ -129,7 +129,8 @@
       "newFromTemplate": "New from template",
       "exportEn": "PDF EN",
       "exportDe": "PDF DE",
-      "saveFirst": "Save before exporting"
+      "saveFirst": "Save before exporting",
+      "goToLetter": "Open motivation letter"
     },
     "fields": {
       "name": "Name",

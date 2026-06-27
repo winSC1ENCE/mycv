@@ -134,7 +134,8 @@
       "newFromTemplate": "Aus Vorlage erstellen",
       "exportEn": "PDF EN",
       "exportDe": "PDF DE",
-      "saveFirst": "Vor dem Export speichern"
+      "saveFirst": "Vor dem Export speichern",
+      "goToLetter": "Motivationsschreiben öffnen"
     },
     "fields": {
       "name": "Name",

@@ -34,6 +34,10 @@ vi.mock("@/api/admin", () => ({
   accessKeyApi: { list: vi.fn(async () => ({ results: [] })) },
 }));
 
+// Controllable route query (deep-link from the Applications section).
+const routeMock = vi.hoisted(() => ({ query: {} as Record<string, string> }));
+vi.mock("vue-router", () => ({ useRoute: () => ({ query: routeMock.query }) }));
+
 import AdminLettersView from "@/views/admin/AdminLettersView.vue";
 import { readmeApi } from "@/api/admin";
 
@@ -49,6 +53,7 @@ function byText(buttons: ReturnType<ReturnType<typeof mountView>["findAll"]>, te
 
 beforeEach(() => {
   vi.clearAllMocks();
+  routeMock.query = {};
   global.URL.createObjectURL = vi.fn(() => "blob:x");
   global.URL.revokeObjectURL = vi.fn();
 });
@@ -92,5 +97,13 @@ describe("AdminLettersView", () => {
       expect.any(String),
       "letter",
     );
+  });
+
+  it("auto-opens the editor when deep-linked via ?edit=<id>", async () => {
+    routeMock.query = { edit: "5" };
+    const wrapper = mountView();
+    await flushPromises();
+    // editor row for the matching application is open without a click
+    expect(wrapper.find('input[placeholder="JOB-2026-042"]').exists()).toBe(true);
   });
 });

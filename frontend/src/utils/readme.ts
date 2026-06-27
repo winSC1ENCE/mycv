@@ -114,13 +114,17 @@ function escapeHtml(value: string): string {
     .replaceAll('"', "&quot;");
 }
 
-/** Build the version/updated badge chips injected at the `{{badges}}` token. */
-export function renderBadges(version: string, updated: string): string {
+/**
+ * Build the two badge chips injected at the `{{badges}}` token. The first chip is
+ * document-specific (`version` for a README, `reference` for a letter); the second
+ * is always the updated date.
+ */
+export function renderBadges(firstKey: string, firstVal: string, updated: string): string {
   return (
     `<span class="readme-badges">` +
     `<span class="readme-badge">` +
-    `<span class="readme-badge__key">version</span>` +
-    `<span class="readme-badge__val">${escapeHtml(version)}</span></span>` +
+    `<span class="readme-badge__key">${escapeHtml(firstKey)}</span>` +
+    `<span class="readme-badge__val">${escapeHtml(firstVal)}</span></span>` +
     `<span class="readme-badge readme-badge--muted">` +
     `<span class="readme-badge__key">updated</span>` +
     `<span class="readme-badge__val">${escapeHtml(updated)}</span></span>` +

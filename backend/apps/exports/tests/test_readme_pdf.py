@@ -45,6 +45,11 @@ class TestPermissionsAndValidation:
         resp = admin_client.post(_url(readme.pk), {"svgs": "nope"}, format="json")
         assert resp.status_code == 400
 
+    def test_invalid_doc_400(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory()
+        resp = admin_client.post(_url(readme.pk), {"doc": "cover"}, format="json")
+        assert resp.status_code == 400
+
     def test_missing_readme_404(self, admin_client: APIClient) -> None:
         resp = admin_client.post(_url(9999), {"lang": "en"}, format="json")
         assert resp.status_code == 404
@@ -145,6 +150,35 @@ class TestPdfRendering:
         assert "testserver" not in html
 
 
+class TestLetterPdf:
+    def test_letter_renders_reference_badge_and_letter_body(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(
+            name="ACME GmbH",
+            content="# README body",
+            letter_reference="JOB-2026-042",
+            letter_content="# Motivation\n\n{{badges}}\n\nDear team",
+        )
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            resp = admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
+        html = render.call_args.args[0]
+        assert "Dear team" in html  # letter body, not the README body
+        assert "README body" not in html
+        assert "JOB-2026-042" in html  # reference chip value
+        assert ">reference<" in html  # reference chip key label
+        assert 'filename="acme-gmbh-letter.pdf"' in resp["Content-Disposition"]
+
+    def test_letter_de_uses_german_letter_body(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(
+            letter_content="English letter",
+            letter_content_de="Deutscher Brief",
+        )
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            admin_client.post(_url(readme.pk), {"doc": "letter", "lang": "de"}, format="json")
+        html = render.call_args.args[0]
+        assert "Deutscher Brief" in html
+        assert "English letter" not in html
+
+
 class TestRenderReadmeBodyHelper:
     def test_no_key_blanks_access_placeholders(self) -> None:
         readme = ReadmeFactory(
@@ -154,3 +188,7 @@ class TestRenderReadmeBodyHelper:
         )
         out = render_readme_body(readme, "en", "http://x/")
         assert out == "A  B  C v9"
+
+    def test_letter_doc_selects_letter_content(self) -> None:
+        readme = ReadmeFactory(content="readme body", letter_content="letter body")
+        assert render_readme_body(readme, "en", "http://x/", doc="letter") == "letter body"

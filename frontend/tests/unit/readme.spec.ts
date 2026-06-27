@@ -91,7 +91,7 @@ describe("renderReadmeHtml", () => {
   });
 
   it("expands the {{badges}} token with the supplied badge markup", () => {
-    const badges = renderBadges("v1.2.3", "26.06.2026");
+    const badges = renderBadges("version", "v1.2.3", "26.06.2026");
     const html = renderReadmeHtml("# Title\n\n{{badges}}\n\nbody", [], badges);
     expect(html).toContain("<h1>Title</h1>");
     expect(html).toContain("readme-badges");
@@ -101,15 +101,23 @@ describe("renderReadmeHtml", () => {
 });
 
 describe("renderBadges", () => {
-  it("outputs version and updated chips", () => {
-    const html = renderBadges("v2.0.0", "01.01.2026");
+  it("outputs the first chip (key + value) and the updated chip", () => {
+    const html = renderBadges("version", "v2.0.0", "01.01.2026");
     expect(html).toContain("readme-badge");
+    expect(html).toContain("version");
     expect(html).toContain("v2.0.0");
     expect(html).toContain("01.01.2026");
   });
 
+  it("supports a custom first-badge key (e.g. reference for letters)", () => {
+    const html = renderBadges("reference", "JOB-42", "01.01.2026");
+    expect(html).toContain("reference");
+    expect(html).toContain("JOB-42");
+  });
+
   it("escapes HTML in the values", () => {
-    expect(renderBadges("<script>", "x")).not.toContain("<script>");
-    expect(renderBadges("<script>", "x")).toContain("&lt;script&gt;");
+    const html = renderBadges("version", "<script>", "x");
+    expect(html).not.toContain("<script>");
+    expect(html).toContain("&lt;script&gt;");
   });
 });

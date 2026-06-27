@@ -119,15 +119,16 @@
       "technologies": "Technologies",
       "socialLinks": "Social links",
       "accessKeys": "Access keys",
-      "readmes": "Applications"
+      "readmes": "Applications",
+      "letters": "Motivation Letters"
     },
     "readme": {
       "version": "Version",
       "accessKey": "Access key",
       "noKey": "— none —",
       "newFromTemplate": "New from template",
-      "exportEn": "Export PDF (EN)",
-      "exportDe": "Export PDF (DE)",
+      "exportEn": "PDF EN",
+      "exportDe": "PDF DE",
       "saveFirst": "Save before exporting"
     },
     "fields": {
@@ -147,6 +148,7 @@
       "content": "Content",
       "content_de": "Content (DE)",
       "created": "Created",
+      "reference": "Reference",
       "degree": "Degree",
       "degree_de": "Degree (DE)",
       "institution": "Institution",

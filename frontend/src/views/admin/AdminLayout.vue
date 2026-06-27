@@ -43,6 +43,9 @@
         <RouterLink class="admin-nav__link" :to="{ name: 'admin-readmes' }">
           {{ $t("admin.nav.readmes") }}
         </RouterLink>
+        <RouterLink class="admin-nav__link" :to="{ name: 'admin-letters' }">
+          {{ $t("admin.nav.letters") }}
+        </RouterLink>
       </nav>
 
       <div class="admin-sidebar__footer">

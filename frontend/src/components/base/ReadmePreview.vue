@@ -8,18 +8,24 @@ import {
   type ReadmeContext,
 } from "@/utils/readme";
 
-const props = defineProps<{ markdown: string; ctx: ReadmeContext }>();
+const props = defineProps<{
+  markdown: string;
+  ctx: ReadmeContext;
+  badgeKey: string;
+  badgeValue: string;
+}>();
 
 const html = ref("");
 
 async function rerender(): Promise<void> {
   const text = substitutePlaceholders(props.markdown, props.ctx);
   const svgs = await renderMermaidSvgs(text);
-  html.value = renderReadmeHtml(text, svgs, renderBadges(props.ctx.version, props.ctx.updated));
+  const badges = renderBadges(props.badgeKey, props.badgeValue, props.ctx.updated);
+  html.value = renderReadmeHtml(text, svgs, badges);
 }
 
 watch(
-  () => [props.markdown, props.ctx] as const,
+  () => [props.markdown, props.ctx, props.badgeKey, props.badgeValue] as const,
   () => {
     void rerender();
   },

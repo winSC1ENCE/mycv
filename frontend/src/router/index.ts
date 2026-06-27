@@ -82,6 +82,11 @@ const router = createRouter({
           name: "admin-readmes",
           component: () => import("@/views/admin/AdminReadmesView.vue"),
         },
+        {
+          path: "letters",
+          name: "admin-letters",
+          component: () => import("@/views/admin/AdminLettersView.vue"),
+        },
       ],
     },
     {

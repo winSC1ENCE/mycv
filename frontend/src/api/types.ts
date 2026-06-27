@@ -248,6 +248,9 @@ export interface Readme {
   content: string;
   content_de: string;
   version: string;
+  letter_content: string;
+  letter_content_de: string;
+  letter_reference: string;
   access_key: number | null;
   access_url: string;
   expires_display: string;
@@ -265,6 +268,9 @@ export interface ReadmeWrite {
   content: string;
   content_de: string;
   version: string;
+  letter_content: string;
+  letter_content_de: string;
+  letter_reference: string;
   access_key: number | null;
   order: number;
   is_published: boolean;

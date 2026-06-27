@@ -88,10 +88,16 @@ export const readmeApi = {
    * `baseUrl` is the visitor-facing origin (the backend's request Host is the
    * internal proxy target, so the client supplies the real one).
    */
-  async pdf(id: Id, lang: "en" | "de", svgs: string[], baseUrl: string): Promise<Blob> {
+  async pdf(
+    id: Id,
+    lang: "en" | "de",
+    svgs: string[],
+    baseUrl: string,
+    doc: "readme" | "letter" = "readme",
+  ): Promise<Blob> {
     const { data } = await http.post<Blob>(
       `/admin/readmes/${id}/pdf/`,
-      { lang, svgs, base_url: baseUrl },
+      { lang, svgs, base_url: baseUrl, doc },
       { responseType: "blob" },
     );
     return data;

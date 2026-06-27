@@ -140,6 +140,11 @@ class Readme(Orderable):
     content = models.TextField(blank=True)
     content_de = models.TextField(blank=True)
     version = models.CharField(max_length=40, default="v1.0.0")
+    # Motivation letter — a second per-application document (same {{badges}} token,
+    # whose first chip is the editable application reference below).
+    letter_content = models.TextField(blank=True)
+    letter_content_de = models.TextField(blank=True)
+    letter_reference = models.CharField(max_length=120, blank=True)
     access_key = models.ForeignKey(
         AccessKey,
         null=True,

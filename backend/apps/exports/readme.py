@@ -35,6 +35,7 @@ from apps.cv import models
 from .views import _read_css, _render_pdf
 
 VALID_LANGS = {"en", "de"}
+VALID_DOCS = {"readme", "letter"}
 
 # Wider allowlist than the inline CV markdown: README documents are full pages
 # (headings, tables, code blocks, diagrams), not short rich-text snippets.
@@ -97,21 +98,34 @@ def _placeholder_context(readme: models.Readme, public_url: str) -> dict[str, st
     }
 
 
-def render_readme_body(readme: models.Readme, lang: str, public_url: str) -> str:
-    """Return the localized body with ``{{placeholders}}`` substituted."""
-    text = readme.content_de if (lang == "de" and readme.content_de) else readme.content
+def render_readme_body(
+    readme: models.Readme, lang: str, public_url: str, *, doc: str = "readme"
+) -> str:
+    """Return the localized body (README or letter) with ``{{placeholders}}`` substituted."""
+    if doc == "letter":
+        text = (
+            readme.letter_content_de
+            if (lang == "de" and readme.letter_content_de)
+            else readme.letter_content
+        )
+    else:
+        text = readme.content_de if (lang == "de" and readme.content_de) else readme.content
     for token, value in _placeholder_context(readme, public_url).items():
         text = text.replace(token, value)
     return text
 
 
-def _badges_html(version: str, updated: str) -> str:
-    """Build the version/updated badge chips injected at the ``{{badges}}`` token."""
+def _badges_html(first_key: str, first_val: str, updated: str) -> str:
+    """Build the two badge chips injected at the ``{{badges}}`` token.
+
+    The first chip is document-specific (``version`` for a README, ``reference``
+    for a letter); the second is always the updated date.
+    """
     return (
         '<span class="rm-badges">'
         '<span class="rm-badge">'
-        '<span class="rm-badge__key">version</span>'
-        f'<span class="rm-badge__val">{escape(version)}</span></span>'
+        f'<span class="rm-badge__key">{escape(first_key)}</span>'
+        f'<span class="rm-badge__val">{escape(first_val)}</span></span>'
         '<span class="rm-badge rm-badge--muted">'
         '<span class="rm-badge__key">updated</span>'
         f'<span class="rm-badge__val">{escape(updated)}</span></span>'
@@ -135,9 +149,10 @@ def _inject_mermaid(html: str, svgs: list[str]) -> str:
 class ReadmePdfView(APIView):
     """``POST /api/admin/readmes/<pk>/pdf/`` — stream a rendered README PDF.
 
-    Body: ``{"lang": "en"|"de", "svgs": ["<svg…>", …], "base_url": "https://…/"}``
-    where ``svgs`` are the client-rendered Mermaid diagrams (ordered by appearance)
-    and ``base_url`` is the visitor-facing origin used to build the access link.
+    Body: ``{"lang": "en"|"de", "doc": "readme"|"letter", "svgs": [...],
+    "base_url": "https://…/"}`` — ``doc`` selects the README or the motivation
+    letter, ``svgs`` are the client-rendered Mermaid diagrams (ordered by
+    appearance), and ``base_url`` is the visitor-facing origin for the access link.
     """
 
     permission_classes = [IsAdminUser]
@@ -146,6 +161,9 @@ class ReadmePdfView(APIView):
         lang = request.data.get("lang", "en")
         if lang not in VALID_LANGS:
             raise ValidationError({"lang": f"Must be one of {sorted(VALID_LANGS)}."})
+        doc = request.data.get("doc", "readme")
+        if doc not in VALID_DOCS:
+            raise ValidationError({"doc": f"Must be one of {sorted(VALID_DOCS)}."})
         svgs = request.data.get("svgs", [])
         if not isinstance(svgs, list):
             raise ValidationError({"svgs": "Must be a list of SVG strings."})
@@ -161,11 +179,15 @@ class ReadmePdfView(APIView):
             base_url = request.build_absolute_uri("/")
         public_url = base_url
         ctx = _placeholder_context(readme, public_url)
-        body = render_readme_body(readme, lang, public_url)
+        body = render_readme_body(readme, lang, public_url, doc=doc)
         raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)
         clean = nh3.clean(raw_html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
         clean = _inject_mermaid(clean, [str(svg) for svg in svgs])
-        clean = clean.replace("{{badges}}", _badges_html(ctx["{{version}}"], ctx["{{updated}}"]))
+        if doc == "letter":
+            badges = _badges_html("reference", readme.letter_reference, ctx["{{updated}}"])
+        else:
+            badges = _badges_html("version", readme.version, ctx["{{updated}}"])
+        clean = clean.replace("{{badges}}", badges)
 
         html = render_to_string(
             "exports/readme.html",
@@ -177,14 +199,16 @@ class ReadmePdfView(APIView):
             },
         )
 
+        label = "Motivation Letter" if doc == "letter" else "README"
         pdf_bytes = _render_pdf(
             html,
             base_url=str(settings.BASE_DIR),
-            title=f"{readme.name} — README",
+            title=f"{readme.name} — {label}",
             author=readme.person.full_name,
         )
 
-        filename = f"{slugify(readme.name) or 'readme'}.pdf"
+        slug = slugify(readme.name) or "readme"
+        filename = f"{slug}-letter.pdf" if doc == "letter" else f"{slug}.pdf"
         resp = HttpResponse(pdf_bytes, content_type="application/pdf")
         resp["Content-Disposition"] = f'attachment; filename="{filename}"'
         return resp

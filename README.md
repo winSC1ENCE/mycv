@@ -13,14 +13,15 @@ Vue 3 + Django REST + PostgreSQL behind Docker and a reverse proxy.
 ## Features
 
 - **Bilingual content** (EN / DE) at the data-model level
-- **Two themes**: clean corporate (`normal`) and comic B&W (`dog`)
+- **Themes**: clean corporate (`normal`) plus a switchable "funny" theme — **Dog Mode** (comic B&W) or **Virus Mode** — selectable per CV via `active_funny_theme`
 - **Sensitive-data redaction** — 5 person fields (email, phone, address, marital status, DOB) and certificate file URLs are placeholders until a valid `AccessKey` token is supplied via `?key=…`
 - **Admin CV endpoint** `/api/admin/cv/` returns unredacted data for authenticated staff
 - **Custom Vue admin panel** (no Django admin UI for content edits)
 - **Media attachments** — certificates and experiences accept image or PDF; projects accept up to 6 images with reorder controls
 - **Image lightbox** + **PDF card** previews (shared `ImageLightbox` + `MediaPreview` components)
 - Drag-and-drop reordering, image upload with crop, file validation, Esc-to-close admin modals
-- Server-rendered **PDF export** via WeasyPrint (four lang/theme combos)
+- Server-rendered **PDF export** via WeasyPrint — the CV (four lang/theme combos) plus per-application documents (below)
+- **Application documents** — an admin **Applications** section for per-application *README* cover docs and a **Motivation Letters** section, both authored in bilingual (EN/DE) Markdown with **Mermaid diagrams** (rasterized to PNG for the PDF), `{{placeholder}}` tokens (access link/expiry auto-filled from the linked `AccessKey`), native version/updated/reference badges, and per-language PDF export
 - **SEO**: JSON-LD Person schema, OG + Twitter tags, sitemap.xml, robots.txt
 - **WCAG 2 AA** accessibility (enforced in CI via axe-playwright)
 - Optional **Sentry** integration (DSN-gated; no-op without)
@@ -124,7 +125,7 @@ mycv/
 │   │   ├── accounts/             # Custom User + session auth
 │   │   └── exports/              # WeasyPrint PDF + sitemaps
 │   ├── config/settings/          # base / dev / prod / test
-│   ├── templates/exports/        # cv.html + cv.css for the PDF
+│   ├── templates/exports/        # cv + readme html/css for the PDFs
 │   ├── static/fonts/             # Inter + JetBrains Mono
 │   ├── pyproject.toml
 │   └── Dockerfile                # multi-stage; non-root in runtime
@@ -182,5 +183,5 @@ All planned iterations are complete (Phases 1–5) plus a series of follow-up re
 - **Admin endpoint** — `/api/admin/cv/` returns unredacted data for staff users
 - **Media everywhere** — Certificate/Experience FK to `MediaAsset`; Project M2M (cap 6) with reorder; shared `ImageLightbox` + `MediaPreview` (PDF card) primitives
 - **UX polish** — flat SVG icons (`Icon.vue`), Esc-to-close admin modals (`useEscClose`), modernised `Sensitive` blur + lock chip
-
-Test
+- **Virus Mode** — a third selectable funny theme alongside Dog Mode
+- **Application documents** — **Applications** (README) and **Motivation Letters** admin sections: bilingual Markdown with Mermaid (rasterized to PNG so WeasyPrint renders it), `{{placeholder}}` tokens, native version/updated/reference badges, sortable list with inline editors, per-language PDF export, and a cross-link from each application to its motivation letter

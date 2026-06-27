@@ -49,7 +49,9 @@ export const useThemeStore = defineStore("theme", () => {
 
   /** Tell the store which funny theme the server allows; re-validate current. */
   function setAvailableFunny(value: string | null | undefined): void {
-    activeFunny.value = value ?? "none";
+    // Server value not loaded yet — keep the persisted theme as-is.
+    if (value === undefined || value === null) return;
+    activeFunny.value = value;
     // If the current theme is a funny one that's no longer allowed, drop to normal.
     if (theme.value !== "normal" && theme.value !== activeFunny.value) {
       theme.value = "normal";

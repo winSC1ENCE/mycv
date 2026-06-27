@@ -86,7 +86,8 @@ make up          # docker compose up --build
 
 | URL                                 | Service                            |
 | ----------------------------------- | ---------------------------------- |
-| <http://localhost:3000>             | Vue frontend (Vite HMR)            |
+| <
+>             | Vue frontend (Vite HMR)            |
 | <http://localhost:8000/api/health/> | backend health (`{"status":"ok"}`) |
 | <http://localhost:8000/admin/>      | Django admin                       |
 

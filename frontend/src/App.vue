@@ -6,8 +6,6 @@ import { useCvStore } from "@/stores/cv";
 import { useThemeStore } from "@/stores/theme";
 import { useLocaleStore } from "@/stores/locale";
 import { packFor } from "@/themes/registry";
-// PDF export disabled (refactoring_12) — uncomment to re-enable.
-// import { buildPdfUrl } from "@/api/exports";
 import { useAccessKey } from "@/composables/useAccessKey";
 import ErrorBoundary from "@/components/base/ErrorBoundary.vue";
 import FunBubbles from "@/components/timeline/FunBubbles.vue";
@@ -35,9 +33,6 @@ const toggleLabel = computed(() => {
   return pack ? `${pack.emoji} ${pack.label}` : "";
 });
 
-// PDF export disabled (refactoring_12) — uncomment to re-enable.
-// const pdfUrl = computed(() => buildPdfUrl(locale.value, theme.value));
-
 useAccessKey();
 
 onMounted(() => {
@@ -52,17 +47,6 @@ onMounted(() => {
         {{ cv ? cv.full_name : "mycv" }}
       </router-link>
       <div class="header__actions">
-        <!-- PDF export disabled (refactoring_12) — uncomment to re-enable.
-        <a
-          class="button button--ghost"
-          :href="pdfUrl"
-          target="_blank"
-          rel="noopener"
-          :title="t('actions.download_pdf')"
-        >
-          📄 {{ t("actions.download_pdf") }}
-        </a>
-        -->
         <button
           type="button"
           class="button button--ghost"

@@ -5,142 +5,124 @@
   <title>{{ person.full_name }} — CV</title>
   <style>{{ css|safe }}</style>
 </head>
-<body class="theme-{{ theme }}">
+<body>
 
-  <header class="cv-header">
-    <div class="cv-header__main">
-      <h1 class="cv-name">{{ person.full_name }}</h1>
-      <p class="cv-title">{% localized person "title" lang %}</p>
-    </div>
-    <div class="cv-header__contact">
-      <p>{{ person.email }}</p>
-      {% if person.phone %}<p>{{ person.phone }}</p>{% endif %}
-      {% if person.location %}<p>{{ person.location }}</p>{% endif %}
-      {% for link in person.social_links.all %}
-        <p>{{ link.platform }}: {{ link.url }}</p>
-      {% endfor %}
-    </div>
-  </header>
+  <aside class="sidebar">
+    <div class="sidebar__top">
+      <h1 class="sidebar__name">{{ person.full_name }}</h1>
+      <p class="sidebar__title">{% localized person "title" lang %}</p>
 
-  {% if person.summary %}
-    <section class="cv-section cv-section--summary">
-      <div class="cv-summary">{% markdown person "summary" lang %}</div>
-    </section>
-  {% endif %}
+      <div class="sidebar__block">
+        <h2 class="sidebar__heading">{% if lang == "de" %}Kontakt{% else %}Contact{% endif %}</h2>
+        <ul class="contact">
+          <li>{{ person.email }}</li>
+          {% if person.phone %}<li>{{ person.phone }}</li>{% endif %}
+          {% if person.location %}<li>{{ person.location }}</li>{% endif %}
+          {% for link in person.social_links.all %}
+            <li><span class="contact__label">{{ link.platform }}</span>{{ link.url }}</li>
+          {% endfor %}
+        </ul>
+      </div>
 
-  {% with experiences=person.experiences.all %}
-    {% if experiences %}
-      <section class="cv-section">
-        <h2 class="cv-section__title">{% if lang == "de" %}Erfahrung{% else %}Experience{% endif %}</h2>
-        {% for exp in experiences %}
-          {% if exp.is_published %}
-            <article class="cv-entry">
-              <div class="cv-entry__head">
-                <h3 class="cv-entry__title">{% localized exp "role" lang %}</h3>
-                <span class="cv-entry__dates">
-                  {{ exp.start_date|date:"Y-m" }} —
-                  {% if exp.end_date %}{{ exp.end_date|date:"Y-m" }}{% else %}{% if lang == "de" %}heute{% else %}Present{% endif %}{% endif %}
-                </span>
-              </div>
-              <p class="cv-entry__sub">{{ exp.company }}{% if exp.location %} · {{ exp.location }}{% endif %}</p>
-              {% if exp.description %}<div class="cv-entry__body">{% markdown exp "description" lang %}</div>{% endif %}
-              {% with techs=exp.technologies.all %}
-                {% if techs %}
-                  <p class="cv-entry__tech">
-                    {% for tech in techs %}<span class="cv-tag">{{ tech.name }}</span>{% endfor %}
-                  </p>
-                {% endif %}
-              {% endwith %}
-            </article>
-          {% endif %}
-        {% endfor %}
-      </section>
-    {% endif %}
-  {% endwith %}
-
-  {% with educations=person.educations.all %}
-    {% if educations %}
-      <section class="cv-section">
-        <h2 class="cv-section__title">{% if lang == "de" %}Ausbildung{% else %}Education{% endif %}</h2>
-        {% for ed in educations %}
-          {% if ed.is_published %}
-            <article class="cv-entry">
-              <div class="cv-entry__head">
-                <h3 class="cv-entry__title">{% localized ed "degree" lang %}</h3>
-                <span class="cv-entry__dates">
-                  {{ ed.start_date|date:"Y" }}{% if ed.end_date %} — {{ ed.end_date|date:"Y" }}{% endif %}
-                </span>
-              </div>
-              <p class="cv-entry__sub">{{ ed.institution }}{% if ed.location %} · {{ ed.location }}{% endif %}</p>
-              {% if ed.description %}<div class="cv-entry__body">{% markdown ed "description" lang %}</div>{% endif %}
-            </article>
-          {% endif %}
-        {% endfor %}
-      </section>
-    {% endif %}
-  {% endwith %}
-
-  {% if skill_categories %}
-    <section class="cv-section">
-      <h2 class="cv-section__title">{% if lang == "de" %}Fähigkeiten{% else %}Skills{% endif %}</h2>
-      {% for cat in skill_categories %}
-        <div class="cv-skill-group">
-          <h3 class="cv-skill-group__title">{% localized cat "name" lang %}</h3>
-          <p class="cv-skill-group__list">
-            {% for skill in cat.skills.all %}<span class="cv-tag">{% localized skill "name" lang %}</span>{% endfor %}
-          </p>
+      {% if skill_categories %}
+        <div class="sidebar__block">
+          <h2 class="sidebar__heading">{% if lang == "de" %}Fähigkeiten{% else %}Skills{% endif %}</h2>
+          {% for cat in skill_categories %}
+            <div class="skill-group">
+              <h3 class="skill-group__title">{% localized cat "name" lang %}</h3>
+              <p class="tags">
+                {% for skill in cat.skills.all %}<span class="tag">{% localized skill "name" lang %}</span>{% endfor %}
+              </p>
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </section>
-  {% endif %}
+      {% endif %}
 
-  {% with certificates=person.certificates.all %}
-    {% if certificates %}
-      <section class="cv-section">
-        <h2 class="cv-section__title">{% if lang == "de" %}Zertifikate{% else %}Certificates{% endif %}</h2>
-        {% for cert in certificates %}
-          {% if cert.is_published %}
-            <article class="cv-entry">
-              <div class="cv-entry__head">
-                <h3 class="cv-entry__title">{% localized cert "name" lang %}</h3>
-                <span class="cv-entry__dates">{{ cert.issue_date|date:"Y-m" }}</span>
-              </div>
-              <p class="cv-entry__sub">{{ cert.issuer }}</p>
-              {% if cert.description %}<div class="cv-entry__body">{% markdown cert "description" lang %}</div>{% endif %}
-            </article>
-          {% endif %}
-        {% endfor %}
+      {% with certificates=person.certificates.all %}
+        {% if certificates %}
+          <div class="sidebar__block">
+            <h2 class="sidebar__heading">{% if lang == "de" %}Zertifikate{% else %}Certificates{% endif %}</h2>
+            {% for cert in certificates %}
+              {% if cert.is_published %}
+                <div class="cert">
+                  <p class="cert__name">{% localized cert "name" lang %}</p>
+                  <p class="cert__meta">{{ cert.issuer }} · {{ cert.issue_date|date:"Y" }}</p>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </aside>
+
+  <main class="main">
+    {% if person.summary %}
+      <section class="section section--summary">
+        <div class="prose">{% markdown person "summary" lang %}</div>
       </section>
     {% endif %}
-  {% endwith %}
 
-  {% with projects=person.projects.all %}
-    {% if projects %}
-      <section class="cv-section">
-        <h2 class="cv-section__title">{% if lang == "de" %}Projekte{% else %}Projects{% endif %}</h2>
-        {% for proj in projects %}
-          {% if proj.is_published %}
-            <article class="cv-entry">
-              <h3 class="cv-entry__title">{% localized proj "name" lang %}</h3>
-              {% if proj.summary %}<p class="cv-entry__sub">{% localized proj "summary" lang %}</p>{% endif %}
-              {% if proj.url %}<p class="cv-entry__sub cv-entry__url">{{ proj.url }}</p>{% endif %}
-              {% if proj.description %}<div class="cv-entry__body">{% markdown proj "description" lang %}</div>{% endif %}
-            </article>
-          {% endif %}
-        {% endfor %}
-      </section>
-    {% endif %}
-  {% endwith %}
+    {% with experiences=person.experiences.all %}
+      {% if experiences %}
+        <section class="section">
+          <h2 class="section__title">{% if lang == "de" %}Erfahrung{% else %}Experience{% endif %}</h2>
+          {% for exp in experiences %}
+            {% if exp.is_published %}
+              <article class="entry">
+                <div class="entry__head">
+                  <h3 class="entry__title">{% localized exp "role" lang %}</h3>
+                  <span class="entry__dates">
+                    {{ exp.start_date|date:"Y-m" }} —
+                    {% if exp.end_date %}{{ exp.end_date|date:"Y-m" }}{% else %}{% if lang == "de" %}heute{% else %}Present{% endif %}{% endif %}
+                  </span>
+                </div>
+                <p class="entry__sub">{{ exp.company }}{% if exp.location %} · {{ exp.location }}{% endif %}</p>
+                {% if exp.description %}<div class="prose">{% markdown exp "description" lang %}</div>{% endif %}
+                {% with techs=exp.technologies.all %}
+                  {% if techs %}
+                    <p class="tags tags--inline">
+                      {% for tech in techs %}<span class="tag">{{ tech.name }}</span>{% endfor %}
+                    </p>
+                  {% endif %}
+                {% endwith %}
+              </article>
+            {% endif %}
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endwith %}
 
-  <footer class="cv-footer">
-    <div class="cv-footer__qr">
-      {{ qr_svg|safe }}
-    </div>
-    <div class="cv-footer__url">
-      <p>{% if lang == "de" %}Online-Version{% else %}Online version{% endif %}:</p>
-      <p class="cv-footer__url-text">{{ public_url }}</p>
-    </div>
-  </footer>
+    {% with educations=person.educations.all %}
+      {% if educations %}
+        <section class="section">
+          <h2 class="section__title">{% if lang == "de" %}Ausbildung{% else %}Education{% endif %}</h2>
+          {% for ed in educations %}
+            {% if ed.is_published %}
+              <article class="entry">
+                <div class="entry__head">
+                  <h3 class="entry__title">{% localized ed "degree" lang %}</h3>
+                  <span class="entry__dates">
+                    {{ ed.start_date|date:"Y" }}{% if ed.end_date %} — {{ ed.end_date|date:"Y" }}{% endif %}
+                  </span>
+                </div>
+                <p class="entry__sub">{{ ed.institution }}{% if ed.location %} · {{ ed.location }}{% endif %}</p>
+                {% if ed.description %}<div class="prose">{% markdown ed "description" lang %}</div>{% endif %}
+              </article>
+            {% endif %}
+          {% endfor %}
+        </section>
+      {% endif %}
+    {% endwith %}
+
+    <footer class="cv-footer">
+      <div class="qr">{{ qr_svg|safe }}</div>
+      <div class="qr__cap">
+        <p>{% if lang == "de" %}Online-Version{% else %}Online version{% endif %}</p>
+        <p class="qr__url">{{ public_url }}</p>
+      </div>
+    </footer>
+  </main>
 
 </body>
 </html>

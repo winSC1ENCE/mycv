@@ -127,6 +127,16 @@
       "readmes": "Bewerbungen",
       "letters": "Motivationsschreiben"
     },
+    "exports": {
+      "title": "Exporte",
+      "cv": "Lebenslauf",
+      "certificates": "Zertifikate",
+      "en": "EN",
+      "de": "DE",
+      "failed": "Export fehlgeschlagen.",
+      "emptyCv": "Kein veröffentlichter Lebenslauf vorhanden.",
+      "emptyCerts": "Noch keine Dokumente an Erfahrung/Ausbildung angehängt."
+    },
     "readme": {
       "version": "Version",
       "accessKey": "Zugriffsschlüssel",

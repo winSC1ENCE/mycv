@@ -1,4 +1,4 @@
-/* PDF stylesheet — A4, print-tuned. Not shared with the web app's CSS. */
+/* PDF stylesheet — A4, print-tuned. Two-column: fixed accent sidebar + main column. */
 
 @font-face {
   font-family: "Inter";
@@ -25,14 +25,27 @@
   font-style: normal;
 }
 
+:root {
+  --accent: #0e7490;        /* cyan-700 */
+  --accent-dark: #0b3a4a;
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+  --sidebar-w: 64mm;
+  --frame: 14mm;            /* top/bottom page margin; sidebar bleeds past it */
+}
+
+/* Full-width top/bottom margin gives continuation pages breathing room; the
+   fixed sidebar uses negative offsets to bleed to the page edges anyway. */
 @page {
   size: A4;
-  margin: 18mm 16mm 22mm 16mm;
+  margin: var(--frame) 0;
   @bottom-center {
     content: counter(page) " / " counter(pages);
     font-family: "Inter", sans-serif;
-    font-size: 9pt;
+    font-size: 8pt;
     color: #94a3b8;
+    margin-left: var(--sidebar-w);   /* center the number under the main column */
   }
 }
 
@@ -40,132 +53,165 @@
 
 html, body {
   font-family: "Inter", sans-serif;
-  font-size: 10.5pt;
-  line-height: 1.45;
-  color: #0f172a;
-  background: white;
+  font-size: 10pt;
+  line-height: 1.5;
+  color: var(--ink);
+  background: #fff;
 }
 
 h1, h2, h3 { font-weight: 700; line-height: 1.2; }
 
-/* --- Header --- */
-.cv-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  border-bottom: 1.5px solid #0f172a;
-  padding-bottom: 8mm;
-  margin-bottom: 6mm;
-  break-after: avoid;
+/* --- Sidebar (fixed → repeats on every page; bleeds into page margins) --- */
+.sidebar {
+  position: fixed;
+  top: calc(-1 * var(--frame));
+  bottom: calc(-1 * var(--frame));
+  left: 0;
+  width: var(--sidebar-w);
+  background: linear-gradient(165deg, var(--accent-dark), var(--accent));
+  color: #fff;
+  padding: 16mm 8mm 12mm 8mm;
+  overflow: hidden;
 }
-.cv-name { font-size: 22pt; }
-.cv-title { font-size: 12pt; color: #475569; margin-top: 2mm; }
-.cv-header__contact { font-size: 9pt; color: #475569; text-align: right; }
-.cv-header__contact p { margin-bottom: 1mm; }
+.sidebar__name { font-size: 19pt; letter-spacing: -0.01em; }
+.sidebar__title {
+  font-size: 10.5pt;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.82);
+  margin-top: 2mm;
+  margin-bottom: 9mm;
+}
 
-/* --- Sections --- */
-.cv-section {
-  margin-bottom: 6mm;
-  break-inside: avoid-page;
-}
-.cv-section__title {
-  font-size: 12pt;
+.sidebar__block { margin-bottom: 7mm; }
+.sidebar__heading {
+  font-size: 8.5pt;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  border-bottom: 0.5px solid #cbd5e1;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.62);
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.25);
   padding-bottom: 1.5mm;
   margin-bottom: 3mm;
+}
+
+.contact { list-style: none; }
+.contact li {
+  font-size: 8.5pt;
+  color: rgba(255, 255, 255, 0.92);
+  margin-bottom: 1.8mm;
+  word-break: break-word;
+}
+.contact__label {
+  display: block;
+  font-size: 7pt;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.skill-group { margin-bottom: 3mm; }
+.skill-group__title { font-size: 8.5pt; font-weight: 600; margin-bottom: 1.5mm; }
+.sidebar .tags { line-height: 2; }
+.sidebar .tag {
+  display: inline-block;
+  font-size: 7.5pt;
+  padding: 0.3mm 1.8mm;
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1.5mm;
+  margin: 0 1mm 1mm 0;
+  color: #fff;
+}
+
+.cert { margin-bottom: 2.5mm; }
+.cert__name { font-size: 8.5pt; font-weight: 600; }
+.cert__meta { font-size: 7.5pt; color: rgba(255, 255, 255, 0.7); }
+
+/* --- Main column --- */
+.main {
+  margin-left: var(--sidebar-w);
+  padding: 0 14mm 0 12mm;
+}
+
+.section { margin-bottom: 6mm; }
+.section__title {
+  font-size: 12pt;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-dark);
+  border-bottom: 1.5px solid var(--accent);
+  padding-bottom: 1.5mm;
+  margin-bottom: 3.5mm;
   break-after: avoid;
 }
-.cv-summary { font-size: 10.5pt; color: #334155; }
+.section--summary { margin-bottom: 7mm; }
+.section--summary .prose { font-size: 10.5pt; color: var(--muted); }
 
-/* --- Entries --- */
-.cv-entry {
-  margin-bottom: 4mm;
-  break-inside: avoid;
-}
-.cv-entry__head {
+.entry { margin-bottom: 4.5mm; break-inside: avoid; }
+.entry__head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
 }
-.cv-entry__title { font-size: 11pt; }
-.cv-entry__dates {
+.entry__title { font-size: 11pt; }
+.entry__dates {
   font-family: "JetBrains Mono", monospace;
-  font-size: 9pt;
-  color: #64748b;
+  font-size: 8.5pt;
+  color: var(--muted);
   white-space: nowrap;
   padding-left: 3mm;
 }
-.cv-entry__sub { font-size: 10pt; color: #475569; margin-top: 0.5mm; }
-.cv-entry__body { font-size: 10pt; margin-top: 1.5mm; color: #1e293b; }
-.cv-entry__body p, .cv-summary p { margin: 0 0 1.5mm 0; }
-.cv-entry__body p:last-child, .cv-summary p:last-child { margin-bottom: 0; }
-.cv-entry__body ul, .cv-entry__body ol, .cv-summary ul, .cv-summary ol { margin: 0 0 1.5mm 0; padding-left: 5mm; }
-.cv-entry__body li, .cv-summary li { margin: 0 0 0.5mm 0; }
-.cv-entry__body strong, .cv-summary strong { font-weight: 700; }
-.cv-entry__body em, .cv-summary em { font-style: italic; }
-.cv-entry__body a, .cv-summary a { color: inherit; text-decoration: underline; }
-.cv-entry__tech { margin-top: 2mm; }
-.cv-entry__url { font-family: "JetBrains Mono", monospace; font-size: 8.5pt; }
-
-/* --- Tags --- */
-.cv-tag {
-  display: inline-block;
-  font-size: 8.5pt;
-  padding: 0.3mm 1.6mm;
-  border: 0.5px solid #cbd5e1;
-  border-radius: 1.5mm;
-  margin-right: 1mm;
+.entry__sub {
+  font-size: 9.5pt;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 0.5mm;
   margin-bottom: 1mm;
+}
+
+/* --- Prose (rendered Markdown) --- */
+.prose { font-size: 9.5pt; color: #1e293b; }
+.prose p { margin: 0 0 1.5mm 0; }
+.prose p:last-child { margin-bottom: 0; }
+.prose ul, .prose ol { margin: 0 0 1.5mm 0; padding-left: 5mm; }
+.prose li { margin: 0 0 0.5mm 0; }
+.prose strong { font-weight: 700; }
+.prose em { font-style: italic; }
+.prose a { color: var(--accent); text-decoration: underline; }
+
+/* --- Tags in the main column --- */
+.tags--inline { margin-top: 2mm; }
+.main .tag {
+  display: inline-block;
+  font-size: 8pt;
+  padding: 0.3mm 1.8mm;
+  background: #f1f5f9;
+  border: 0.5px solid var(--line);
+  border-radius: 1.5mm;
+  margin: 0 1mm 1mm 0;
   color: #334155;
 }
 
-/* --- Skills --- */
-.cv-skill-group { margin-bottom: 3mm; break-inside: avoid; }
-.cv-skill-group__title { font-size: 10pt; margin-bottom: 1.5mm; }
-
-/* --- Footer (QR + URL) --- */
+/* --- Footer (QR + online version), flows once at the document end --- */
 .cv-footer {
-  margin-top: 8mm;
-  padding-top: 4mm;
-  border-top: 0.5px solid #cbd5e1;
   display: flex;
   align-items: center;
-  gap: 6mm;
+  gap: 5mm;
+  margin-top: 8mm;
+  padding-top: 4mm;
+  border-top: 0.5px solid var(--line);
   break-inside: avoid;
 }
-.cv-footer__qr svg { width: 18mm; height: 18mm; }
-.cv-footer__url p { font-size: 9pt; color: #64748b; }
-.cv-footer__url-text {
+.qr svg {
+  width: 18mm;
+  height: 18mm;
+  border: 0.5px solid var(--line);
+  padding: 1mm;
+  border-radius: 1mm;
+}
+.qr__cap p { font-size: 8.5pt; color: var(--muted); }
+.qr__url {
   font-family: "JetBrains Mono", monospace;
-  font-size: 10pt !important;
-  color: #0f172a !important;
+  font-size: 8.5pt !important;
+  color: var(--ink) !important;
+  word-break: break-all;
 }
-
-/* --- Dog theme (print-tuned, B&W, comic feel) --- */
-body.theme-dog {
-  color: #000;
-  font-family: "Inter", sans-serif;
-}
-.theme-dog .cv-header { border-bottom: 2.5px solid #000; }
-.theme-dog .cv-name { letter-spacing: -0.02em; }
-.theme-dog .cv-title,
-.theme-dog .cv-entry__sub,
-.theme-dog .cv-header__contact,
-.theme-dog .cv-entry__dates,
-.theme-dog .cv-footer__url p { color: #000; }
-.theme-dog .cv-section__title {
-  border-bottom: 1.5px solid #000;
-  background: #000;
-  color: #fff;
-  padding: 1mm 2mm;
-}
-.theme-dog .cv-tag {
-  border: 1px solid #000;
-  background: #fff;
-  color: #000;
-  border-radius: 0;
-}
-.theme-dog .cv-entry__body { color: #000; }
-.theme-dog .cv-footer { border-top: 1.5px solid #000; }

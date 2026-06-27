@@ -3,7 +3,7 @@
 Full-stack interactive CV built as a senior-engineering reference build:
 Vue 3 + Django REST + PostgreSQL behind Docker and a reverse proxy.
 
-> **Stack** — Django 5 + DRF · Vue 3 + Vite + TypeScript · PostgreSQL 16 · Docker · WeasyPrint
+> **Stack** — Django 5 + DRF · Vue 3 + Vite + TypeScript · PostgreSQL 16 · Docker · WeasyPrint + pypdf
 > **Quality** — 100% backend coverage · mypy strict · ESLint + Prettier · Playwright + axe-core
 
 > _Self-host on any Docker-capable VPS behind a reverse proxy. Configure `your-domain.tld` in `.env` and `Caddyfile.example`, then push the deploy workflow._
@@ -20,7 +20,7 @@ Vue 3 + Django REST + PostgreSQL behind Docker and a reverse proxy.
 - **Media attachments** — certificates and experiences accept image or PDF; projects accept up to 6 images with reorder controls
 - **Image lightbox** + **PDF card** previews (shared `ImageLightbox` + `MediaPreview` components)
 - Drag-and-drop reordering, image upload with crop, file validation, Esc-to-close admin modals
-- Server-rendered **PDF export** via WeasyPrint — the CV (four lang/theme combos) plus per-application documents (below)
+- Server-rendered **PDF export** via WeasyPrint (admin-only, EN/DE) — the full CV in a modern two-column layout, a **Certificates PDF** bundling the documents attached to Experience/Education entries into one file (a CI header per entry; image attachments converted to a page, PDF attachments merged in verbatim via `pypdf`), plus per-application documents (below). Triggered from the admin Dashboard **Exports** card.
 - **Application documents** — an admin **Applications** section for per-application *README* cover docs and a **Motivation Letters** section, both authored in bilingual (EN/DE) Markdown with **Mermaid diagrams** (rasterized to PNG for the PDF), `{{placeholder}}` tokens (access link/expiry auto-filled from the linked `AccessKey`), native version/updated/reference badges, and per-language PDF export
 - **SEO**: JSON-LD Person schema, OG + Twitter tags, sitemap.xml, robots.txt
 - **WCAG 2 AA** accessibility (enforced in CI via axe-playwright)

@@ -345,3 +345,15 @@ class AccessKeyViewSet(viewsets.ModelViewSet[models.AccessKey]):
         if self.action in ("create", "update", "partial_update"):
             return serializers.AccessKeyWriteSerializer
         return serializers.AccessKeySerializer
+
+
+class ReadmeViewSet(PersonOwnedCreateMixin, viewsets.ModelViewSet[models.Readme]):
+    """Staff-only CRUD for per-application README documents."""
+
+    queryset = models.Readme.objects.select_related("access_key").all()
+    permission_classes = [permissions.IsAdminUser]
+
+    def get_serializer_class(self) -> _SerializerClass:
+        if self.action in ("create", "update", "partial_update"):
+            return serializers.ReadmeWriteSerializer
+        return serializers.ReadmeSerializer

@@ -12,6 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from django.utils import timezone
 from rest_framework import serializers
 
 from . import models
@@ -317,6 +318,78 @@ class AccessKeyWriteSerializer(serializers.ModelSerializer[models.AccessKey]):
         model = models.AccessKey
         fields = ["id", "person", "token", "label", "expires_at", "is_active"]
         read_only_fields = ["token"]
+
+
+class ReadmeSerializer(serializers.ModelSerializer[models.Readme]):
+    """Read payload for a README, including resolved placeholder values.
+
+    ``access_url``/``expires_display``/``updated_display`` are computed so the
+    frontend preview substitutes the same ``{{placeholder}}`` tokens the PDF
+    backend does, keeping preview and export identical.
+    """
+
+    access_url = serializers.SerializerMethodField()
+    expires_display = serializers.SerializerMethodField()
+    updated_display = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.Readme
+        fields = [
+            "id",
+            "name",
+            "content",
+            "content_de",
+            "version",
+            "letter_content",
+            "letter_content_de",
+            "letter_reference",
+            "access_key",
+            "access_url",
+            "expires_display",
+            "updated_display",
+            "order",
+            "is_published",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_access_url(self, obj: models.Readme) -> str:
+        if obj.access_key is None:
+            return ""
+        request = self.context.get("request")
+        base = request.build_absolute_uri("/") if request is not None else "/"
+        return f"{base}?key={obj.access_key.token}"
+
+    def get_expires_display(self, obj: models.Readme) -> str:
+        if obj.access_key is None:
+            return ""
+        return timezone.localtime(obj.access_key.expires_at).strftime("%d.%m.%Y %H:%M")
+
+    def get_updated_display(self, obj: models.Readme) -> str:
+        return timezone.localtime(obj.updated_at).strftime("%d.%m.%Y")
+
+
+class ReadmeWriteSerializer(serializers.ModelSerializer[models.Readme]):
+    person = serializers.PrimaryKeyRelatedField(
+        queryset=models.Person.objects.all(), required=False, allow_null=True
+    )
+
+    class Meta:
+        model = models.Readme
+        fields = [
+            "id",
+            "person",
+            "name",
+            "content",
+            "content_de",
+            "version",
+            "letter_content",
+            "letter_content_de",
+            "letter_reference",
+            "access_key",
+            "order",
+            "is_published",
+        ]
 
 
 class TechnologyWriteSerializer(serializers.ModelSerializer[models.Technology]):

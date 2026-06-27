@@ -91,9 +91,7 @@ describe("MediaPreview.vue", () => {
   });
 
   it("renders <video> when kind=video with url", () => {
-    const wrapper = mountPreview(
-      makeAsset({ kind: "video", url: "https://example.com/file.mp4" }),
-    );
+    const wrapper = mountPreview(makeAsset({ kind: "video", url: "https://example.com/file.mp4" }));
     const video = wrapper.find("video");
     expect(video.exists()).toBe(true);
     expect(video.attributes("src")).toBe("https://example.com/file.mp4");
@@ -114,10 +112,7 @@ describe("MediaPreview.vue", () => {
   });
 
   it("falls back to alt prop when alt_text is empty (image)", () => {
-    const wrapper = mountPreview(
-      makeAsset({ alt_text: "", kind: "image" }),
-      "Fallback alt",
-    );
+    const wrapper = mountPreview(makeAsset({ alt_text: "", kind: "image" }), "Fallback alt");
     expect(wrapper.find("img").attributes("alt")).toBe("Fallback alt");
     wrapper.unmount();
   });

@@ -14,6 +14,8 @@ import type {
   PersonWrite,
   Project,
   ProjectWrite,
+  Readme,
+  ReadmeWrite,
   Skill,
   SkillCategory,
   SkillCategoryWrite,
@@ -78,6 +80,29 @@ export const personApi = {
 };
 
 export const accessKeyApi = crud<AccessKey, AccessKeyWrite>("/access-keys");
+
+export const readmeApi = {
+  ...crud<Readme, ReadmeWrite>("/admin/readmes"),
+  /**
+   * Export a README as PDF. `svgs` are the client-rendered Mermaid diagrams;
+   * `baseUrl` is the visitor-facing origin (the backend's request Host is the
+   * internal proxy target, so the client supplies the real one).
+   */
+  async pdf(
+    id: Id,
+    lang: "en" | "de",
+    svgs: string[],
+    baseUrl: string,
+    doc: "readme" | "letter" = "readme",
+  ): Promise<Blob> {
+    const { data } = await http.post<Blob>(
+      `/admin/readmes/${id}/pdf/`,
+      { lang, svgs, base_url: baseUrl, doc },
+      { responseType: "blob" },
+    );
+    return data;
+  },
+};
 
 export async function uploadMedia(file: File): Promise<MediaAsset> {
   const form = new FormData();

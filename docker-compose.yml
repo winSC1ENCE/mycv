@@ -33,6 +33,7 @@ services:
       TZ: Europe/Zurich
     volumes:
       - ./backend:/app
+      - backend_venv:/app/.venv
       - backend_static:/app/staticfiles
       - backend_media:/app/media
     depends_on:
@@ -69,6 +70,7 @@ services:
 
 volumes:
   db_data:
+  backend_venv:
   backend_static:
   backend_media:
   frontend_node_modules:

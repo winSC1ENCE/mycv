@@ -19,8 +19,7 @@ export default defineConfig({
   webServer: [
     {
       // Django backend on a dedicated sqlite + port
-      command:
-        "cd ../backend && uv run python manage.py runserver 0.0.0.0:8001 --noreload",
+      command: "cd ../backend && uv run python manage.py runserver 0.0.0.0:8001 --noreload",
       url: `http://localhost:${BACKEND_PORT}/api/health/`,
       reuseExistingServer: !process.env.CI,
       timeout: 60_000,

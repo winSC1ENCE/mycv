@@ -47,9 +47,7 @@ describe("Sensitive.vue", () => {
 
   it("uses custom tooltip when provided", () => {
     const wrapper = mountSensitive(true, "Custom tooltip");
-    expect(wrapper.find(".sensitive__chip").attributes("data-tooltip")).toBe(
-      "Custom tooltip",
-    );
+    expect(wrapper.find(".sensitive__chip").attributes("data-tooltip")).toBe("Custom tooltip");
   });
 
   it("sets aria-label on the chip for screen readers", () => {

@@ -20,7 +20,7 @@ Vue 3 + Django REST + PostgreSQL behind Docker and a reverse proxy.
 - **Media attachments** — certificates and experiences accept image or PDF; projects accept up to 6 images with reorder controls
 - **Image lightbox** + **PDF card** previews (shared `ImageLightbox` + `MediaPreview` components)
 - Drag-and-drop reordering, image upload with crop, file validation, Esc-to-close admin modals
-- Server-rendered **PDF export** via WeasyPrint — the CV (four lang/theme combos) plus per-application documents (below)
+- Server-rendered **PDF export** via WeasyPrint — the full CV in a modern two-column layout (admin-only, EN/DE) plus per-application documents (below)
 - **Application documents** — an admin **Applications** section for per-application *README* cover docs and a **Motivation Letters** section, both authored in bilingual (EN/DE) Markdown with **Mermaid diagrams** (rasterized to PNG for the PDF), `{{placeholder}}` tokens (access link/expiry auto-filled from the linked `AccessKey`), native version/updated/reference badges, and per-language PDF export
 - **SEO**: JSON-LD Person schema, OG + Twitter tags, sitemap.xml, robots.txt
 - **WCAG 2 AA** accessibility (enforced in CI via axe-playwright)

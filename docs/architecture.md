@@ -83,14 +83,17 @@ POST /api/experiences/  →  Caddy  →  Django
 ### PDF export
 
 ```
-GET /api/cv/pdf/?lang=de&theme=dog  →  Django (CvPdfView)
+GET /api/cv/pdf/?lang=de&base_url=…  →  Django (CvPdfView, staff-only / IsAdminUser)
                                         │
                                         ├── Load published Person (prefetched)
-                                        ├── Generate QR via segno
+                                        ├── Generate QR via segno (base_url = visitor origin)
                                         ├── render_to_string("exports/cv.html", ...)
                                         ├── WeasyPrint HTML(...).write_pdf(metadata=...)
                                         └── HttpResponse with Content-Disposition: attachment
 ```
+
+Exposed only in the admin SPA (Timeline view → `📄 PDF EN` / `📄 PDF DE`); the
+public site has no download button. Renders the normal theme in EN or DE.
 
 ## Theming
 
@@ -118,7 +121,7 @@ Session-based, browser-native:
 
 ## PDF generation
 
-WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`) rather than reusing the web CSS — the print engine has different layout semantics (no flexbox quirks, page breaks, `@page` rules). Fonts (Inter + JetBrains Mono) are embedded via `@font-face` with absolute file paths so WeasyPrint can resolve them without a base URL.
+WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`) rather than reusing the web CSS — the print engine has different layout semantics (page breaks, `@page` rules). The CV uses a **two-column layout**: a `position: fixed` accent sidebar (name, contact, skills, certificates) that WeasyPrint repeats on every page, beside the flowing main column (summary, experience, education, projects). Fonts (Inter + JetBrains Mono) are embedded via `@font-face` with absolute file paths so WeasyPrint can resolve them without a base URL.
 
 ## Testing
 
@@ -126,7 +129,7 @@ WeasyPrint renders a **separate** stylesheet (`backend/templates/exports/cv.css`
 |---|---|---|---|
 | Backend unit/integration | `pytest` + `pytest-django` + `factory-boy` | Models, serializers, views, management commands | **100% coverage on `apps/`** |
 | Frontend unit | `vitest` | Stores, composables, API helpers | No coverage gate |
-| End-to-end | `Playwright` + `@axe-core/playwright` | Smoke (home, theme, PDF link, 404) + admin write flow + WCAG 2 A/AA accessibility | Serious/critical violations fail the build |
+| End-to-end | `Playwright` + `@axe-core/playwright` | Smoke (home, theme, timeline, 404) + admin write flow + WCAG 2 A/AA accessibility | Serious/critical violations fail the build |
 
 Playwright spawns a dedicated backend on port 8001 with `DATABASE_URL=sqlite:///db.e2e.sqlite3` and a frontend on port 3001. `tests/e2e/helpers/global-setup.ts` resets the DB, seeds it via the existing `load_cv_seed` management command, creates a superuser, and writes credentials to `tests/e2e/.auth.json` for the admin spec to read.
 

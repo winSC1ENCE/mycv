@@ -40,6 +40,44 @@
         </select>
       </label>
 
+      <div class="entity-form__wide photo-section">
+        <span class="photo-section__title">{{ $t("admin.profilePictures") }}</span>
+        <div class="photo-section__grid">
+          <div class="photo-block">
+            <span class="photo-block__label">{{ $t("admin.fields.photo_normal") }}</span>
+            <img :src="normalPreview" alt="" class="photo-block__preview" />
+            <span v-if="!form.photo" class="photo-block__hint">
+              {{ $t("admin.photoDefaultHint") }}
+            </span>
+            <FileUpload accept="image/*" @uploaded="onPhotoUploaded('photo', $event)" />
+            <button
+              v-if="form.photo"
+              type="button"
+              class="btn photo-block__reset"
+              @click="resetPhoto('photo')"
+            >
+              {{ $t("admin.fields.removePhoto") }}
+            </button>
+          </div>
+          <div class="photo-block">
+            <span class="photo-block__label">{{ $t("admin.fields.photo_funny") }}</span>
+            <img :src="funnyPreview" alt="" class="photo-block__preview" />
+            <span v-if="!form.photo_funny" class="photo-block__hint">
+              {{ $t("admin.photoDefaultHint") }}
+            </span>
+            <FileUpload accept="image/*" @uploaded="onPhotoUploaded('photo_funny', $event)" />
+            <button
+              v-if="form.photo_funny"
+              type="button"
+              class="btn photo-block__reset"
+              @click="resetPhoto('photo_funny')"
+            >
+              {{ $t("admin.fields.removePhoto") }}
+            </button>
+          </div>
+        </div>
+      </div>
+
       <p v-if="saveError" class="form-error">{{ saveError }}</p>
       <p v-if="saved" class="form-success">{{ $t("admin.saved") }}</p>
 
@@ -53,13 +91,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { personApi } from "@/api/admin";
-import type { Cv, PersonWrite } from "@/api/types";
-import { FUNNY_OPTIONS } from "@/themes/registry";
+import type { Cv, MediaAsset, PersonWrite } from "@/api/types";
+import { FUNNY_OPTIONS, packFor } from "@/themes/registry";
 import MarkdownField from "@/components/base/MarkdownField.vue";
+import FileUpload from "@/components/admin/FileUpload.vue";
 
 const form = ref<Partial<PersonWrite> | null>(null);
+const photoUrls = ref<{ photo: string | null; photo_funny: string | null }>({
+  photo: null,
+  photo_funny: null,
+});
+const normalPreview = computed(() => photoUrls.value.photo ?? "/profile-normal.jpg");
+const funnyPreview = computed(
+  () =>
+    photoUrls.value.photo_funny ??
+    packFor(form.value?.active_funny_theme)?.profilePhoto ??
+    "/profile-dog.png",
+);
 const originalSlug = ref<string>("");
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -89,13 +139,31 @@ async function load(): Promise<void> {
       date_of_birth: cv.date_of_birth ?? undefined,
       summary: cv.summary,
       summary_de: cv.summary_de,
+      photo: cv.photo?.id ?? null,
+      photo_funny: cv.photo_funny?.id ?? null,
       active_funny_theme: cv.active_funny_theme,
+    };
+    photoUrls.value = {
+      photo: cv.photo?.url ?? null,
+      photo_funny: cv.photo_funny?.url ?? null,
     };
   } catch {
     error.value = "Failed to load.";
   } finally {
     loading.value = false;
   }
+}
+
+function onPhotoUploaded(field: "photo" | "photo_funny", asset: MediaAsset): void {
+  if (!form.value) return;
+  form.value[field] = asset.id;
+  photoUrls.value[field] = asset.url;
+}
+
+function resetPhoto(field: "photo" | "photo_funny"): void {
+  if (!form.value) return;
+  form.value[field] = null;
+  photoUrls.value[field] = null;
 }
 
 async function save(): Promise<void> {
@@ -130,5 +198,42 @@ async function save(): Promise<void> {
 .form-success {
   color: var(--color-success, #16a34a);
   font-size: 0.875rem;
+}
+.photo-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.photo-section__title {
+  font-weight: 600;
+}
+.photo-section__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+.photo-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.photo-block__label {
+  font-size: 0.875rem;
+  color: var(--color-fg-muted);
+}
+.photo-block__preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.photo-block__hint {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+}
+.photo-block__reset {
+  font-size: 0.8125rem;
 }
 </style>

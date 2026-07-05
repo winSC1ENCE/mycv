@@ -2,7 +2,14 @@
 
 from __future__ import annotations
 
-from apps.exports.templatetags.cv_filters import _read, localize, localized, markdown_tag
+from apps.exports.templatetags.cv_filters import (
+    _read,
+    localize,
+    localized,
+    markdown_tag,
+    skill_dots,
+    skill_legend,
+)
 
 
 class FakeObj:
@@ -97,3 +104,49 @@ def test_markdown_adds_rel_to_links():
     html = markdown_tag(obj, "description", "en")
     assert 'href="https://example.com"' in html
     assert 'rel="noopener noreferrer"' in html
+
+
+def test_skill_dots_level_5_all_filled():
+    html = skill_dots(5)
+    assert html.count('class="dot dot--on"') == 5
+    assert html.count('class="dot"') == 0
+
+
+def test_skill_dots_level_1():
+    html = skill_dots(1)
+    assert html.count('class="dot dot--on"') == 1
+    assert html.count('class="dot"') == 4
+
+
+def test_skill_dots_level_0():
+    assert skill_dots(0).count("dot--on") == 0
+
+
+def test_skill_dots_none_renders_empty():
+    assert skill_dots(None).count("dot--on") == 0
+
+
+def test_skill_dots_invalid_renders_empty():
+    assert skill_dots("x").count("dot--on") == 0
+
+
+def test_skill_dots_clamps_above_max():
+    assert skill_dots(9).count("dot--on") == 5
+
+
+def test_skill_legend_de():
+    rows = skill_legend("de")
+    assert [r["level"] for r in rows] == [5, 4, 3, 2, 1]
+    assert rows[0]["label"] == "Produktiver Einsatz / Expertenniveau"
+    assert rows[4]["label"] == "Erste Berührungspunkte"
+
+
+def test_skill_legend_en():
+    rows = skill_legend("en")
+    assert [r["level"] for r in rows] == [5, 4, 3, 2, 1]
+    assert rows[0]["label"] == "Production use / expert"
+    assert rows[4]["label"] == "First exposure"
+
+
+def test_skill_legend_unknown_lang_falls_back_to_en():
+    assert skill_legend("fr") == skill_legend("en")

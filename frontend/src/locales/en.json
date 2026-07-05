@@ -109,6 +109,10 @@
     "chooseFile": "Choose file…",
     "viewPublicCv": "View public CV",
     "multiSelectHint": "Hold Cmd/Ctrl to select multiple",
+    "pdfCount": "{count} in PDF (max ~15)",
+    "pdfNone": "Remove all from PDF",
+    "profilePictures": "Profile pictures",
+    "photoDefaultHint": "Default picture is used",
     "funnyTheme": {
       "none": "None (normal only)"
     },
@@ -175,9 +179,12 @@
       "summary": "Summary",
       "summary_de": "Summary (DE)",
       "active_funny_theme": "Funny theme",
+      "photo_normal": "Picture – normal CV",
+      "photo_funny": "Picture – comic CV",
       "url": "URL",
       "repo_url": "Repository URL",
       "published": "Published",
+      "showInPdf": "Show in PDF",
       "mediaFile": "Attachment",
       "email": "Email",
       "phone": "Phone",

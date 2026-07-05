@@ -9,6 +9,7 @@ from typing import cast
 
 import segno
 from django.conf import settings
+from django.db.models import Prefetch
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from pypdf import PdfReader, PdfWriter
@@ -107,11 +108,16 @@ class CvPdfView(APIView):
         if person is None:
             raise NotFound("No published CV.")
 
-        skill_categories = list(
-            models.SkillCategory.objects.filter(is_published=True)
-            .prefetch_related("skills")
+        # Only skills flagged for PDF export; drop categories left empty.
+        skill_categories = [
+            cat
+            for cat in models.SkillCategory.objects.filter(is_published=True)
+            .prefetch_related(
+                Prefetch("skills", queryset=models.Skill.objects.filter(show_in_pdf=True))
+            )
             .order_by("order", "id")
-        )
+            if cat.skills.all()
+        ]
 
         public_url = request.query_params.get("base_url") or request.build_absolute_uri("/")
         html = render_to_string(

@@ -102,6 +102,33 @@ def test_admin_can_update_active_funny_theme(admin_client: APIClient) -> None:
     assert person.active_funny_theme == "virus"
 
 
+def test_admin_can_update_profile_photos(admin_client: APIClient) -> None:
+    person = PersonFactory(slug="me")
+    normal, funny = MediaAssetFactory(), MediaAssetFactory()
+    resp = admin_client.patch(
+        f"/api/cv/{person.slug}/",
+        {"photo": normal.id, "photo_funny": funny.id},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    person.refresh_from_db()
+    assert person.photo_id == normal.id
+    assert person.photo_funny_id == funny.id
+
+    body = admin_client.get("/api/admin/cv/").json()
+    assert body["photo"]["id"] == normal.id
+    assert body["photo"]["url"]
+    assert body["photo_funny"]["id"] == funny.id
+    assert body["photo_funny"]["url"]
+
+
+def test_cv_exposes_profile_photos_publicly(api_client: APIClient) -> None:
+    PersonFactory(photo=MediaAssetFactory(), photo_funny=MediaAssetFactory())
+    body = api_client.get("/api/cv/").json()
+    assert body["photo"]["url"]
+    assert body["photo_funny"]["url"]
+
+
 def test_admin_cannot_set_invalid_funny_theme(admin_client: APIClient) -> None:
     person = PersonFactory(slug="me")
     resp = admin_client.patch(

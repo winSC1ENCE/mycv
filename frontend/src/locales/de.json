@@ -116,6 +116,8 @@
     "multiSelectHint": "Cmd/Strg gedrückt halten für Mehrfachauswahl",
     "pdfCount": "{count} im PDF (max. ~15)",
     "pdfNone": "Alle aus PDF entfernen",
+    "profilePictures": "Profilbilder",
+    "photoDefaultHint": "Standardbild wird verwendet",
     "funnyTheme": {
       "none": "Keiner (nur Normal)"
     },
@@ -182,6 +184,8 @@
       "summary": "Zusammenfassung",
       "summary_de": "Zusammenfassung (DE)",
       "active_funny_theme": "Spass-Modus",
+      "photo_normal": "Bild – normaler CV",
+      "photo_funny": "Bild – Comic-CV",
       "url": "URL",
       "repo_url": "Repository-URL",
       "published": "Veröffentlicht",

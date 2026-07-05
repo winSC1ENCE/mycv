@@ -191,6 +191,7 @@ export interface PersonWrite {
   summary: string;
   summary_de: string;
   photo: number | null;
+  photo_funny: number | null;
   active_funny_theme?: string;
   order: number;
   is_published: boolean;
@@ -215,6 +216,7 @@ export interface Cv {
   summary: string;
   summary_de: string;
   photo: MediaAsset | null;
+  photo_funny: MediaAsset | null;
   active_funny_theme: string;
   experiences: Experience[];
   educations: Education[];

@@ -207,6 +207,7 @@ class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
     """Full CV payload returned by ``GET /api/cv/``."""
 
     photo = MediaAssetSerializer(read_only=True)
+    photo_funny = MediaAssetSerializer(read_only=True)
     full_name = serializers.CharField(read_only=True)
     experiences = ExperienceSerializer(many=True, read_only=True)
     educations = EducationSerializer(many=True, read_only=True)
@@ -236,6 +237,7 @@ class PersonDetailSerializer(serializers.ModelSerializer[models.Person]):
             "summary",
             "summary_de",
             "photo",
+            "photo_funny",
             "active_funny_theme",
             "experiences",
             "educations",
@@ -289,6 +291,7 @@ class PersonWriteSerializer(serializers.ModelSerializer[models.Person]):
             "summary",
             "summary_de",
             "photo",
+            "photo_funny",
             "active_funny_theme",
             "order",
             "is_published",

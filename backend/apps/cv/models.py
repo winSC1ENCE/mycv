@@ -81,6 +81,14 @@ class Person(Orderable):
     photo = models.ForeignKey(
         MediaAsset, null=True, blank=True, on_delete=models.PROTECT, related_name="people"
     )
+    photo_funny = models.ForeignKey(
+        MediaAsset,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="people_funny",
+        help_text="Profile picture for the active funny theme; falls back to the theme default.",
+    )
     active_funny_theme = models.CharField(
         max_length=20,
         choices=FunnyTheme.choices,

@@ -481,6 +481,26 @@ def test_admin_can_delete_skill(admin_client: APIClient) -> None:
     assert not models.Skill.objects.filter(pk=skill.pk).exists()
 
 
+def test_admin_can_toggle_skill_show_in_pdf(admin_client: APIClient) -> None:
+    skill = SkillFactory()
+    assert skill.show_in_pdf is True  # model default
+    resp = admin_client.patch(
+        f"/api/skills/{skill.pk}/",
+        {"show_in_pdf": False},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    skill.refresh_from_db()
+    assert skill.show_in_pdf is False
+
+
+def test_skill_read_payload_includes_show_in_pdf(api_client: APIClient) -> None:
+    skill = SkillFactory(show_in_pdf=False)
+    resp = api_client.get(f"/api/skills/{skill.pk}/")
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["show_in_pdf"] is False
+
+
 def test_admin_can_create_social_link_with_person_autofill(admin_client: APIClient) -> None:
     person = PersonFactory(is_published=True)
     resp = admin_client.post(

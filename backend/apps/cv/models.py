@@ -176,6 +176,9 @@ class Skill(Orderable):
     category = models.ForeignKey(SkillCategory, on_delete=models.PROTECT, related_name="skills")
     level = models.PositiveSmallIntegerField(default=3, help_text="1-5 proficiency")
     technologies = models.ManyToManyField(Technology, blank=True, related_name="skills")
+    show_in_pdf = models.BooleanField(
+        default=True, help_text="Include this skill in the exported CV PDF."
+    )
 
     class Meta(Orderable.Meta):
         constraints = [

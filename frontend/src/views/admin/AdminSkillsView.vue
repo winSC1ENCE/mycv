@@ -102,6 +102,10 @@
             <input v-model="editingSkill.is_published" type="checkbox" />
             {{ $t("admin.fields.published") }}
           </label>
+          <label class="label--checkbox">
+            <input v-model="editingSkill.show_in_pdf" type="checkbox" />
+            {{ $t("admin.fields.showInPdf") }}
+          </label>
           <p v-if="saveError" class="form-error">{{ saveError }}</p>
           <div class="form-panel__footer">
             <button class="btn btn--primary" type="submit">{{ $t("admin.save") }}</button>
@@ -224,6 +228,7 @@ function openNewSkill(categoryId: number): void {
     level: 3,
     technologies: [],
     is_published: true,
+    show_in_pdf: true,
   };
 }
 

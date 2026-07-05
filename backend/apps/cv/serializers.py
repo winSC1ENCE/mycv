@@ -46,7 +46,7 @@ class SkillSerializer(serializers.ModelSerializer[models.Skill]):
 
     class Meta:
         model = models.Skill
-        fields = ["id", "name", "name_de", "level", "technologies", "order"]
+        fields = ["id", "name", "name_de", "level", "technologies", "order", "show_in_pdf"]
 
 
 class SkillCategorySerializer(serializers.ModelSerializer[models.SkillCategory]):
@@ -416,6 +416,7 @@ class SkillWriteSerializer(serializers.ModelSerializer[models.Skill]):
             "technologies",
             "order",
             "is_published",
+            "show_in_pdf",
         ]
 
 

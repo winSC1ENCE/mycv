@@ -33,6 +33,7 @@ export interface Skill {
   level: number;
   technologies: Technology[];
   order: number;
+  show_in_pdf: boolean;
 }
 
 export interface SkillCategory {

@@ -183,6 +183,7 @@
       "url": "URL",
       "repo_url": "Repository-URL",
       "published": "Veröffentlicht",
+      "showInPdf": "Im PDF anzeigen",
       "mediaFile": "Anhang",
       "email": "E-Mail",
       "phone": "Telefon",

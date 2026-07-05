@@ -24,7 +24,7 @@ class SkillCategoryAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
 
 @admin.register(models.Skill)
 class SkillAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
-    list_display = ("name", "category", "level", "order")
+    list_display = ("name", "category", "level", "order", "show_in_pdf")
     list_filter = ("category",)
     filter_horizontal = ("technologies",)
 

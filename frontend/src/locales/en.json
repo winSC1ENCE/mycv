@@ -178,6 +178,7 @@
       "url": "URL",
       "repo_url": "Repository URL",
       "published": "Published",
+      "showInPdf": "Show in PDF",
       "mediaFile": "Attachment",
       "email": "Email",
       "phone": "Phone",

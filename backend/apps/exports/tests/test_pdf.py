@@ -118,3 +118,29 @@ class TestRenderWrapper:
         assert resp.status_code == 200
         html = mock_render.call_args.args[0]
         assert base_url in html  # rendered in the sidebar footer / online-version block
+
+
+class TestShowInPdf:
+    def test_hidden_skill_excluded_from_html(
+        self, admin_client: APIClient, _populated_person
+    ) -> None:
+        cat = SkillCategoryFactory(slug="pdf-mixed", name="Mixed")
+        SkillFactory(category=cat, name="Visible skill", show_in_pdf=True)
+        SkillFactory(category=cat, name="Hidden skill", show_in_pdf=False)
+        with patch("apps.exports.views._render_pdf", return_value=_FAKE_PDF) as mock_render:
+            resp = admin_client.get("/api/cv/pdf/?lang=en")
+        assert resp.status_code == 200
+        html = mock_render.call_args.args[0]
+        assert "Visible skill" in html
+        assert "Hidden skill" not in html
+
+    def test_category_with_only_hidden_skills_dropped(
+        self, admin_client: APIClient, _populated_person
+    ) -> None:
+        cat = SkillCategoryFactory(slug="pdf-hidden", name="All hidden category")
+        SkillFactory(category=cat, name="Invisible", show_in_pdf=False)
+        with patch("apps.exports.views._render_pdf", return_value=_FAKE_PDF) as mock_render:
+            resp = admin_client.get("/api/cv/pdf/?lang=en")
+        assert resp.status_code == 200
+        html = mock_render.call_args.args[0]
+        assert "All hidden category" not in html

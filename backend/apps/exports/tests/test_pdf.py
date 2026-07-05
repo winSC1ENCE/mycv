@@ -147,9 +147,9 @@ class TestShowInPdf:
 
 
 class TestSkillTechnologies:
-    """Proficiency-tier skills render their technologies, not the tier label."""
+    """Proficiency-tier skills render their technologies grouped on one row."""
 
-    def test_tier_skill_renders_technology_names(
+    def test_tier_technologies_grouped_on_one_row(
         self, admin_client: APIClient, _populated_person
     ) -> None:
         cat = SkillCategoryFactory(slug="pdf-tiers", name="Tiered")
@@ -160,8 +160,8 @@ class TestSkillTechnologies:
             resp = admin_client.get("/api/cv/pdf/?lang=en")
         assert resp.status_code == 200
         html = mock_render.call_args.args[0]
-        assert "DuckDB" in html
-        assert "PySpark" in html
+        assert "DuckDB · PySpark" in html
+        assert html.count("DuckDB") == 1
         assert "Production use / Expert level" not in html
 
     def test_skill_without_technologies_renders_own_name(

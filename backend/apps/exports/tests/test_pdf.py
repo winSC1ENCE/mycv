@@ -40,6 +40,8 @@ def _populated_person():
     cat = SkillCategoryFactory(slug="backend", name="Backend")
     skill = SkillFactory(category=cat)
     skill.technologies.add(tech)
+    SkillFactory(category=cat, level=5)
+    SkillFactory(category=cat, level=1)
     exp = ExperienceFactory(person=person)
     exp.technologies.add(tech)
     EducationFactory(person=person)

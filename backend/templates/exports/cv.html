@@ -30,11 +30,22 @@
           {% for cat in skill_categories %}
             <div class="skill-group">
               <h3 class="skill-group__title">{% localized cat "name" lang %}</h3>
-              <p class="tags">
-                {% for skill in cat.skills.all %}<span class="tag">{% localized skill "name" lang %}</span>{% endfor %}
-              </p>
+              <ul class="skill-list">
+                {% for skill in cat.skills.all %}
+                  <li class="skill-row">
+                    <span class="skill-row__name">{% localized skill "name" lang %}</span>
+                    {% skill_dots skill.level %}
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
           {% endfor %}
+          {% skill_legend lang as legend %}
+          <div class="skill-legend">
+            {% for row in legend %}
+              <p class="skill-legend__row">{% skill_dots row.level %}<span class="skill-legend__label">{{ row.label }}</span></p>
+            {% endfor %}
+          </div>
         </div>
       {% endif %}
 

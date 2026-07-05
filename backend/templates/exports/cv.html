@@ -33,12 +33,10 @@
               <ul class="skill-list">
                 {% for skill in cat.skills.all %}
                   {% if skill.technologies.all %}
-                    {% for tech in skill.technologies.all %}
-                      <li class="skill-row">
-                        <span class="skill-row__name">{{ tech.name }}</span>
-                        {% skill_dots skill.level %}
-                      </li>
-                    {% endfor %}
+                    <li class="skill-tier">
+                      {% skill_dots skill.level %}
+                      <span class="skill-tier__techs">{% for tech in skill.technologies.all %}{{ tech.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</span>
+                    </li>
                   {% else %}
                     <li class="skill-row">
                       <span class="skill-row__name">{% localized skill "name" lang %}</span>

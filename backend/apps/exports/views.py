@@ -113,7 +113,12 @@ class CvPdfView(APIView):
             cat
             for cat in models.SkillCategory.objects.filter(is_published=True)
             .prefetch_related(
-                Prefetch("skills", queryset=models.Skill.objects.filter(show_in_pdf=True))
+                Prefetch(
+                    "skills",
+                    queryset=models.Skill.objects.filter(show_in_pdf=True).prefetch_related(
+                        "technologies"
+                    ),
+                )
             )
             .order_by("order", "id")
             if cat.skills.all()

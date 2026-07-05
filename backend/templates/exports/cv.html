@@ -32,10 +32,19 @@
               <h3 class="skill-group__title">{% localized cat "name" lang %}</h3>
               <ul class="skill-list">
                 {% for skill in cat.skills.all %}
-                  <li class="skill-row">
-                    <span class="skill-row__name">{% localized skill "name" lang %}</span>
-                    {% skill_dots skill.level %}
-                  </li>
+                  {% if skill.technologies.all %}
+                    {% for tech in skill.technologies.all %}
+                      <li class="skill-row">
+                        <span class="skill-row__name">{{ tech.name }}</span>
+                        {% skill_dots skill.level %}
+                      </li>
+                    {% endfor %}
+                  {% else %}
+                    <li class="skill-row">
+                      <span class="skill-row__name">{% localized skill "name" lang %}</span>
+                      {% skill_dots skill.level %}
+                    </li>
+                  {% endif %}
                 {% endfor %}
               </ul>
             </div>

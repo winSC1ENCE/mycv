@@ -144,3 +144,45 @@ class TestShowInPdf:
         assert resp.status_code == 200
         html = mock_render.call_args.args[0]
         assert "All hidden category" not in html
+
+
+class TestSkillTechnologies:
+    """Proficiency-tier skills render their technologies, not the tier label."""
+
+    def test_tier_skill_renders_technology_names(
+        self, admin_client: APIClient, _populated_person
+    ) -> None:
+        cat = SkillCategoryFactory(slug="pdf-tiers", name="Tiered")
+        tier = SkillFactory(category=cat, name="Production use / Expert level", level=5)
+        tier.technologies.add(TechnologyFactory(slug="duckdb", name="DuckDB"))
+        tier.technologies.add(TechnologyFactory(slug="pyspark", name="PySpark"))
+        with patch("apps.exports.views._render_pdf", return_value=_FAKE_PDF) as mock_render:
+            resp = admin_client.get("/api/cv/pdf/?lang=en")
+        assert resp.status_code == 200
+        html = mock_render.call_args.args[0]
+        assert "DuckDB" in html
+        assert "PySpark" in html
+        assert "Production use / Expert level" not in html
+
+    def test_skill_without_technologies_renders_own_name(
+        self, admin_client: APIClient, _populated_person
+    ) -> None:
+        cat = SkillCategoryFactory(slug="pdf-langs", name="Languages")
+        SkillFactory(category=cat, name="German — native (C2)", level=5)
+        with patch("apps.exports.views._render_pdf", return_value=_FAKE_PDF) as mock_render:
+            resp = admin_client.get("/api/cv/pdf/?lang=en")
+        assert resp.status_code == 200
+        html = mock_render.call_args.args[0]
+        assert "German — native (C2)" in html
+
+    def test_hidden_tier_hides_its_technologies(
+        self, admin_client: APIClient, _populated_person
+    ) -> None:
+        cat = SkillCategoryFactory(slug="pdf-hidden-tier", name="Hidden tier cat")
+        tier = SkillFactory(category=cat, name="First exposure", level=1, show_in_pdf=False)
+        tier.technologies.add(TechnologyFactory(slug="flutter", name="Flutter"))
+        with patch("apps.exports.views._render_pdf", return_value=_FAKE_PDF) as mock_render:
+            resp = admin_client.get("/api/cv/pdf/?lang=en")
+        assert resp.status_code == 200
+        html = mock_render.call_args.args[0]
+        assert "Flutter" not in html

@@ -2,6 +2,10 @@
   <div class="admin-page">
     <div class="admin-page__header">
       <h1 class="admin-page__title">{{ $t("nav.skills") }}</h1>
+      <span class="pdf-count">{{ $t("admin.pdfCount", { count: pdfCount }) }}</span>
+      <button class="btn" :disabled="pdfCount === 0" @click="deselectAllPdf">
+        {{ $t("admin.pdfNone") }}
+      </button>
       <button class="btn btn--primary" @click="openNewCategory">
         + {{ $t("admin.addCategory") }}
       </button>
@@ -25,6 +29,10 @@
         </div>
         <ul class="skill-list">
           <li v-for="skill in cat.skills" :key="skill.id" class="skill-row">
+            <label class="label--checkbox skill-row__pdf">
+              <input type="checkbox" :checked="skill.show_in_pdf" @change="togglePdf(skill)" />
+              PDF
+            </label>
             <span class="skill-row__name">{{ skill.name }}</span>
             <span class="skill-row__level">{{ levelLabel(skill.level) }}</span>
             <span class="skill-row__tech">
@@ -174,6 +182,32 @@ async function load(): Promise<void> {
   }
 }
 
+const pdfCount = computed(
+  () => items.value.flatMap((c) => c.skills).filter((s) => s.show_in_pdf).length,
+);
+
+async function togglePdf(skill: Skill): Promise<void> {
+  const next = !skill.show_in_pdf;
+  skill.show_in_pdf = next; // optimistic — revert on failure
+  try {
+    await skillApi.update(skill.id, { show_in_pdf: next });
+  } catch {
+    skill.show_in_pdf = !next;
+    error.value = "Save failed.";
+  }
+}
+
+async function deselectAllPdf(): Promise<void> {
+  if (!confirm("Remove all skills from the PDF?")) return;
+  const selected = items.value.flatMap((c) => c.skills).filter((s) => s.show_in_pdf);
+  try {
+    await Promise.all(selected.map((s) => skillApi.update(s.id, { show_in_pdf: false })));
+  } catch {
+    error.value = "Save failed.";
+  }
+  await load();
+}
+
 async function loadTechnologies(): Promise<void> {
   try {
     const page = await technologyApi.list();
@@ -277,11 +311,23 @@ async function removeSkill(id: number): Promise<void> {
 }
 .skill-row {
   display: grid;
-  grid-template-columns: 1fr auto 2fr auto;
+  grid-template-columns: auto 1fr auto 2fr auto;
   gap: var(--space-3);
   align-items: center;
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--color-border);
+}
+.skill-row__pdf {
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pdf-count {
+  font-size: 0.85rem;
+  color: var(--color-fg-muted);
+  margin-left: auto;
+  margin-right: var(--space-3);
 }
 .skill-row__name {
   font-weight: 500;

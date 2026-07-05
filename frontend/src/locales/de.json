@@ -114,6 +114,8 @@
     "chooseFile": "Datei auswählen…",
     "viewPublicCv": "Öffentlichen CV anzeigen",
     "multiSelectHint": "Cmd/Strg gedrückt halten für Mehrfachauswahl",
+    "pdfCount": "{count} im PDF (max. ~15)",
+    "pdfNone": "Alle aus PDF entfernen",
     "funnyTheme": {
       "none": "Keiner (nur Normal)"
     },

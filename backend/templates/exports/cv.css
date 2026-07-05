@@ -125,6 +125,17 @@ h1, h2, h3 { font-weight: 700; line-height: 1.2; }
   color: rgba(255, 255, 255, 0.92);
   word-break: break-word;
 }
+.skill-tier {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5mm;
+  margin-bottom: 1mm;
+}
+.skill-tier__techs {
+  font-size: 7.5pt;
+  color: rgba(255, 255, 255, 0.92);
+  word-break: break-word;
+}
 .dots { flex-shrink: 0; white-space: nowrap; }
 .dot {
   display: inline-block;

@@ -102,6 +102,33 @@ def test_admin_can_update_active_funny_theme(admin_client: APIClient) -> None:
     assert person.active_funny_theme == "virus"
 
 
+def test_admin_can_update_profile_photos(admin_client: APIClient) -> None:
+    person = PersonFactory(slug="me")
+    normal, funny = MediaAssetFactory(), MediaAssetFactory()
+    resp = admin_client.patch(
+        f"/api/cv/{person.slug}/",
+        {"photo": normal.id, "photo_funny": funny.id},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    person.refresh_from_db()
+    assert person.photo_id == normal.id
+    assert person.photo_funny_id == funny.id
+
+    body = admin_client.get("/api/admin/cv/").json()
+    assert body["photo"]["id"] == normal.id
+    assert body["photo"]["url"]
+    assert body["photo_funny"]["id"] == funny.id
+    assert body["photo_funny"]["url"]
+
+
+def test_cv_exposes_profile_photos_publicly(api_client: APIClient) -> None:
+    PersonFactory(photo=MediaAssetFactory(), photo_funny=MediaAssetFactory())
+    body = api_client.get("/api/cv/").json()
+    assert body["photo"]["url"]
+    assert body["photo_funny"]["url"]
+
+
 def test_admin_cannot_set_invalid_funny_theme(admin_client: APIClient) -> None:
     person = PersonFactory(slug="me")
     resp = admin_client.patch(
@@ -479,6 +506,26 @@ def test_admin_can_delete_skill(admin_client: APIClient) -> None:
     resp = admin_client.delete(f"/api/skills/{skill.pk}/")
     assert resp.status_code == status.HTTP_204_NO_CONTENT
     assert not models.Skill.objects.filter(pk=skill.pk).exists()
+
+
+def test_admin_can_toggle_skill_show_in_pdf(admin_client: APIClient) -> None:
+    skill = SkillFactory()
+    assert skill.show_in_pdf is True  # model default
+    resp = admin_client.patch(
+        f"/api/skills/{skill.pk}/",
+        {"show_in_pdf": False},
+        format="json",
+    )
+    assert resp.status_code == status.HTTP_200_OK
+    skill.refresh_from_db()
+    assert skill.show_in_pdf is False
+
+
+def test_skill_read_payload_includes_show_in_pdf(api_client: APIClient) -> None:
+    skill = SkillFactory(show_in_pdf=False)
+    resp = api_client.get(f"/api/skills/{skill.pk}/")
+    assert resp.status_code == status.HTTP_200_OK
+    assert resp.json()["show_in_pdf"] is False
 
 
 def test_admin_can_create_social_link_with_person_autofill(admin_client: APIClient) -> None:

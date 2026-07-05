@@ -109,18 +109,41 @@ h1, h2, h3 { font-weight: 700; line-height: 1.2; }
   color: rgba(255, 255, 255, 0.55);
 }
 
-.skill-group { margin-bottom: 3mm; }
-.skill-group__title { font-size: 8.5pt; font-weight: 600; margin-bottom: 1.5mm; }
-.sidebar .tags { line-height: 2; }
-.sidebar .tag {
-  display: inline-block;
-  font-size: 7.5pt;
-  padding: 0.3mm 1.8mm;
-  border: 0.5px solid rgba(255, 255, 255, 0.4);
-  border-radius: 1.5mm;
-  margin: 0 1mm 1mm 0;
-  color: #fff;
+.skill-group { margin-bottom: 2.5mm; }
+.skill-group__title { font-size: 8.5pt; font-weight: 600; margin-bottom: 1mm; }
+.skill-list { list-style: none; }
+.skill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 2mm;
+  margin-bottom: 0.8mm;
 }
+.skill-row__name {
+  flex: 1;
+  font-size: 7.5pt;
+  color: rgba(255, 255, 255, 0.92);
+  word-break: break-word;
+}
+.dots { flex-shrink: 0; white-space: nowrap; }
+.dot {
+  display: inline-block;
+  width: 1.3mm;
+  height: 1.3mm;
+  border: 0.4px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
+  margin-left: 0.6mm;
+}
+.dot--on { background: #fff; border-color: #fff; }
+
+.skill-legend {
+  border-top: 0.5px solid rgba(255, 255, 255, 0.25);
+  margin-top: 2.5mm;
+  padding-top: 2mm;
+}
+.skill-legend__row { margin-bottom: 0.6mm; }
+.skill-legend__row .dots { margin-right: 1.2mm; }
+.skill-legend__label { font-size: 6.5pt; color: rgba(255, 255, 255, 0.7); }
 
 .cert { margin-bottom: 2.5mm; }
 .cert__name { font-size: 8.5pt; font-weight: 600; }

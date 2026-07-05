@@ -90,6 +90,7 @@ describe("stores", () => {
       summary: "",
       summary_de: "",
       photo: null,
+      photo_funny: null,
       active_funny_theme: "dog",
       experiences: [
         {
@@ -219,6 +220,7 @@ describe("stores", () => {
       summary: "",
       summary_de: "",
       photo: null,
+      photo_funny: null,
       active_funny_theme: "dog",
       experiences: [
         {

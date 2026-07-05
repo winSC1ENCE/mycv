@@ -27,6 +27,25 @@ _ALLOWED_TAGS = {
 }
 _ALLOWED_ATTRS = {"a": {"href"}}
 
+MAX_SKILL_LEVEL = 5
+
+_LEGEND_LABELS = {
+    "de": [
+        "Produktiver Einsatz / Expertenniveau",
+        "Regelmäßiger Einsatz",
+        "Projektbezogener Einsatz",
+        "Grundlagen angewendet",
+        "Erste Berührungspunkte",
+    ],
+    "en": [
+        "Production use / expert",
+        "Regular use",
+        "Project-based use",
+        "Applied fundamentals",
+        "First exposure",
+    ],
+}
+
 
 @register.filter(name="localize")
 def localize(obj: Any, lang: str) -> str:
@@ -76,6 +95,33 @@ def markdown_tag(obj: Any, field: str, lang: str) -> str:
     # nh3.clean strips everything outside the allowlist, so the result is safe to mark.
     clean = nh3.clean(html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
     return mark_safe(clean)  # nosec B308 B703 # noqa: S308
+
+
+@register.simple_tag
+def skill_dots(level: Any) -> str:
+    """Render a 1-5 proficiency level as five dots (filled = level).
+
+    Invalid or missing levels render as zero filled dots; values above
+    ``MAX_SKILL_LEVEL`` are clamped.
+    """
+    try:
+        filled = int(level)
+    except TypeError, ValueError:
+        filled = 0
+    filled = max(0, min(filled, MAX_SKILL_LEVEL))
+    dots = "".join(
+        f'<span class="dot{" dot--on" if i < filled else ""}"></span>'
+        for i in range(MAX_SKILL_LEVEL)
+    )
+    # Markup is fully static (no user input), so it is safe to mark.
+    return mark_safe(f'<span class="dots">{dots}</span>')  # nosec B308 B703 # noqa: S308
+
+
+@register.simple_tag
+def skill_legend(lang: str) -> list[dict[str, Any]]:
+    """Return the proficiency legend rows (levels 5→1) for the given language."""
+    labels = _LEGEND_LABELS.get(lang, _LEGEND_LABELS["en"])
+    return [{"level": MAX_SKILL_LEVEL - i, "label": label} for i, label in enumerate(labels)]
 
 
 def _read(obj: Any, key: str) -> str:

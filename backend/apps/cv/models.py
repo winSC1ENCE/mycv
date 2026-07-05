@@ -81,6 +81,14 @@ class Person(Orderable):
     photo = models.ForeignKey(
         MediaAsset, null=True, blank=True, on_delete=models.PROTECT, related_name="people"
     )
+    photo_funny = models.ForeignKey(
+        MediaAsset,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="people_funny",
+        help_text="Profile picture for the active funny theme; falls back to the theme default.",
+    )
     active_funny_theme = models.CharField(
         max_length=20,
         choices=FunnyTheme.choices,
@@ -176,6 +184,9 @@ class Skill(Orderable):
     category = models.ForeignKey(SkillCategory, on_delete=models.PROTECT, related_name="skills")
     level = models.PositiveSmallIntegerField(default=3, help_text="1-5 proficiency")
     technologies = models.ManyToManyField(Technology, blank=True, related_name="skills")
+    show_in_pdf = models.BooleanField(
+        default=True, help_text="Include this skill in the exported CV PDF."
+    )
 
     class Meta(Orderable.Meta):
         constraints = [

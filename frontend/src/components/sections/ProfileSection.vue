@@ -22,10 +22,16 @@ const birthDate = computed(() =>
 
 const themeStore = useThemeStore();
 const pack = computed(() => packFor(themeStore.theme));
-const profilePhoto = computed(() => pack.value?.profilePhoto ?? "/profile-normal.jpg");
-const photoAlt = computed(() =>
-  themeStore.theme === "dog" ? "Nicolas Mischler — comic portrait" : "Nicolas Mischler",
+const profilePhoto = computed(() =>
+  pack.value
+    ? props.cv.photo_funny?.url || pack.value.profilePhoto
+    : props.cv.photo?.url || "/profile-normal.jpg",
 );
+const photoAlt = computed(() => {
+  const asset = pack.value ? props.cv.photo_funny : props.cv.photo;
+  if (asset?.alt_text) return asset.alt_text;
+  return themeStore.theme === "dog" ? "Nicolas Mischler — comic portrait" : "Nicolas Mischler";
+});
 
 // Optional themed hero block (e.g. Virus Mode's containment checklist).
 const hero = computed(() => pack.value?.hero ?? null);

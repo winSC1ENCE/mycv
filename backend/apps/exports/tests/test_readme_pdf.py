@@ -81,7 +81,10 @@ class TestPdfRendering:
 
     def test_mermaid_block_replaced_with_svg(self, admin_client: APIClient) -> None:
         readme = ReadmeFactory(content="```mermaid\nflowchart TD\nA-->B\n```")
-        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", return_value=1),
+        ):
             admin_client.post(
                 _url(readme.pk),
                 {"svgs": ["<svg>DIAGRAM</svg>"]},
@@ -177,6 +180,112 @@ class TestLetterPdf:
         html = render.call_args.args[0]
         assert "Deutscher Brief" in html
         assert "English letter" not in html
+
+
+class TestOnePageFit:
+    """READMEs must fit on one page: diagrams shrink stepwise until they do."""
+
+    _SVGS = ["<svg>DIAGRAM</svg>"]
+
+    def _readme(self):
+        return ReadmeFactory(content="```mermaid\nflowchart TD\nA-->B\n```")
+
+    def test_shrinks_diagram_until_one_page(self, admin_client: APIClient) -> None:
+        readme = self._readme()
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", side_effect=[2, 1]) as count,
+        ):
+            resp = admin_client.post(_url(readme.pk), {"svgs": self._SVGS}, format="json")
+        assert resp.status_code == 200
+        assert render.call_count == 2
+        assert "max-height" not in render.call_args_list[0].args[0]
+        assert "max-height: 150mm" in render.call_args_list[1].args[0]
+        assert count.call_count == 2
+
+    def test_ladder_exhausted_returns_smallest_render(self, admin_client: APIClient) -> None:
+        readme = self._readme()
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", return_value=2),
+        ):
+            resp = admin_client.post(_url(readme.pk), {"svgs": self._SVGS}, format="json")
+        assert resp.status_code == 200
+        assert render.call_count == 5  # initial render + all four ladder steps
+        assert "max-height: 50mm" in render.call_args_list[-1].args[0]
+
+    def test_one_page_needs_single_render(self, admin_client: APIClient) -> None:
+        readme = self._readme()
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", return_value=1),
+        ):
+            admin_client.post(_url(readme.pk), {"svgs": self._SVGS}, format="json")
+        assert render.call_count == 1
+
+    def test_no_diagrams_skips_fit_loop(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(content="just text")
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count") as count,
+        ):
+            admin_client.post(_url(readme.pk), {"svgs": []}, format="json")
+        assert render.call_count == 1
+        count.assert_not_called()
+
+    def test_letter_skips_fit_loop(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(letter_content="Dear team")
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count") as count,
+        ):
+            admin_client.post(_url(readme.pk), {"doc": "letter", "svgs": self._SVGS}, format="json")
+        assert render.call_count == 1
+        count.assert_not_called()
+
+    def test_page_count_reads_real_pdf(self) -> None:
+        import io
+
+        from pypdf import PdfWriter
+
+        from apps.exports.readme import _page_count
+
+        writer = PdfWriter()
+        writer.add_blank_page(width=100, height=100)
+        writer.add_blank_page(width=100, height=100)
+        buf = io.BytesIO()
+        writer.write(buf)
+        assert _page_count(buf.getvalue()) == 2
+
+
+class TestLetterBlankLines:
+    """Extra blank lines in a letter survive as ``&nbsp;`` paragraphs."""
+
+    def test_blank_line_runs_become_nbsp_paragraphs(self) -> None:
+        readme = ReadmeFactory(letter_content="Street 1\n\n\n\nCity")
+        out = render_readme_body(readme, "en", "http://x/", doc="letter")
+        assert out == "Street 1\n\n&nbsp;\n\n&nbsp;\n\nCity"
+
+    def test_single_paragraph_break_untouched(self) -> None:
+        readme = ReadmeFactory(letter_content="a\n\nb")
+        assert render_readme_body(readme, "en", "http://x/", doc="letter") == "a\n\nb"
+
+    def test_fenced_code_untouched(self) -> None:
+        readme = ReadmeFactory(letter_content="a\n\n```\nx\n\n\n\ny\n```\n\n\n\nb")
+        out = render_readme_body(readme, "en", "http://x/", doc="letter")
+        assert "```\nx\n\n\n\ny\n```" in out
+        assert out.endswith("```\n\n&nbsp;\n\n&nbsp;\n\nb")
+
+    def test_readme_doc_unaffected(self) -> None:
+        readme = ReadmeFactory(content="a\n\n\n\nb")
+        assert render_readme_body(readme, "en", "http://x/") == "a\n\n\n\nb"
+
+    def test_letter_pdf_renders_spacing_paragraphs(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(letter_content="Street 1\n\n\n\nBern")
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
+        html = render.call_args.args[0]
+        assert "<p>&nbsp;</p>" in html or "<p>\xa0</p>" in html
 
 
 class TestRenderReadmeBodyHelper:

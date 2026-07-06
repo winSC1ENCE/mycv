@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import io
+import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 import segno
 from django.conf import settings
@@ -19,6 +20,8 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from apps.cv import models
+
+logger = logging.getLogger(__name__)
 
 VALID_LANGS = {"en", "de"}
 CERT_KINDS: set[str] = {models.MediaAsset.Kind.IMAGE, models.MediaAsset.Kind.DOCUMENT}
@@ -35,14 +38,22 @@ class _CertEntry:
     media: models.MediaAsset
 
 
-def _render_pdf(html: str, base_url: str, *, title: str, author: str) -> bytes:
-    """Render HTML to PDF via WeasyPrint. Isolated for easy mocking in tests."""
+def _render_pdf(
+    html: str, base_url: str, *, title: str, author: str, font_config: Any | None = None
+) -> bytes:
+    """Render HTML to PDF via WeasyPrint. Isolated for easy mocking in tests.
+
+    ``font_config`` (a ``weasyprint.text.fonts.FontConfiguration``) lets callers
+    that render several documents per request decompress the woff2 fonts once
+    instead of on every call.
+    """
     from weasyprint import HTML  # imported lazily so test envs without libs can skip
 
     return cast(
         bytes,
         HTML(string=html, base_url=base_url).write_pdf(
             metadata={"title": title, "author": author},
+            font_config=font_config,
         ),
     )
 
@@ -224,9 +235,24 @@ class CertificatesPdfView(APIView):
         if not entries:
             raise NotFound("No certificates to export.")
 
+        missing = [
+            name
+            for entry in entries
+            if (name := entry.media.file.name) and not entry.media.file.storage.exists(name)
+        ]
+        if missing:
+            logger.warning("Certificates export aborted; missing media files: %s", missing)
+            raise ValidationError({"missing_files": missing})
+
         css = _read_css("certificates.css")
         base_url = str(settings.BASE_DIR)
         title = f"{person.full_name} — Certificates"
+
+        # One shared font configuration: fonts are decompressed once per request
+        # instead of once per rendered document (cover + every entry header).
+        from weasyprint.text.fonts import FontConfiguration  # lazy, like _render_pdf
+
+        font_config = FontConfiguration()
 
         parts: list[bytes] = [
             _render_pdf(
@@ -237,6 +263,7 @@ class CertificatesPdfView(APIView):
                 base_url=base_url,
                 title=title,
                 author=person.full_name,
+                font_config=font_config,
             )
         ]
         for entry in entries:
@@ -256,6 +283,7 @@ class CertificatesPdfView(APIView):
                     base_url=base_url,
                     title=title,
                     author=person.full_name,
+                    font_config=font_config,
                 )
             )
             if media.kind == models.MediaAsset.Kind.DOCUMENT:

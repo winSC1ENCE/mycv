@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   extractMermaid,
+  preserveBlankLines,
   renderBadges,
   renderMermaidImages,
   renderMermaidSvgs,
@@ -38,6 +39,27 @@ describe("substitutePlaceholders", () => {
 
   it("replaces repeated tokens", () => {
     expect(substitutePlaceholders("{{version}} {{version}}", CTX)).toBe("v1.0.0 v1.0.0");
+  });
+});
+
+describe("preserveBlankLines", () => {
+  it("turns extra blank lines into &nbsp; paragraphs", () => {
+    expect(preserveBlankLines("Street 1\n\n\n\nCity")).toBe("Street 1\n\n&nbsp;\n\n&nbsp;\n\nCity");
+  });
+
+  it("leaves single paragraph breaks untouched", () => {
+    expect(preserveBlankLines("a\n\nb")).toBe("a\n\nb");
+  });
+
+  it("leaves fenced code blocks untouched", () => {
+    const out = preserveBlankLines("a\n\n```\nx\n\n\n\ny\n```\n\n\n\nb");
+    expect(out).toContain("```\nx\n\n\n\ny\n```");
+    expect(out.endsWith("```\n\n&nbsp;\n\n&nbsp;\n\nb")).toBe(true);
+  });
+
+  it("renders the &nbsp; paragraphs through the markdown pipeline", () => {
+    const html = renderReadmeHtml(preserveBlankLines("a\n\n\nb"), []);
+    expect(html).toMatch(/<p>(&nbsp;|\u00a0)<\/p>/);
   });
 });
 

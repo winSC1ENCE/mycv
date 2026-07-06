@@ -13,6 +13,7 @@ them so its own logic stays unit-testable.
 
 from __future__ import annotations
 
+import io
 import re
 
 import markdown as md
@@ -24,6 +25,7 @@ from django.utils import timezone
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.text import slugify
+from pypdf import PdfReader
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAdminUser
@@ -77,6 +79,14 @@ _MERMAID_BLOCK = re.compile(
     re.DOTALL,
 )
 
+# A run of two-or-more blank lines (Markdown collapses them into one paragraph break).
+_BLANK_RUN = re.compile(r"\n(?:[ \t]*\n){2,}")
+_FENCED_BLOCK = re.compile(r"(```[\s\S]*?```)")
+
+# READMEs must fit on one page: retry the render down this ladder of diagram
+# height caps until the page count reaches 1 (or the ladder is exhausted).
+_DIAGRAM_HEIGHT_STEPS = ("150mm", "110mm", "75mm", "50mm")
+
 
 def _placeholder_context(readme: models.Readme, public_url: str) -> dict[str, str]:
     """Resolve the ``{{token}}`` substitution map for a README.
@@ -98,6 +108,24 @@ def _placeholder_context(readme: models.Readme, public_url: str) -> dict[str, st
     }
 
 
+def _preserve_blank_lines(text: str) -> str:
+    """Keep extra blank lines as ``&nbsp;`` paragraphs (Markdown collapses them).
+
+    Letters use empty lines for layout (address block, gap before the signature).
+    A run of N blank lines keeps the normal paragraph break plus N-1 ``&nbsp;``
+    paragraphs. Fenced code blocks pass through untouched.
+    """
+
+    def replace(match: re.Match[str]) -> str:
+        blank_lines = match.group(0).count("\n") - 1
+        return "\n\n" + "&nbsp;\n\n" * (blank_lines - 1)
+
+    return "".join(
+        part if part.startswith("```") else _BLANK_RUN.sub(replace, part)
+        for part in _FENCED_BLOCK.split(text)
+    )
+
+
 def render_readme_body(
     readme: models.Readme, lang: str, public_url: str, *, doc: str = "readme"
 ) -> str:
@@ -108,6 +136,7 @@ def render_readme_body(
             if (lang == "de" and readme.letter_content_de)
             else readme.letter_content
         )
+        text = _preserve_blank_lines(text)
     else:
         text = readme.content_de if (lang == "de" and readme.content_de) else readme.content
     for token, value in _placeholder_context(readme, public_url).items():
@@ -144,6 +173,11 @@ def _inject_mermaid(html: str, svgs: list[str]) -> str:
             return match.group(0)
 
     return _MERMAID_BLOCK.sub(replace, html)
+
+
+def _page_count(pdf: bytes) -> int:
+    """Number of pages in a rendered PDF. Isolated for easy mocking in tests."""
+    return len(PdfReader(io.BytesIO(pdf)).pages)
 
 
 class ReadmePdfView(APIView):
@@ -189,23 +223,36 @@ class ReadmePdfView(APIView):
             badges = _badges_html("version", readme.version, ctx["{{updated}}"])
         clean = clean.replace("{{badges}}", badges)
 
-        html = render_to_string(
-            "exports/readme.html",
-            {
-                "name": readme.name,
-                "body": mark_safe(clean),  # nosec B308 B703 # noqa: S308
-                "css": _read_css("readme.css"),
-                "lang": lang,
-            },
-        )
-
+        css = _read_css("readme.css")
         label = "Motivation Letter" if doc == "letter" else "README"
-        pdf_bytes = _render_pdf(
-            html,
-            base_url=str(settings.BASE_DIR),
-            title=f"{readme.name} — {label}",
-            author=readme.person.full_name,
-        )
+
+        def render(extra_css: str = "") -> bytes:
+            html = render_to_string(
+                "exports/readme.html",
+                {
+                    "name": readme.name,
+                    "body": mark_safe(clean),  # nosec B308 B703 # noqa: S308
+                    "css": css + extra_css,
+                    "lang": lang,
+                },
+            )
+            return _render_pdf(
+                html,
+                base_url=str(settings.BASE_DIR),
+                title=f"{readme.name} — {label}",
+                author=readme.person.full_name,
+            )
+
+        pdf_bytes = render()
+        if doc == "readme" and svgs:
+            # A README must stay a one-pager: shrink the diagrams stepwise until
+            # everything fits (remaining overflow means the text itself is too long).
+            for cap in _DIAGRAM_HEIGHT_STEPS:
+                if _page_count(pdf_bytes) == 1:
+                    break
+                pdf_bytes = render(
+                    f"\n.rm-body img, .rm-body svg {{ max-height: {cap}; width: auto; }}"
+                )
 
         slug = slugify(readme.name) or "readme"
         filename = f"{slug}-letter.pdf" if doc == "letter" else f"{slug}.pdf"

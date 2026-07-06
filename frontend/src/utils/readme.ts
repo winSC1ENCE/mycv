@@ -62,6 +62,27 @@ export function substitutePlaceholders(text: string, ctx: ReadmeContext): string
     .replaceAll("{{updated}}", ctx.updated);
 }
 
+/**
+ * Keep extra blank lines as `&nbsp;` paragraphs (Markdown collapses them).
+ * Mirrors the PDF backend's letter-only preprocessing so the admin preview and
+ * the exported PDF show the same vertical spacing (address block, signature gap).
+ * A run of N blank lines keeps the normal paragraph break plus N-1 `&nbsp;`
+ * paragraphs; fenced code blocks pass through untouched.
+ */
+export function preserveBlankLines(src: string): string {
+  return src
+    .split(/(```[\s\S]*?```)/)
+    .map((part) =>
+      part.startsWith("```")
+        ? part
+        : part.replace(/\n(?:[ \t]*\n){2,}/g, (run) => {
+            const blankLines = run.split("\n").length - 2;
+            return "\n\n" + "&nbsp;\n\n".repeat(blankLines - 1);
+          }),
+    )
+    .join("");
+}
+
 /** Extract the source of each ```mermaid block, in order. */
 export function extractMermaid(src: string): string[] {
   const blocks: string[] = [];

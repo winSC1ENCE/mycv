@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 curl ca-certificates \
     libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libfontconfig1 \
-    libcairo2 libgdk-pixbuf-2.0-0 \
+    libcairo2 libgdk-pixbuf-2.0-0 fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /usr/local/bin/uv
@@ -44,7 +44,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq5 curl \
     libpango-1.0-0 libpangoft2-1.0-0 libharfbuzz0b libfontconfig1 \
-    libcairo2 libgdk-pixbuf-2.0-0 \
+    libcairo2 libgdk-pixbuf-2.0-0 fonts-noto-color-emoji \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --uid 1000 --create-home --shell /bin/bash appuser
 
@@ -54,4 +54,4 @@ USER appuser
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD curl -f http://localhost:8000/api/health/ || exit 1
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--access-logfile", "-"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "120", "--access-logfile", "-"]

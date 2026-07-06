@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import {
+  preserveBlankLines,
   renderBadges,
   renderMermaidSvgs,
   renderReadmeHtml,
@@ -13,12 +14,15 @@ const props = defineProps<{
   ctx: ReadmeContext;
   badgeKey: string;
   badgeValue: string;
+  /** Letters keep blank-line runs as vertical spacing, mirroring the PDF backend. */
+  preserveBlanks?: boolean;
 }>();
 
 const html = ref("");
 
 async function rerender(): Promise<void> {
-  const text = substitutePlaceholders(props.markdown, props.ctx);
+  let text = substitutePlaceholders(props.markdown, props.ctx);
+  if (props.preserveBlanks) text = preserveBlankLines(text);
   const svgs = await renderMermaidSvgs(text);
   const badges = renderBadges(props.badgeKey, props.badgeValue, props.ctx.updated);
   html.value = renderReadmeHtml(text, svgs, badges);

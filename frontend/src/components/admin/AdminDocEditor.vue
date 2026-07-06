@@ -180,6 +180,7 @@ function applyTemplate(): void {
         :ctx="previewCtx"
         :badge-key="badgeKey"
         :badge-value="badgeValue"
+        :preserve-blanks="isLetter"
       />
     </div>
   </div>

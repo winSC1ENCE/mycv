@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import datetime as dt
 import io
+from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -144,3 +146,27 @@ class TestRendering:
         resp = admin_client.get(f"{URL}?lang=de")
         assert resp.status_code == 200
         assert "_Certificates_DE.pdf" in resp["Content-Disposition"]
+
+    def test_renders_share_one_font_config(
+        self, admin_client: APIClient, _person_with_certs
+    ) -> None:
+        """Fonts are decompressed once per request, not once per rendered document."""
+        with patch("apps.exports.views._render_pdf", return_value=_pdf()) as mock_render:
+            resp = admin_client.get(f"{URL}?lang=en")
+        assert resp.status_code == 200
+        assert mock_render.call_count == 5  # cover + 4 entry headers
+        configs = {id(call.kwargs["font_config"]) for call in mock_render.call_args_list}
+        assert len(configs) == 1
+        assert mock_render.call_args.kwargs["font_config"] is not None
+
+
+class TestMissingFiles:
+    def test_missing_media_file_returns_400(
+        self, admin_client: APIClient, _person_with_certs
+    ) -> None:
+        media = models.MediaAsset.objects.filter(kind=models.MediaAsset.Kind.DOCUMENT).first()
+        assert media is not None
+        Path(media.file.path).unlink()
+        resp = admin_client.get(f"{URL}?lang=en")
+        assert resp.status_code == 400
+        assert media.file.name in resp.json()["missing_files"]

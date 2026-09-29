@@ -86,7 +86,8 @@ usePageMeta({
   max-width: 36ch;
 }
 
-[data-theme="dog"] .not-found__code {
+[data-theme="dog"] .not-found__code,
+[data-theme="power"] .not-found__code {
   transform: rotate(-3deg);
   display: inline-block;
 }

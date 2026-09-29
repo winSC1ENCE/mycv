@@ -41,6 +41,30 @@
           "automation": "Automatisierung"
         }
       }
+    },
+    "power": {
+      "counter": "{n} Volt durchgejagt",
+      "profile": {
+        "lead": "Angetrieben durch:",
+        "items": [
+          "Schnelle Iteration",
+          "Hochspannungs-Debugging",
+          "Full-Stack-Strom",
+          "Kurzschluss-Reparaturen"
+        ]
+      },
+      "egg": {
+        "button": "⚡ Spannung prüfen",
+        "title": "Stromnetz-Diagnose",
+        "intro": "Spannungswerte — Leistung unter Volllast:",
+        "valueHead": "Spannung",
+        "footnote": "Achtung: Der Kandidat arbeitet dauerhaft mit Superhelden-Spannung.",
+        "rows": {
+          "python": "Python-Wissen",
+          "sql": "SQL-Kenntnisse",
+          "automation": "Automatisierung"
+        }
+      }
     }
   },
   "skills": {

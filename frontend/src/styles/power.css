@@ -1,7 +1,7 @@
-/* "Comic Mode" — electrical-power superhero comic book: bright halftone
+/* "Power Mode" — electrical-power superhero comic book: bright halftone
    panels, bold ink borders, and a bolt cursor/spine running the whole page. */
 
-[data-theme="comic"] {
+[data-theme="power"] {
   --color-bg: #fffdf2;
   --color-bg-elevated: #ffffff;
   --color-surface: #ffffff;
@@ -14,31 +14,31 @@
   --color-border: #0b1030;
   --color-timeline: #0b1030;
 
-  --pattern-comic: url("/icons/comic/halftone.svg");
+  --pattern-power: url("/icons/power/halftone.svg");
   --font-display: "Comic Neue", "Comic Sans MS", var(--font-sans);
 
   cursor:
-    url("/icons/comic/cursor.svg") 4 4,
+    url("/icons/power/cursor.svg") 4 4,
     auto;
 }
 
-[data-theme="comic"] a,
-[data-theme="comic"] button,
-[data-theme="comic"] .timeline__node {
+[data-theme="power"] a,
+[data-theme="power"] button,
+[data-theme="power"] .timeline__node {
   cursor:
-    url("/icons/comic/cursor.svg") 4 4,
+    url("/icons/power/cursor.svg") 4 4,
     pointer;
 }
 
 /* Body stays paper-white; halftone dots live on a fixed overlay gutter frame,
    same technique as Dog Mode's spots. */
-[data-theme="comic"] body {
+[data-theme="power"] body {
   background-color: var(--color-bg);
   background-image: none;
 }
 
-[data-theme="comic"] body::before,
-[data-theme="comic"] body::after {
+[data-theme="power"] body::before,
+[data-theme="power"] body::after {
   content: "";
   position: fixed;
   top: 0;
@@ -46,39 +46,39 @@
   width: calc((100vw - var(--content-max, 1100px)) / 2);
   z-index: -1;
   pointer-events: none;
-  background-image: var(--pattern-comic);
+  background-image: var(--pattern-power);
   background-size: 480px 480px;
   background-repeat: repeat;
   opacity: 0.9;
 }
 
-[data-theme="comic"] body::before {
+[data-theme="power"] body::before {
   left: 0;
 }
-[data-theme="comic"] body::after {
+[data-theme="power"] body::after {
   right: 0;
 }
 
 @media (max-width: 720px) {
-  [data-theme="comic"] body::before,
-  [data-theme="comic"] body::after {
+  [data-theme="power"] body::before,
+  [data-theme="power"] body::after {
     display: none;
   }
 }
 
 /* --- Header brand: bolt glyph in electric yellow --- */
-[data-theme="comic"] .header__brand svg {
+[data-theme="power"] .header__brand svg {
   color: var(--color-accent);
 }
 
 /* --- Headings: bolt-yellow highlight, comic-panel tilt --- */
-[data-theme="comic"] .hero__title {
+[data-theme="power"] .hero__title {
   display: inline-block;
   transform: rotate(1deg);
 }
 
-[data-theme="comic"] .section__title,
-[data-theme="comic"] h2.section__title {
+[data-theme="power"] .section__title,
+[data-theme="power"] h2.section__title {
   display: inline-block;
   background: var(--color-accent);
   color: var(--color-fg);
@@ -88,8 +88,8 @@
 }
 
 /* --- Cards: ink borders + chunky yellow-tinted offset shadow --- */
-[data-theme="comic"] .card,
-[data-theme="comic"] .timeline__item-card {
+[data-theme="power"] .card,
+[data-theme="power"] .timeline__item-card {
   border: 3px solid var(--color-border);
   box-shadow: 6px 6px 0 var(--color-accent);
   transition:
@@ -97,31 +97,31 @@
     box-shadow var(--motion-fast) var(--easing-out);
 }
 
-[data-theme="comic"] .card:hover,
-[data-theme="comic"] .timeline__item-card:hover {
+[data-theme="power"] .card:hover,
+[data-theme="power"] .timeline__item-card:hover {
   transform: translate(-2px, -2px);
   box-shadow: 10px 10px 0 var(--color-accent);
 }
 
 /* --- Buttons: chunky comic feel --- */
-[data-theme="comic"] .button {
+[data-theme="power"] .button {
   border: 2px solid var(--color-fg);
   box-shadow: 3px 3px 0 var(--color-accent);
   font-weight: 700;
 }
 
-[data-theme="comic"] .button:hover {
+[data-theme="power"] .button:hover {
   transform: translate(-1px, -1px);
   box-shadow: 5px 5px 0 var(--color-accent);
 }
 
-[data-theme="comic"] .button:active {
+[data-theme="power"] .button:active {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--color-accent);
 }
 
 /* --- Tags: blocky no-radius badges --- */
-[data-theme="comic"] .tag {
+[data-theme="power"] .tag {
   border: 2px solid var(--color-fg);
   border-radius: 0;
   background: var(--color-accent-soft);
@@ -131,30 +131,30 @@
 }
 
 /* --- Skill dots: bolt-yellow pen-stroke circles --- */
-[data-theme="comic"] .skill-dot {
+[data-theme="power"] .skill-dot {
   background: transparent;
   border: 2px solid var(--color-fg);
 }
-[data-theme="comic"] .skill-dot--filled {
+[data-theme="power"] .skill-dot--filled {
   background: var(--color-accent);
   border-color: var(--color-fg);
 }
-[data-theme="comic"] .skill-level-label {
+[data-theme="power"] .skill-level-label {
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--color-fg);
 }
-[data-theme="comic"] .skill-row {
+[data-theme="power"] .skill-row {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: var(--color-fg);
 }
-[data-theme="comic"] .skill-row:hover {
+[data-theme="power"] .skill-row:hover {
   background: transparent;
 }
 
 /* --- Alt timeline (central-axis, alternating, expandable) --- */
-[data-theme="comic"] .timeline--alt {
+[data-theme="power"] .timeline--alt {
   background: rgba(255, 255, 255, 0.86);
   border: 3px solid var(--color-fg);
   box-shadow: 10px 10px 0 var(--color-accent);
@@ -162,19 +162,19 @@
   position: relative;
 }
 
-[data-theme="comic"] .section .container:has(> .timeline--alt) {
+[data-theme="power"] .section .container:has(> .timeline--alt) {
   padding-top: var(--space-3);
   padding-bottom: var(--space-3);
 }
 
-[data-theme="comic"] .section[aria-labelledby="timeline-title"] .section__title {
+[data-theme="power"] .section[aria-labelledby="timeline-title"] .section__title {
   font-size: 1.6em;
   margin-bottom: var(--space-3);
 }
 
 /* Spine = bolt trail */
-[data-theme="comic"] .timeline--alt::before {
-  background: url("/icons/comic/bolt-trail.svg") center top / 96px auto repeat-y;
+[data-theme="power"] .timeline--alt::before {
+  background: url("/icons/power/bolt-trail.svg") center top / 96px auto repeat-y;
   width: 96px;
   border-radius: 0;
   -webkit-mask-image: none;
@@ -182,7 +182,7 @@
 }
 
 /* Node = white circle with a random comic icon (set via inline --node-icon) */
-[data-theme="comic"] .timeline__node {
+[data-theme="power"] .timeline__node {
   position: relative;
   width: 52px;
   height: 52px;
@@ -197,17 +197,17 @@
     box-shadow var(--motion-fast) var(--easing-out);
 }
 
-[data-theme="comic"] .timeline__node:hover {
+[data-theme="power"] .timeline__node:hover {
   transform: translate(-1px, -1px) scale(1.05);
   box-shadow: 5px 5px 0 var(--color-accent);
 }
 
-[data-theme="comic"] .timeline__node:active {
+[data-theme="power"] .timeline__node:active {
   transform: translate(1px, 1px) scale(0.95);
   box-shadow: 1px 1px 0 var(--color-accent);
 }
 
-[data-theme="comic"] .timeline__node::before {
+[data-theme="power"] .timeline__node::before {
   content: "";
   position: absolute;
   inset: 4px;
@@ -217,7 +217,7 @@
   background-repeat: no-repeat;
 }
 
-[data-theme="comic"] .timeline__card {
+[data-theme="power"] .timeline__card {
   background: #ffffff;
   border-radius: 0;
   border: 3px solid var(--color-fg);
@@ -227,16 +227,16 @@
     box-shadow var(--motion-fast) var(--easing-out);
 }
 
-[data-theme="comic"] .timeline__card:hover {
+[data-theme="power"] .timeline__card:hover {
   transform: translate(-3px, -3px);
   box-shadow: 11px 11px 0 var(--color-accent);
 }
 
-[data-theme="comic"] .timeline__date {
+[data-theme="power"] .timeline__date {
   gap: 8px;
 }
 
-[data-theme="comic"] .timeline__date-part {
+[data-theme="power"] .timeline__date-part {
   font-family: var(--font-display);
   color: var(--color-fg);
   background: var(--color-accent);
@@ -246,38 +246,38 @@
   transform: rotate(2deg);
 }
 
-[data-theme="comic"] .timeline__date-part--end {
+[data-theme="power"] .timeline__date-part--end {
   transform: rotate(-2deg);
 }
 
-[data-theme="comic"] .timeline__date-sep {
+[data-theme="power"] .timeline__date-sep {
   display: none;
 }
 
-[data-theme="comic"] .timeline__card-title {
+[data-theme="power"] .timeline__card-title {
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--color-fg);
   letter-spacing: -0.01em;
 }
 
-[data-theme="comic"] .timeline__card-sub {
+[data-theme="power"] .timeline__card-sub {
   color: var(--color-fg);
   font-weight: 600;
   opacity: 0.75;
 }
 
-[data-theme="comic"] .timeline__chevron {
+[data-theme="power"] .timeline__chevron {
   color: var(--color-fg);
   font-weight: 900;
 }
 
-[data-theme="comic"] .timeline__detail {
+[data-theme="power"] .timeline__detail {
   border-top: 3px solid var(--color-fg);
 }
 
-[data-theme="comic"] .kind-badge,
-[data-theme="comic"] .timeline__kind {
+[data-theme="power"] .kind-badge,
+[data-theme="power"] .timeline__kind {
   border: 2px solid var(--color-fg);
   border-radius: 0;
   background: var(--color-accent);
@@ -285,14 +285,14 @@
   box-shadow: 2px 2px 0 var(--color-fg);
 }
 
-[data-theme="comic"] .timeline__card,
-[data-theme="comic"] .timeline__row--left .timeline__card,
-[data-theme="comic"] .timeline__row--right .timeline__card {
+[data-theme="power"] .timeline__card,
+[data-theme="power"] .timeline__row--left .timeline__card,
+[data-theme="power"] .timeline__row--right .timeline__card {
   border: 3px solid var(--color-fg);
 }
 
 /* Bolt counter chip — fixed at bottom-center, mirrors the dog pet-counter. */
-[data-theme="comic"] .dog-pet-counter {
+[data-theme="power"] .dog-pet-counter {
   position: fixed;
   bottom: var(--space-3);
   left: 50%;
@@ -312,22 +312,22 @@
 }
 
 /* Profile hero "Powered by:" checklist. */
-[data-theme="comic"] .profile-hero__lead {
+[data-theme="power"] .profile-hero__lead {
   font-family: var(--font-display);
   font-weight: 700;
 }
 
-[data-theme="comic"] .profile-hero__item span[aria-hidden="true"] {
+[data-theme="power"] .profile-hero__item span[aria-hidden="true"] {
   color: var(--color-fg);
   background: var(--color-accent);
   font-weight: 800;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-theme="comic"] .card,
-  [data-theme="comic"] .timeline__card,
-  [data-theme="comic"] .timeline__node,
-  [data-theme="comic"] .button {
+  [data-theme="power"] .card,
+  [data-theme="power"] .timeline__card,
+  [data-theme="power"] .timeline__node,
+  [data-theme="power"] .button {
     transition: none;
   }
 }

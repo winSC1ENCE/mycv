@@ -113,7 +113,7 @@ const resolvedTooltip = computed(() => props.tooltip ?? t("sensitive.tooltip"));
 }
 
 [data-theme="dog"] .sensitive--blurred .sensitive__text,
-[data-theme="comic"] .sensitive--blurred .sensitive__text {
+[data-theme="power"] .sensitive--blurred .sensitive__text {
   filter: none;
   background: repeating-linear-gradient(90deg, var(--color-fg) 0 10px, transparent 10px 14px);
   color: transparent;
@@ -121,7 +121,7 @@ const resolvedTooltip = computed(() => props.tooltip ?? t("sensitive.tooltip"));
 }
 
 [data-theme="dog"] .sensitive__chip,
-[data-theme="comic"] .sensitive__chip {
+[data-theme="power"] .sensitive__chip {
   background: var(--color-fg);
   color: var(--color-surface);
   border-radius: 0;
@@ -130,7 +130,7 @@ const resolvedTooltip = computed(() => props.tooltip ?? t("sensitive.tooltip"));
 }
 
 [data-theme="dog"] .sensitive__chip::after,
-[data-theme="comic"] .sensitive__chip::after {
+[data-theme="power"] .sensitive__chip::after {
   border-radius: 0;
   font-family: var(--font-display, inherit);
   text-transform: uppercase;

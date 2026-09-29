@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                     ("none", "None"),
                     ("dog", "Dog"),
                     ("virus", "Virus"),
-                    ("comic", "Comic"),
+                    ("power", "Power"),
                 ],
                 default="dog",
                 help_text="Which funny theme (besides Normal) is selectable on the public site.",

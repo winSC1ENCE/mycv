@@ -200,22 +200,22 @@ usePageMeta({
   display: block;
 }
 
-/* Dog mode / Comic mode — shared comic-book chrome */
+/* Dog mode / Power mode — shared comic-book chrome */
 [data-theme="dog"] .project-gallery__main,
-[data-theme="comic"] .project-gallery__main {
+[data-theme="power"] .project-gallery__main {
   border: 3px solid var(--color-fg);
   box-shadow: 4px 4px 0 var(--color-fg);
   border-radius: 0;
 }
 
 [data-theme="dog"] .project-gallery__thumb-btn,
-[data-theme="comic"] .project-gallery__thumb-btn {
+[data-theme="power"] .project-gallery__thumb-btn {
   border-color: var(--color-fg);
   border-radius: 0;
 }
 
 [data-theme="dog"] .project-gallery__thumb-btn--active,
-[data-theme="comic"] .project-gallery__thumb-btn--active {
+[data-theme="power"] .project-gallery__thumb-btn--active {
   box-shadow: 2px 2px 0 var(--color-fg);
 }
 

@@ -151,8 +151,8 @@ onUnmounted(() => window.removeEventListener("keydown", onKeydown));
 
 [data-theme="dog"] .image-lightbox__close,
 [data-theme="dog"] .image-lightbox__nav,
-[data-theme="comic"] .image-lightbox__close,
-[data-theme="comic"] .image-lightbox__nav {
+[data-theme="power"] .image-lightbox__close,
+[data-theme="power"] .image-lightbox__nav {
   border-radius: 0;
   border: 2px solid #fff;
 }
@@ -163,7 +163,7 @@ onUnmounted(() => window.removeEventListener("keydown", onKeydown));
   border: 3px solid #fff;
 }
 
-[data-theme="comic"] .image-lightbox__img {
+[data-theme="power"] .image-lightbox__img {
   border-radius: 0;
   border: 3px solid #fff;
 }

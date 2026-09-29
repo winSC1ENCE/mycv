@@ -102,14 +102,14 @@ def test_admin_can_update_active_funny_theme(admin_client: APIClient) -> None:
     assert person.active_funny_theme == "virus"
 
 
-def test_admin_can_set_comic_funny_theme(admin_client: APIClient) -> None:
+def test_admin_can_set_power_funny_theme(admin_client: APIClient) -> None:
     person = PersonFactory(slug="me")
     resp = admin_client.patch(
-        f"/api/cv/{person.slug}/", {"active_funny_theme": "comic"}, format="json"
+        f"/api/cv/{person.slug}/", {"active_funny_theme": "power"}, format="json"
     )
     assert resp.status_code == status.HTTP_200_OK
     person.refresh_from_db()
-    assert person.active_funny_theme == "comic"
+    assert person.active_funny_theme == "power"
 
 
 def test_admin_can_update_profile_photos(admin_client: APIClient) -> None:

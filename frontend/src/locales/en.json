@@ -37,7 +37,7 @@
         }
       }
     },
-    "comic": {
+    "power": {
       "counter": "{n} volts jolted",
       "profile": {
         "lead": "Powered by:",

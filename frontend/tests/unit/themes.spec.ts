@@ -7,7 +7,7 @@ describe("theme registry", () => {
   it("resolves registered packs and rejects others", () => {
     expect(packFor("dog")?.id).toBe("dog");
     expect(packFor("virus")?.id).toBe("virus");
-    expect(packFor("comic")?.id).toBe("comic");
+    expect(packFor("power")?.id).toBe("power");
     expect(packFor("normal")).toBeNull();
     expect(packFor("none")).toBeNull();
     expect(packFor("nope")).toBeNull();
@@ -17,7 +17,7 @@ describe("theme registry", () => {
   it("isFunnyTheme is a type guard over the registry", () => {
     expect(isFunnyTheme("dog")).toBe(true);
     expect(isFunnyTheme("virus")).toBe(true);
-    expect(isFunnyTheme("comic")).toBe(true);
+    expect(isFunnyTheme("power")).toBe(true);
     expect(isFunnyTheme("normal")).toBe(false);
     expect(isFunnyTheme(undefined)).toBe(false);
   });
@@ -34,11 +34,11 @@ describe("iconForTheme", () => {
   it("is deterministic per (theme, uid)", () => {
     expect(iconForTheme("dog", "experience-10")).toBe(iconForTheme("dog", "experience-10"));
     expect(iconForTheme("virus", "milestone-42")).toBe(iconForTheme("virus", "milestone-42"));
-    expect(iconForTheme("comic", "milestone-42")).toBe(iconForTheme("comic", "milestone-42"));
+    expect(iconForTheme("power", "milestone-42")).toBe(iconForTheme("power", "milestone-42"));
   });
 
   it("always returns one of the active pack's node icons", () => {
-    for (const id of ["dog", "virus", "comic"] as const) {
+    for (const id of ["dog", "virus", "power"] as const) {
       const candidates = new Set(packFor(id)!.nodeIcons);
       for (let i = 0; i < 60; i++) {
         expect(candidates.has(iconForTheme(id, `experience-${i}`))).toBe(true);
@@ -72,11 +72,11 @@ describe("phrasesForIcon / randomPhrase / praiseFor (locale-aware)", () => {
     expect(phrasesForIcon("virus", "de", "/icons/virus/unknown.svg")).toContain("QUARANTÄNE!");
   });
 
-  it("matches comic buckets per locale with a default fallback", () => {
-    expect(phrasesForIcon("comic", "en", "/icons/comic/bolt.svg")).toContain("ZAP!");
-    expect(phrasesForIcon("comic", "de", "/icons/comic/bolt.svg")).toContain("ZACK!");
-    expect(phrasesForIcon("comic", "en", "/icons/comic/pow.svg")).toContain("POW!");
-    expect(phrasesForIcon("comic", "de", "/icons/comic/unknown.svg")).toContain("FUNKE!");
+  it("matches power buckets per locale with a default fallback", () => {
+    expect(phrasesForIcon("power", "en", "/icons/power/bolt.svg")).toContain("ZAP!");
+    expect(phrasesForIcon("power", "de", "/icons/power/bolt.svg")).toContain("ZACK!");
+    expect(phrasesForIcon("power", "en", "/icons/power/pow.svg")).toContain("POW!");
+    expect(phrasesForIcon("power", "de", "/icons/power/unknown.svg")).toContain("FUNKE!");
   });
 
   it("falls back to EN for an unknown locale", () => {
@@ -102,8 +102,8 @@ describe("phrasesForIcon / randomPhrase / praiseFor (locale-aware)", () => {
     expect(praiseFor("dog", "de", 3)).toBe("GUTER HUND!");
     expect(praiseFor("virus", "en", 3)).toBe("PATIENT ZERO!");
     expect(praiseFor("virus", "de", 3)).toBe("PATIENT NULL!");
-    expect(praiseFor("comic", "en", 3)).toBe("FULLY CHARGED!");
-    expect(praiseFor("comic", "de", 3)).toBe("VOLL GELADEN!");
+    expect(praiseFor("power", "en", 3)).toBe("FULLY CHARGED!");
+    expect(praiseFor("power", "de", 3)).toBe("VOLL GELADEN!");
     expect(praiseFor("dog", "en", 4)).toBeNull();
     expect(praiseFor("normal", "en", 3)).toBeNull();
   });

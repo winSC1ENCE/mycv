@@ -122,7 +122,7 @@ const { locale } = storeToRefs(useLocaleStore());
 }
 
 [data-theme="dog"] .project-card,
-[data-theme="comic"] .project-card {
+[data-theme="power"] .project-card {
   border: 3px solid var(--color-fg);
   box-shadow: 4px 4px 0 var(--color-fg);
 }
@@ -132,7 +132,7 @@ const { locale } = storeToRefs(useLocaleStore());
   filter: grayscale(1) contrast(1.2);
 }
 
-[data-theme="comic"] .project-card__thumb-link:hover .project-card__thumb {
+[data-theme="power"] .project-card__thumb-link:hover .project-card__thumb {
   transform: none;
 }
 </style>

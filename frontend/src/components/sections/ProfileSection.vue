@@ -107,7 +107,7 @@ const heroItems = computed<string[]>(() => {
   box-shadow: 4px 4px 0 #0a0a0a;
 }
 
-[data-theme="comic"] .profile-card__photo {
+[data-theme="power"] .profile-card__photo {
   border-radius: 50%;
   object-position: center center;
   border: 3px solid var(--color-fg);

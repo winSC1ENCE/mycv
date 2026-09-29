@@ -1,5 +1,5 @@
 /**
- * Comic Mode theme pack — electrical-power superhero comic-book style.
+ * Power Mode theme pack — electrical-power superhero comic-book style.
  *
  * High-voltage energy: halftone dots, bolt/POW timeline icons, and a bolt
  * mark on the header brand + favicon. Follows the dog.ts / virus.ts shape.
@@ -7,27 +7,27 @@
 
 import type { ThemePack } from "./types";
 
-const COMIC_ICONS = [
-  "/icons/comic/bolt.svg",
-  "/icons/comic/pow.svg",
-  "/icons/comic/zap-burst.svg",
-  "/icons/comic/battery.svg",
-  "/icons/comic/plug.svg",
-  "/icons/comic/star-burst.svg",
-  "/icons/comic/thunder-cloud.svg",
-  "/icons/comic/boom.svg",
+const POWER_ICONS = [
+  "/icons/power/bolt.svg",
+  "/icons/power/pow.svg",
+  "/icons/power/zap-burst.svg",
+  "/icons/power/battery.svg",
+  "/icons/power/plug.svg",
+  "/icons/power/star-burst.svg",
+  "/icons/power/thunder-cloud.svg",
+  "/icons/power/boom.svg",
 ] as const;
 
-export const comicPack: ThemePack = {
-  id: "comic",
-  label: "Comic",
+export const powerPack: ThemePack = {
+  id: "power",
+  label: "Power",
   emoji: "⚡",
-  profilePhoto: "/profile-comic.jpg",
-  counterKey: "themes.comic.counter",
-  nodeIcons: COMIC_ICONS,
+  profilePhoto: "/profile-power.jpg",
+  counterKey: "themes.power.counter",
+  nodeIcons: POWER_ICONS,
   photoAltFallback: "Nicolas Mischler — electric portrait",
   brandIcon: "bolt",
-  favicon: "/icons/comic/app-icon-comic.svg",
+  favicon: "/icons/power/app-icon-power.svg",
   phrases: {
     en: {
       iconPhrases: {
@@ -103,19 +103,19 @@ export const comicPack: ThemePack = {
     },
   },
   hero: {
-    leadKey: "themes.comic.profile.lead",
-    itemsKey: "themes.comic.profile.items",
+    leadKey: "themes.power.profile.lead",
+    itemsKey: "themes.power.profile.items",
   },
   easterEgg: {
-    buttonKey: "themes.comic.egg.button",
-    titleKey: "themes.comic.egg.title",
-    introKey: "themes.comic.egg.intro",
-    footnoteKey: "themes.comic.egg.footnote",
-    valueHeadKey: "themes.comic.egg.valueHead",
+    buttonKey: "themes.power.egg.button",
+    titleKey: "themes.power.egg.title",
+    introKey: "themes.power.egg.intro",
+    footnoteKey: "themes.power.egg.footnote",
+    valueHeadKey: "themes.power.egg.valueHead",
     rows: [
-      { labelKey: "themes.comic.egg.rows.python", value: "220V" },
-      { labelKey: "themes.comic.egg.rows.sql", value: "180V" },
-      { labelKey: "themes.comic.egg.rows.automation", value: "240V" },
+      { labelKey: "themes.power.egg.rows.python", value: "220V" },
+      { labelKey: "themes.power.egg.rows.sql", value: "180V" },
+      { labelKey: "themes.power.egg.rows.automation", value: "240V" },
     ],
   },
 };

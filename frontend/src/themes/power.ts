@@ -1,7 +1,7 @@
 /**
  * Power Mode theme pack — electrical-power superhero comic-book style.
  *
- * High-voltage energy: halftone dots, bolt/POW timeline icons, and a bolt
+ * High-voltage energy: a glowing spark backdrop, bolt/POW timeline icons, and a bolt
  * mark on the header brand + favicon. Follows the dog.ts / virus.ts shape.
  */
 

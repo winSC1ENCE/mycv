@@ -1,5 +1,5 @@
-/* "Power Mode" — electrical-power superhero comic book: bright halftone
-   panels, bold ink borders, and a bolt cursor/spine running the whole page. */
+/* "Power Mode" — electrical-power superhero comic book: a glowing spark-and-
+   circuit backdrop, bold ink borders, and a bolt cursor/spine running the page. */
 
 [data-theme="power"] {
   --color-bg: #fffdf2;
@@ -14,7 +14,7 @@
   --color-border: #0b1030;
   --color-timeline: #0b1030;
 
-  --pattern-power: url("/icons/power/halftone.svg");
+  --pattern-power: url("/icons/power/sparks.svg");
   --font-display: "Comic Neue", "Comic Sans MS", var(--font-sans);
 
   cursor:
@@ -30,11 +30,16 @@
     pointer;
 }
 
-/* Body stays paper-white; halftone dots live on a fixed overlay gutter frame,
-   same technique as Dog Mode's spots. */
+/* Page stays paper-white with a soft two-tone glow wash (yellow ⇄ electric
+   blue) instead of a flat tint; scattered spark/bolt motifs live on a fixed
+   overlay gutter frame, same technique as Dog Mode's spots. */
 [data-theme="power"] body {
   background-color: var(--color-bg);
-  background-image: none;
+  background-image:
+    radial-gradient(900px circle at 12% -8%, rgba(255, 213, 0, 0.16), transparent 55%),
+    radial-gradient(900px circle at 88% 105%, rgba(47, 107, 255, 0.12), transparent 55%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 [data-theme="power"] body::before,
@@ -47,9 +52,9 @@
   z-index: -1;
   pointer-events: none;
   background-image: var(--pattern-power);
-  background-size: 480px 480px;
+  background-size: 420px 420px;
   background-repeat: repeat;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 [data-theme="power"] body::before {

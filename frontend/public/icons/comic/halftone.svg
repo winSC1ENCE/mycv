@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" preserveAspectRatio="xMidYMid">
+  <g fill="#0b1030" fill-opacity="0.16">
+    <circle cx="15" cy="15" r="5" />
+    <circle cx="45" cy="15" r="5" />
+    <circle cx="75" cy="15" r="5" />
+    <circle cx="105" cy="15" r="5" />
+    <circle cx="30" cy="45" r="5" />
+    <circle cx="60" cy="45" r="5" />
+    <circle cx="90" cy="45" r="5" />
+    <circle cx="0" cy="45" r="5" />
+    <circle cx="15" cy="75" r="5" />
+    <circle cx="45" cy="75" r="5" />
+    <circle cx="75" cy="75" r="5" />
+    <circle cx="105" cy="75" r="5" />
+    <circle cx="30" cy="105" r="5" />
+    <circle cx="60" cy="105" r="5" />
+    <circle cx="90" cy="105" r="5" />
+    <circle cx="0" cy="105" r="5" />
+  </g>
+  <g fill="#ffd500" fill-opacity="0.35">
+    <circle cx="30" cy="15" r="2" />
+    <circle cx="90" cy="15" r="2" />
+    <circle cx="15" cy="45" r="2" />
+    <circle cx="75" cy="45" r="2" />
+    <circle cx="30" cy="75" r="2" />
+    <circle cx="90" cy="75" r="2" />
+    <circle cx="15" cy="105" r="2" />
+    <circle cx="75" cy="105" r="2" />
+  </g>
+</svg>

@@ -63,6 +63,7 @@ class Person(Orderable):
         NONE = "none", "None"
         DOG = "dog", "Dog"
         VIRUS = "virus", "Virus"
+        COMIC = "comic", "Comic"
 
     slug = models.SlugField(max_length=80, unique=True, db_index=True)
     first_name = models.CharField(max_length=80)

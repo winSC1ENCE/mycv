@@ -29,6 +29,13 @@ describe("stores", () => {
     expect(store.theme).toBe("virus");
   });
 
+  it("toggleFunny works with the comic theme too", () => {
+    const store = useThemeStore();
+    store.setAvailableFunny("comic");
+    store.toggleFunny();
+    expect(store.theme).toBe("comic");
+  });
+
   it("setTheme ignores a funny id that isn't the available one", () => {
     const store = useThemeStore();
     store.setAvailableFunny("dog");

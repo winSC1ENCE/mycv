@@ -30,7 +30,7 @@ const profilePhoto = computed(() =>
 const photoAlt = computed(() => {
   const asset = pack.value ? props.cv.photo_funny : props.cv.photo;
   if (asset?.alt_text) return asset.alt_text;
-  return themeStore.theme === "dog" ? "Nicolas Mischler — comic portrait" : "Nicolas Mischler";
+  return pack.value?.photoAltFallback ?? "Nicolas Mischler";
 });
 
 // Optional themed hero block (e.g. Virus Mode's containment checklist).
@@ -105,6 +105,13 @@ const heroItems = computed<string[]>(() => {
   object-position: center center;
   border: 3px solid #0a0a0a;
   box-shadow: 4px 4px 0 #0a0a0a;
+}
+
+[data-theme="comic"] .profile-card__photo {
+  border-radius: 50%;
+  object-position: center center;
+  border: 3px solid var(--color-fg);
+  box-shadow: 4px 4px 0 var(--color-accent);
 }
 
 .profile-card__info {

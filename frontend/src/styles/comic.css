@@ -1,0 +1,333 @@
+/* "Comic Mode" — electrical-power superhero comic book: bright halftone
+   panels, bold ink borders, and a bolt cursor/spine running the whole page. */
+
+[data-theme="comic"] {
+  --color-bg: #fffdf2;
+  --color-bg-elevated: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #fff3b0;
+  --color-fg: #0b1030;
+  --color-fg-muted: #232a52;
+  --color-muted: #4a5185;
+  --color-accent: #ffd500;
+  --color-accent-soft: #fff1a8;
+  --color-border: #0b1030;
+  --color-timeline: #0b1030;
+
+  --pattern-comic: url("/icons/comic/halftone.svg");
+  --font-display: "Comic Neue", "Comic Sans MS", var(--font-sans);
+
+  cursor:
+    url("/icons/comic/cursor.svg") 4 4,
+    auto;
+}
+
+[data-theme="comic"] a,
+[data-theme="comic"] button,
+[data-theme="comic"] .timeline__node {
+  cursor:
+    url("/icons/comic/cursor.svg") 4 4,
+    pointer;
+}
+
+/* Body stays paper-white; halftone dots live on a fixed overlay gutter frame,
+   same technique as Dog Mode's spots. */
+[data-theme="comic"] body {
+  background-color: var(--color-bg);
+  background-image: none;
+}
+
+[data-theme="comic"] body::before,
+[data-theme="comic"] body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: calc((100vw - var(--content-max, 1100px)) / 2);
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--pattern-comic);
+  background-size: 480px 480px;
+  background-repeat: repeat;
+  opacity: 0.9;
+}
+
+[data-theme="comic"] body::before {
+  left: 0;
+}
+[data-theme="comic"] body::after {
+  right: 0;
+}
+
+@media (max-width: 720px) {
+  [data-theme="comic"] body::before,
+  [data-theme="comic"] body::after {
+    display: none;
+  }
+}
+
+/* --- Header brand: bolt glyph in electric yellow --- */
+[data-theme="comic"] .header__brand svg {
+  color: var(--color-accent);
+}
+
+/* --- Headings: bolt-yellow highlight, comic-panel tilt --- */
+[data-theme="comic"] .hero__title {
+  display: inline-block;
+  transform: rotate(1deg);
+}
+
+[data-theme="comic"] .section__title,
+[data-theme="comic"] h2.section__title {
+  display: inline-block;
+  background: var(--color-accent);
+  color: var(--color-fg);
+  padding: 0.1em 0.5em;
+  border: 2px solid var(--color-fg);
+  transform: rotate(0.5deg);
+}
+
+/* --- Cards: ink borders + chunky yellow-tinted offset shadow --- */
+[data-theme="comic"] .card,
+[data-theme="comic"] .timeline__item-card {
+  border: 3px solid var(--color-border);
+  box-shadow: 6px 6px 0 var(--color-accent);
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
+}
+
+[data-theme="comic"] .card:hover,
+[data-theme="comic"] .timeline__item-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 10px 10px 0 var(--color-accent);
+}
+
+/* --- Buttons: chunky comic feel --- */
+[data-theme="comic"] .button {
+  border: 2px solid var(--color-fg);
+  box-shadow: 3px 3px 0 var(--color-accent);
+  font-weight: 700;
+}
+
+[data-theme="comic"] .button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--color-accent);
+}
+
+[data-theme="comic"] .button:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--color-accent);
+}
+
+/* --- Tags: blocky no-radius badges --- */
+[data-theme="comic"] .tag {
+  border: 2px solid var(--color-fg);
+  border-radius: 0;
+  background: var(--color-accent-soft);
+  color: var(--color-fg);
+  font-weight: 600;
+  box-shadow: 2px 2px 0 var(--color-fg);
+}
+
+/* --- Skill dots: bolt-yellow pen-stroke circles --- */
+[data-theme="comic"] .skill-dot {
+  background: transparent;
+  border: 2px solid var(--color-fg);
+}
+[data-theme="comic"] .skill-dot--filled {
+  background: var(--color-accent);
+  border-color: var(--color-fg);
+}
+[data-theme="comic"] .skill-level-label {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-fg);
+}
+[data-theme="comic"] .skill-row {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: var(--color-fg);
+}
+[data-theme="comic"] .skill-row:hover {
+  background: transparent;
+}
+
+/* --- Alt timeline (central-axis, alternating, expandable) --- */
+[data-theme="comic"] .timeline--alt {
+  background: rgba(255, 255, 255, 0.86);
+  border: 3px solid var(--color-fg);
+  box-shadow: 10px 10px 0 var(--color-accent);
+  padding: var(--space-8) var(--space-5);
+  position: relative;
+}
+
+[data-theme="comic"] .section .container:has(> .timeline--alt) {
+  padding-top: var(--space-3);
+  padding-bottom: var(--space-3);
+}
+
+[data-theme="comic"] .section[aria-labelledby="timeline-title"] .section__title {
+  font-size: 1.6em;
+  margin-bottom: var(--space-3);
+}
+
+/* Spine = bolt trail */
+[data-theme="comic"] .timeline--alt::before {
+  background: url("/icons/comic/bolt-trail.svg") center top / 96px auto repeat-y;
+  width: 96px;
+  border-radius: 0;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+/* Node = white circle with a random comic icon (set via inline --node-icon) */
+[data-theme="comic"] .timeline__node {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  background: #ffffff;
+  border: 3px solid var(--color-fg);
+  border-radius: 50%;
+  box-shadow: 3px 3px 0 var(--color-accent);
+  -webkit-mask-image: none;
+  mask-image: none;
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
+}
+
+[data-theme="comic"] .timeline__node:hover {
+  transform: translate(-1px, -1px) scale(1.05);
+  box-shadow: 5px 5px 0 var(--color-accent);
+}
+
+[data-theme="comic"] .timeline__node:active {
+  transform: translate(1px, 1px) scale(0.95);
+  box-shadow: 1px 1px 0 var(--color-accent);
+}
+
+[data-theme="comic"] .timeline__node::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background-image: var(--node-icon);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+[data-theme="comic"] .timeline__card {
+  background: #ffffff;
+  border-radius: 0;
+  border: 3px solid var(--color-fg);
+  box-shadow: 8px 8px 0 var(--color-accent);
+  transition:
+    transform var(--motion-fast) var(--easing-out),
+    box-shadow var(--motion-fast) var(--easing-out);
+}
+
+[data-theme="comic"] .timeline__card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 11px 11px 0 var(--color-accent);
+}
+
+[data-theme="comic"] .timeline__date {
+  gap: 8px;
+}
+
+[data-theme="comic"] .timeline__date-part {
+  font-family: var(--font-display);
+  color: var(--color-fg);
+  background: var(--color-accent);
+  border: 2px solid var(--color-fg);
+  padding: 6px 12px;
+  box-shadow: 3px 3px 0 var(--color-fg);
+  transform: rotate(2deg);
+}
+
+[data-theme="comic"] .timeline__date-part--end {
+  transform: rotate(-2deg);
+}
+
+[data-theme="comic"] .timeline__date-sep {
+  display: none;
+}
+
+[data-theme="comic"] .timeline__card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-fg);
+  letter-spacing: -0.01em;
+}
+
+[data-theme="comic"] .timeline__card-sub {
+  color: var(--color-fg);
+  font-weight: 600;
+  opacity: 0.75;
+}
+
+[data-theme="comic"] .timeline__chevron {
+  color: var(--color-fg);
+  font-weight: 900;
+}
+
+[data-theme="comic"] .timeline__detail {
+  border-top: 3px solid var(--color-fg);
+}
+
+[data-theme="comic"] .kind-badge,
+[data-theme="comic"] .timeline__kind {
+  border: 2px solid var(--color-fg);
+  border-radius: 0;
+  background: var(--color-accent);
+  color: var(--color-fg);
+  box-shadow: 2px 2px 0 var(--color-fg);
+}
+
+[data-theme="comic"] .timeline__card,
+[data-theme="comic"] .timeline__row--left .timeline__card,
+[data-theme="comic"] .timeline__row--right .timeline__card {
+  border: 3px solid var(--color-fg);
+}
+
+/* Bolt counter chip — fixed at bottom-center, mirrors the dog pet-counter. */
+[data-theme="comic"] .dog-pet-counter {
+  position: fixed;
+  bottom: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: var(--color-accent);
+  color: var(--color-fg);
+  border: 2px solid var(--color-fg);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 2px 2px 0 var(--color-fg);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Profile hero "Powered by:" checklist. */
+[data-theme="comic"] .profile-hero__lead {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+[data-theme="comic"] .profile-hero__item span[aria-hidden="true"] {
+  color: var(--color-fg);
+  background: var(--color-accent);
+  font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="comic"] .card,
+  [data-theme="comic"] .timeline__card,
+  [data-theme="comic"] .timeline__node,
+  [data-theme="comic"] .button {
+    transition: none;
+  }
+}

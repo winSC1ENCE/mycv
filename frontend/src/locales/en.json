@@ -36,6 +36,30 @@
           "automation": "Automation"
         }
       }
+    },
+    "comic": {
+      "counter": "{n} volts jolted",
+      "profile": {
+        "lead": "Powered by:",
+        "items": [
+          "Rapid iteration",
+          "High-voltage debugging",
+          "Full-stack current",
+          "Short-circuit fixes"
+        ]
+      },
+      "egg": {
+        "button": "⚡ Check voltage",
+        "title": "Power Grid Diagnostics",
+        "intro": "Voltage readings — output under full load:",
+        "valueHead": "Voltage",
+        "footnote": "Warning: the candidate operates at superhero-grade voltage at all times.",
+        "rows": {
+          "python": "Python knowledge",
+          "sql": "SQL skills",
+          "automation": "Automation"
+        }
+      }
     }
   },
   "skills": {

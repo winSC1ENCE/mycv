@@ -9,11 +9,13 @@
 
 import { dogPack } from "./dog";
 import { virusPack } from "./virus";
+import { comicPack } from "./comic";
 import type { ThemePack } from "./types";
 
 export const FUNNY_PACKS = {
   dog: dogPack,
   virus: virusPack,
+  comic: comicPack,
 } as const;
 
 export type FunnyThemeId = keyof typeof FUNNY_PACKS;

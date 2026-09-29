@@ -13,6 +13,7 @@ import "./styles/tokens.css";
 import "./styles/normal.css";
 import "./styles/dog.css";
 import "./styles/virus.css";
+import "./styles/comic.css";
 import "./styles/app.css";
 
 const i18n = createI18n({

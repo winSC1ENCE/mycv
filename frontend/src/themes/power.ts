@@ -1,21 +1,20 @@
 /**
  * Power Mode theme pack — electrical-power superhero comic-book style.
  *
- * High-voltage energy: a glowing spark backdrop, bolt/POW timeline icons, and a bolt
- * mark on the header brand + favicon. Follows the dog.ts / virus.ts shape.
+ * High-voltage energy: a glowing spark backdrop, a bolt/warning/tower/bulb/
+ * windmill/spark timeline icon set, and a bolt mark on the header brand +
+ * favicon. Follows the dog.ts / virus.ts shape.
  */
 
 import type { ThemePack } from "./types";
 
 const POWER_ICONS = [
   "/icons/power/bolt.svg",
-  "/icons/power/pow.svg",
-  "/icons/power/zap-burst.svg",
-  "/icons/power/battery.svg",
-  "/icons/power/plug.svg",
-  "/icons/power/star-burst.svg",
-  "/icons/power/thunder-cloud.svg",
-  "/icons/power/boom.svg",
+  "/icons/power/warning.svg",
+  "/icons/power/tower.svg",
+  "/icons/power/bulb.svg",
+  "/icons/power/windmill.svg",
+  "/icons/power/spark.svg",
 ] as const;
 
 export const powerPack: ThemePack = {
@@ -32,13 +31,11 @@ export const powerPack: ThemePack = {
     en: {
       iconPhrases: {
         bolt: ["ZAP!", "ZOT!", "STRIKE!", "CRACKLE!"],
-        pow: ["POW!", "BAM!", "WHAM!", "SMACK!"],
-        "zap-burst": ["ZZZAP!", "SURGE!", "FLASH!", "OVERLOAD!"],
-        battery: ["CHARGED!", "TOPPED UP!", "FULL POWER!", "JUICED!"],
-        plug: ["PLUGGED IN!", "CONNECTED!", "LIVE WIRE!", "ONLINE!"],
-        "star-burst": ["KA-POW!", "BOOM!", "BLAST!", "IMPACT!"],
-        "thunder-cloud": ["RUMBLE!", "STORM!", "BRACE!", "INCOMING!"],
-        boom: ["KABOOM!", "BLAM!", "DETONATE!", "SHAZAM!"],
+        warning: ["HIGH VOLTAGE!", "DANGER!", "CAUTION!", "LIVE WIRE!"],
+        tower: ["GRID LIVE!", "TRANSMITTING!", "LINES UP!", "POWERED GRID!"],
+        bulb: ["LIGHTS ON!", "BRIGHT IDEA!", "GLOWING!", "ILLUMINATED!"],
+        windmill: ["SPINNING!", "CLEAN POWER!", "WIND POWER!", "RENEWABLE!"],
+        spark: ["FLASH!", "JOLT!", "QUICK ZAP!", "SPARKLE!"],
       },
       defaultPhrases: ["SPARK!", "SHORT CIRCUIT!", "HIGH VOLTAGE!", "AMPED!", "ELECTRIFYING!"],
       praise: {
@@ -51,13 +48,11 @@ export const powerPack: ThemePack = {
     de: {
       iconPhrases: {
         bolt: ["ZACK!", "BLITZ!", "TREFFER!", "KNISTER!"],
-        pow: ["WUMM!", "BUMM!", "WHAM!", "KLATSCH!"],
-        "zap-burst": ["ZZZAP!", "SCHUB!", "BLITZ!", "ÜBERLASTUNG!"],
-        battery: ["GELADEN!", "AUFGELADEN!", "VOLLE KRAFT!", "GESTÄRKT!"],
-        plug: ["EINGESTECKT!", "VERBUNDEN!", "UNTER STROM!", "ONLINE!"],
-        "star-burst": ["KA-WUMM!", "BUMM!", "EXPLOSION!", "EINSCHLAG!"],
-        "thunder-cloud": ["GRUMMEL!", "GEWITTER!", "ACHTUNG!", "ES NAHT!"],
-        boom: ["KABUMM!", "KRACH!", "ZÜNDUNG!", "SCHAZAM!"],
+        warning: ["HOCHSPANNUNG!", "GEFAHR!", "VORSICHT!", "UNTER STROM!"],
+        tower: ["NETZ LIVE!", "ÜBERTRAGUNG!", "LEITUNG STEHT!", "NETZ AKTIV!"],
+        bulb: ["LICHT AN!", "GUTE IDEE!", "LEUCHTET!", "ERHELLT!"],
+        windmill: ["DREHT SICH!", "ÖKOSTROM!", "WINDKRAFT!", "ERNEUERBAR!"],
+        spark: ["BLITZ!", "RUCK!", "SCHNELLER ZAP!", "FUNKELN!"],
       },
       defaultPhrases: ["FUNKE!", "KURZSCHLUSS!", "HOCHSPANNUNG!", "GELADEN!", "ELEKTRISIEREND!"],
       praise: {

@@ -75,7 +75,7 @@ describe("phrasesForIcon / randomPhrase / praiseFor (locale-aware)", () => {
   it("matches power buckets per locale with a default fallback", () => {
     expect(phrasesForIcon("power", "en", "/icons/power/bolt.svg")).toContain("ZAP!");
     expect(phrasesForIcon("power", "de", "/icons/power/bolt.svg")).toContain("ZACK!");
-    expect(phrasesForIcon("power", "en", "/icons/power/pow.svg")).toContain("POW!");
+    expect(phrasesForIcon("power", "en", "/icons/power/bulb.svg")).toContain("LIGHTS ON!");
     expect(phrasesForIcon("power", "de", "/icons/power/unknown.svg")).toContain("FUNKE!");
   });
 

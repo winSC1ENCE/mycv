@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <radialGradient id="warning-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd500" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#ffd500" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="url(#warning-glow)" />
+
+  <!-- high-voltage warning triangle: bold navy badge, universally-read power symbol -->
+  <path
+    d="M32 6 L59 55 L5 55 Z"
+    fill="#0b1030"
+    stroke="#ffd500"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+
+  <!-- glowing light-yellow bolt cutout -->
+  <path
+    d="M36 20 L23 40 L31 40 L27 52 L44 31 L35 31 Z"
+    fill="#ffe985"
+    fill-opacity="0.92"
+  />
+</svg>

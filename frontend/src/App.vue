@@ -7,9 +7,11 @@ import { useThemeStore } from "@/stores/theme";
 import { useLocaleStore } from "@/stores/locale";
 import { packFor } from "@/themes/registry";
 import { useAccessKey } from "@/composables/useAccessKey";
+import { useFavicon } from "@/composables/useFavicon";
 import ErrorBoundary from "@/components/base/ErrorBoundary.vue";
 import FunBubbles from "@/components/timeline/FunBubbles.vue";
 import EasterEggButton from "@/components/base/EasterEggButton.vue";
+import Icon from "@/components/base/Icon.vue";
 
 const cvStore = useCvStore();
 const themeStore = useThemeStore();
@@ -18,6 +20,11 @@ const { cv } = storeToRefs(cvStore);
 const { theme, activeFunny, funnyAvailable } = storeToRefs(themeStore);
 const { locale } = storeToRefs(localeStore);
 const { t, locale: i18nLocale } = useI18n();
+
+// Active pack's optional header-brand glyph (e.g. Comic Mode's bolt).
+const pack = computed(() => packFor(theme.value));
+
+useFavicon();
 
 // The funny theme the public site exposes is admin-controlled (server value).
 watch(
@@ -44,6 +51,7 @@ onMounted(() => {
   <header class="header">
     <div class="container header__row">
       <router-link :to="{ name: 'home' }" class="header__brand">
+        <Icon v-if="pack?.brandIcon" :name="pack.brandIcon" :size="18" />
         {{ cv ? cv.full_name : "mycv" }}
       </router-link>
       <div class="header__actions">

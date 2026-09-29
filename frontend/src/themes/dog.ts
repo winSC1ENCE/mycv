@@ -27,6 +27,7 @@ export const dogPack: ThemePack = {
   profilePhoto: "/profile-dog.png",
   counterKey: "timeline.pet_counter",
   nodeIcons: DOG_ICONS,
+  photoAltFallback: "Nicolas Mischler — comic portrait",
   phrases: {
     en: {
       iconPhrases: {

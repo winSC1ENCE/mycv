@@ -9,6 +9,8 @@
  * stylesheet. Nothing else needs to know the id.
  */
 
+import type { IconName } from "@/components/base/Icon.vue";
+
 /** A localized hover quip for a skill/technology name (Virus Mode etc.). */
 export interface SkillQuip {
   en: string;
@@ -77,4 +79,10 @@ export interface ThemePack {
   hero?: HeroBlock;
   /** Optional floating easter-egg button + modal. */
   easterEgg?: EasterEggConfig;
+  /** Optional profile-photo alt-text fallback used when the asset has none. */
+  photoAltFallback?: string;
+  /** Optional `Icon.vue` name shown next to the header brand while this theme is active. */
+  brandIcon?: IconName;
+  /** Optional favicon asset overriding the default `/app-icon.png` while this theme is active. */
+  favicon?: string;
 }

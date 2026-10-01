@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import io
 from unittest.mock import patch
 
 import pytest
 from django.contrib.auth import get_user_model
+from pypdf import PdfReader, PdfWriter
 from rest_framework.test import APIClient
 
 from apps.cv.tests.factories import AccessKeyFactory, PersonFactory, ReadmeFactory
@@ -48,6 +50,18 @@ class TestPermissionsAndValidation:
     def test_invalid_doc_400(self, admin_client: APIClient) -> None:
         readme = ReadmeFactory()
         resp = admin_client.post(_url(readme.pk), {"doc": "cover"}, format="json")
+        assert resp.status_code == 400
+
+    def test_include_readme_requires_letter_doc_400(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory()
+        resp = admin_client.post(
+            _url(readme.pk), {"doc": "readme", "include_readme": True}, format="json"
+        )
+        assert resp.status_code == 400
+
+    def test_readme_svgs_must_be_list(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory()
+        resp = admin_client.post(_url(readme.pk), {"readme_svgs": "nope"}, format="json")
         assert resp.status_code == 400
 
     def test_missing_readme_404(self, admin_client: APIClient) -> None:
@@ -119,7 +133,7 @@ class TestPdfRendering:
         assert "<a " in html
         assert f'href="http://testserver/?key={key.token}"' in html
 
-    def test_badges_token_renders_chips_and_name_is_not_a_heading(
+    def test_badges_token_renders_chips_and_header_shows_name(
         self, admin_client: APIClient
     ) -> None:
         readme = ReadmeFactory(
@@ -133,10 +147,20 @@ class TestPdfRendering:
         assert "{{badges}}" not in html
         assert "rm-badge" in html
         assert "v4.2.0" in html  # version chip value
-        assert "<h1>My Manual Title</h1>" in html  # author's heading is the H1
-        # name is only PDF metadata (<title>), never a rendered heading/band
-        assert "<h1>ACME GmbH</h1>" not in html
-        assert "rm-name" not in html
+        assert "<h1>My Manual Title</h1>" in html  # author's heading stays in the body
+        # the corporate header band carries the name, distinct from the body heading
+        assert '<h1 class="doc-head__title">ACME GmbH</h1>' in html
+        assert 'class="doc-head__kicker">README<' in html
+
+    def test_letter_renders_corporate_header_with_letter_kicker(
+        self, admin_client: APIClient
+    ) -> None:
+        readme = ReadmeFactory(name="ACME GmbH", letter_content="Dear team")
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
+        html = render.call_args.args[0]
+        assert '<h1 class="doc-head__title">ACME GmbH</h1>' in html
+        assert 'class="doc-head__kicker">Motivation Letter<' in html
 
     def test_base_url_override(self, admin_client: APIClient) -> None:
         person = PersonFactory(is_published=True)
@@ -286,6 +310,78 @@ class TestLetterBlankLines:
             admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
         html = render.call_args.args[0]
         assert "<p>&nbsp;</p>" in html or "<p>\xa0</p>" in html
+
+
+def _fake_pdf(width: int) -> bytes:
+    writer = PdfWriter()
+    writer.add_blank_page(width=width, height=100)
+    buf = io.BytesIO()
+    writer.write(buf)
+    return buf.getvalue()
+
+
+class TestCombinedReadmeAndLetter:
+    """``include_readme`` merges the README PDF in front of the letter."""
+
+    def test_merges_readme_before_letter_in_render_and_page_order(
+        self, admin_client: APIClient
+    ) -> None:
+        readme = ReadmeFactory(
+            name="ACME GmbH", content="README body", letter_content="Letter body"
+        )
+        widths = iter([250, 150])  # README rendered first, then the letter
+        with patch(
+            "apps.exports.readme._render_pdf",
+            side_effect=lambda *a, **k: _fake_pdf(next(widths)),
+        ) as render:
+            resp = admin_client.post(
+                _url(readme.pk), {"doc": "letter", "include_readme": True}, format="json"
+            )
+        assert resp.status_code == 200
+        assert render.call_count == 2
+        assert "README body" in render.call_args_list[0].args[0]
+        assert "Letter body" in render.call_args_list[1].args[0]
+        reader = PdfReader(io.BytesIO(resp.content))
+        assert len(reader.pages) == 2
+        assert [int(p.mediabox.width) for p in reader.pages] == [250, 150]
+        assert 'filename="acme-gmbh-letter-with-readme.pdf"' in resp["Content-Disposition"]
+
+    def test_omitted_flag_renders_letter_only(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(letter_content="Letter body")
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            resp = admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
+        assert render.call_count == 1
+        assert "with-readme" not in resp["Content-Disposition"]
+
+    def test_readme_mermaid_uses_readme_svgs_not_letter_svgs(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(
+            content="```mermaid\nflowchart TD\nA-->B\n```",
+            letter_content="```mermaid\nflowchart TD\nC-->D\n```",
+        )
+        widths = iter([250, 150])
+        with (
+            patch(
+                "apps.exports.readme._render_pdf",
+                side_effect=lambda *a, **k: _fake_pdf(next(widths)),
+            ) as render,
+            patch("apps.exports.readme._page_count", return_value=1),
+        ):
+            admin_client.post(
+                _url(readme.pk),
+                {
+                    "doc": "letter",
+                    "include_readme": True,
+                    "svgs": ["<svg>LETTER</svg>"],
+                    "readme_svgs": ["<svg>README</svg>"],
+                },
+                format="json",
+            )
+        readme_html = render.call_args_list[0].args[0]
+        letter_html = render.call_args_list[1].args[0]
+        assert "<svg>README</svg>" in readme_html
+        assert "<svg>LETTER</svg>" not in readme_html
+        assert "<svg>LETTER</svg>" in letter_html
+        assert "<svg>README</svg>" not in letter_html
 
 
 class TestRenderReadmeBodyHelper:

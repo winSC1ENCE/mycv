@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import io
 import re
+from typing import Any
 
 import markdown as md
 import nh3
@@ -34,7 +35,7 @@ from rest_framework.views import APIView
 
 from apps.cv import models
 
-from .views import _read_css, _render_pdf
+from .views import _assemble_pdf, _read_css, _render_pdf
 
 VALID_LANGS = {"en", "de"}
 VALID_DOCS = {"readme", "letter"}
@@ -180,13 +181,82 @@ def _page_count(pdf: bytes) -> int:
     return len(PdfReader(io.BytesIO(pdf)).pages)
 
 
+def _label_for(doc: str) -> str:
+    return "Motivation Letter" if doc == "letter" else "README"
+
+
+def _render_document(
+    readme: models.Readme,
+    *,
+    lang: str,
+    doc: str,
+    svgs: list[object],
+    public_url: str,
+    font_config: Any | None = None,
+) -> bytes:
+    """Render one README/Letter document: markdown -> sanitized HTML -> PDF.
+
+    Shares the corporate-header template/CSS with the other doc type; applies
+    the one-page-fit diagram-shrink ladder only for ``doc == "readme"``.
+    """
+    ctx = _placeholder_context(readme, public_url)
+    body = render_readme_body(readme, lang, public_url, doc=doc)
+    raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)
+    clean = nh3.clean(raw_html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
+    clean = _inject_mermaid(clean, [str(svg) for svg in svgs])
+    if doc == "letter":
+        badges = _badges_html("reference", readme.letter_reference, ctx["{{updated}}"])
+    else:
+        badges = _badges_html("version", readme.version, ctx["{{updated}}"])
+    clean = clean.replace("{{badges}}", badges)
+
+    css = _read_css("readme.css")
+    label = _label_for(doc)
+
+    def render(extra_css: str = "") -> bytes:
+        html = render_to_string(
+            "exports/readme.html",
+            {
+                "name": readme.name,
+                "kicker": label,
+                "person_name": readme.person.full_name,
+                "body": mark_safe(clean),  # nosec B308 B703 # noqa: S308
+                "css": css + extra_css,
+                "lang": lang,
+            },
+        )
+        return _render_pdf(
+            html,
+            base_url=str(settings.BASE_DIR),
+            title=f"{readme.name} — {label}",
+            author=readme.person.full_name,
+            font_config=font_config,
+        )
+
+    pdf_bytes = render()
+    if doc == "readme" and svgs:
+        # A README must stay a one-pager: shrink the diagrams stepwise until
+        # everything fits (remaining overflow means the text itself is too long).
+        for cap in _DIAGRAM_HEIGHT_STEPS:
+            if _page_count(pdf_bytes) == 1:
+                break
+            pdf_bytes = render(
+                f"\n.rm-body img, .rm-body svg {{ max-height: {cap}; width: auto; }}"
+            )
+    return pdf_bytes
+
+
 class ReadmePdfView(APIView):
     """``POST /api/admin/readmes/<pk>/pdf/`` — stream a rendered README PDF.
 
     Body: ``{"lang": "en"|"de", "doc": "readme"|"letter", "svgs": [...],
-    "base_url": "https://…/"}`` — ``doc`` selects the README or the motivation
-    letter, ``svgs`` are the client-rendered Mermaid diagrams (ordered by
-    appearance), and ``base_url`` is the visitor-facing origin for the access link.
+    "base_url": "https://…/", "include_readme": bool, "readme_svgs": [...]}``
+    — ``doc`` selects the README or the motivation letter, ``svgs`` are the
+    client-rendered Mermaid diagrams for that document (ordered by appearance),
+    and ``base_url`` is the visitor-facing origin for the access link.
+    ``include_readme`` (only valid when ``doc == "letter"``) merges the README
+    PDF in front of the letter into one document; ``readme_svgs`` are the
+    README body's own Mermaid diagrams, used only in that case.
     """
 
     permission_classes = [IsAdminUser]
@@ -201,6 +271,12 @@ class ReadmePdfView(APIView):
         svgs = request.data.get("svgs", [])
         if not isinstance(svgs, list):
             raise ValidationError({"svgs": "Must be a list of SVG strings."})
+        include_readme = bool(request.data.get("include_readme", False))
+        if include_readme and doc != "letter":
+            raise ValidationError({"include_readme": 'Only valid when doc is "letter".'})
+        readme_svgs = request.data.get("readme_svgs", [])
+        if not isinstance(readme_svgs, list):
+            raise ValidationError({"readme_svgs": "Must be a list of SVG strings."})
 
         readme = get_object_or_404(
             models.Readme.objects.select_related("access_key", "person"), pk=pk
@@ -212,50 +288,50 @@ class ReadmePdfView(APIView):
         if not (isinstance(base_url, str) and base_url.startswith(("http://", "https://"))):
             base_url = request.build_absolute_uri("/")
         public_url = base_url
-        ctx = _placeholder_context(readme, public_url)
-        body = render_readme_body(readme, lang, public_url, doc=doc)
-        raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)
-        clean = nh3.clean(raw_html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
-        clean = _inject_mermaid(clean, [str(svg) for svg in svgs])
-        if doc == "letter":
-            badges = _badges_html("reference", readme.letter_reference, ctx["{{updated}}"])
-        else:
-            badges = _badges_html("version", readme.version, ctx["{{updated}}"])
-        clean = clean.replace("{{badges}}", badges)
 
-        css = _read_css("readme.css")
-        label = "Motivation Letter" if doc == "letter" else "README"
+        font_config = None
+        if include_readme:
+            # Shared across both renders: decompress the woff2 fonts once per
+            # request instead of once per document (mirrors CertificatesPdfView).
+            from weasyprint.text.fonts import FontConfiguration  # lazy, like _render_pdf
 
-        def render(extra_css: str = "") -> bytes:
-            html = render_to_string(
-                "exports/readme.html",
-                {
-                    "name": readme.name,
-                    "body": mark_safe(clean),  # nosec B308 B703 # noqa: S308
-                    "css": css + extra_css,
-                    "lang": lang,
-                },
-            )
-            return _render_pdf(
-                html,
-                base_url=str(settings.BASE_DIR),
-                title=f"{readme.name} — {label}",
-                author=readme.person.full_name,
-            )
-
-        pdf_bytes = render()
-        if doc == "readme" and svgs:
-            # A README must stay a one-pager: shrink the diagrams stepwise until
-            # everything fits (remaining overflow means the text itself is too long).
-            for cap in _DIAGRAM_HEIGHT_STEPS:
-                if _page_count(pdf_bytes) == 1:
-                    break
-                pdf_bytes = render(
-                    f"\n.rm-body img, .rm-body svg {{ max-height: {cap}; width: auto; }}"
-                )
+            font_config = FontConfiguration()
 
         slug = slugify(readme.name) or "readme"
-        filename = f"{slug}-letter.pdf" if doc == "letter" else f"{slug}.pdf"
+        if include_readme:
+            readme_pdf_bytes = _render_document(
+                readme,
+                lang=lang,
+                doc="readme",
+                svgs=readme_svgs,
+                public_url=public_url,
+                font_config=font_config,
+            )
+            letter_pdf_bytes = _render_document(
+                readme,
+                lang=lang,
+                doc=doc,
+                svgs=svgs,
+                public_url=public_url,
+                font_config=font_config,
+            )
+            pdf_bytes = _assemble_pdf(
+                [readme_pdf_bytes, letter_pdf_bytes],
+                title=f"{readme.name} — README + {_label_for(doc)}",
+                author=readme.person.full_name,
+            )
+            filename = f"{slug}-letter-with-readme.pdf"
+        else:
+            pdf_bytes = _render_document(
+                readme,
+                lang=lang,
+                doc=doc,
+                svgs=svgs,
+                public_url=public_url,
+                font_config=font_config,
+            )
+            filename = f"{slug}-letter.pdf" if doc == "letter" else f"{slug}.pdf"
+
         resp = HttpResponse(pdf_bytes, content_type="application/pdf")
         resp["Content-Disposition"] = f'attachment; filename="{filename}"'
         return resp

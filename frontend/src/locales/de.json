@@ -172,6 +172,7 @@
       "newFromTemplate": "Aus Vorlage erstellen",
       "exportEn": "PDF EN",
       "exportDe": "PDF DE",
+      "includeReadme": "README anhängen",
       "saveFirst": "Vor dem Export speichern",
       "goToLetter": "Motivationsschreiben öffnen"
     },

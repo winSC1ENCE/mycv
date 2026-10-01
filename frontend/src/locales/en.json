@@ -167,6 +167,7 @@
       "newFromTemplate": "New from template",
       "exportEn": "PDF EN",
       "exportDe": "PDF DE",
+      "includeReadme": "Append README",
       "saveFirst": "Save before exporting",
       "goToLetter": "Open motivation letter"
     },

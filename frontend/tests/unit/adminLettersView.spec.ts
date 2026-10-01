@@ -96,6 +96,27 @@ describe("AdminLettersView", () => {
       expect.any(Array),
       expect.any(String),
       "letter",
+      false,
+      [],
+    );
+  });
+
+  it("exports with include_readme and the README's own Mermaid SVGs when checked", async () => {
+    const wrapper = mountView();
+    await flushPromises();
+    await wrapper.find(".btn-icon").trigger("click");
+    await flushPromises();
+    await wrapper.find('input[type="checkbox"]').setValue(true);
+    await byText(wrapper.findAll("button"), "PDF EN")!.trigger("click");
+    await flushPromises();
+    expect(readmeApi.pdf).toHaveBeenCalledWith(
+      5,
+      "en",
+      expect.any(Array),
+      expect.any(String),
+      "letter",
+      true,
+      expect.any(Array),
     );
   });
 

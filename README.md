@@ -21,7 +21,7 @@ Vue 3 + Django REST + PostgreSQL behind Docker and a reverse proxy.
 - **Image lightbox** + **PDF card** previews (shared `ImageLightbox` + `MediaPreview` components)
 - Drag-and-drop reordering, image upload with crop, file validation, Esc-to-close admin modals
 - Server-rendered **PDF export** via WeasyPrint (admin-only, EN/DE) — the full CV in a modern two-column layout, a **Certificates PDF** bundling the documents attached to Experience/Education entries into one file (a CI header per entry; image attachments converted to a page, PDF attachments merged in verbatim via `pypdf`), plus per-application documents (below). Triggered from the admin Dashboard **Exports** card.
-- **Application documents** — an admin **Applications** section for per-application *README* cover docs and a **Motivation Letters** section, both authored in bilingual (EN/DE) Markdown with **Mermaid diagrams** (rasterized to PNG for the PDF), `{{placeholder}}` tokens (access link/expiry auto-filled from the linked `AccessKey`), native version/updated/reference badges, and per-language PDF export
+- **Application documents** — an admin **Applications** section for per-application *README* cover docs and a **Motivation Letters** section, both authored in bilingual (EN/DE) Markdown with **Mermaid diagrams** (rasterized to PNG for the PDF), `{{placeholder}}` tokens (access link/expiry auto-filled from the linked `AccessKey`), native version/updated/reference badges, per-language PDF export, and all four PDF exports (CV, Certificates, README, Letter) sharing the same corporate header design — a Motivation Letter export can optionally append the README PDF in front of it as one combined document
 - **SEO**: JSON-LD Person schema, OG + Twitter tags, sitemap.xml, robots.txt
 - **WCAG 2 AA** accessibility (enforced in CI via axe-playwright)
 - Optional **Sentry** integration (DSN-gated; no-op without)
@@ -161,6 +161,7 @@ mycv/
 | [`docs/architecture.md`](docs/architecture.md) | Stack overview, request flows, theming, auth, security |
 | [`docs/erd.md`](docs/erd.md) | Mermaid ERD + schema conventions |
 | [`docs/deployment.md`](docs/deployment.md) | Self-host on any Docker-capable VPS behind a reverse proxy |
+| [`docs/devops.md`](docs/devops.md) | Branching (GitFlow), local dev/test, releasing `develop → main`, and triggering a deploy via tag push |
 
 ---
 

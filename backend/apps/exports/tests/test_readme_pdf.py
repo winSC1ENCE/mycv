@@ -50,6 +50,18 @@ class TestPermissionsAndValidation:
         resp = admin_client.post(_url(readme.pk), {"doc": "cover"}, format="json")
         assert resp.status_code == 400
 
+    def test_include_readme_requires_letter_doc_400(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory()
+        resp = admin_client.post(
+            _url(readme.pk), {"doc": "readme", "include_readme": True}, format="json"
+        )
+        assert resp.status_code == 400
+
+    def test_readme_svgs_must_be_list(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory()
+        resp = admin_client.post(_url(readme.pk), {"readme_svgs": "nope"}, format="json")
+        assert resp.status_code == 400
+
     def test_missing_readme_404(self, admin_client: APIClient) -> None:
         resp = admin_client.post(_url(9999), {"lang": "en"}, format="json")
         assert resp.status_code == 404
@@ -119,7 +131,7 @@ class TestPdfRendering:
         assert "<a " in html
         assert f'href="http://testserver/?key={key.token}"' in html
 
-    def test_badges_token_renders_chips_and_name_is_not_a_heading(
+    def test_badges_token_renders_chips_and_header_shows_name(
         self, admin_client: APIClient
     ) -> None:
         readme = ReadmeFactory(
@@ -133,10 +145,20 @@ class TestPdfRendering:
         assert "{{badges}}" not in html
         assert "rm-badge" in html
         assert "v4.2.0" in html  # version chip value
-        assert "<h1>My Manual Title</h1>" in html  # author's heading is the H1
-        # name is only PDF metadata (<title>), never a rendered heading/band
-        assert "<h1>ACME GmbH</h1>" not in html
-        assert "rm-name" not in html
+        assert "<h1>My Manual Title</h1>" in html  # author's heading stays in the body
+        # the corporate header band carries the name, distinct from the body heading
+        assert '<h1 class="doc-head__title">ACME GmbH</h1>' in html
+        assert 'class="doc-head__kicker">README<' in html
+
+    def test_letter_renders_corporate_header_with_letter_kicker(
+        self, admin_client: APIClient
+    ) -> None:
+        readme = ReadmeFactory(name="ACME GmbH", letter_content="Dear team")
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
+        html = render.call_args.args[0]
+        assert '<h1 class="doc-head__title">ACME GmbH</h1>' in html
+        assert 'class="doc-head__kicker">Motivation Letter<' in html
 
     def test_base_url_override(self, admin_client: APIClient) -> None:
         person = PersonFactory(is_published=True)
@@ -286,6 +308,87 @@ class TestLetterBlankLines:
             admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
         html = render.call_args.args[0]
         assert "<p>&nbsp;</p>" in html or "<p>\xa0</p>" in html
+
+
+class TestCombinedReadmeAndLetter:
+    """``include_readme`` renders the README and Letter as ONE document (one
+
+    WeasyPrint call), so the page counter in the footer stays continuous
+    across both parts instead of each part restarting its own count.
+    """
+
+    def test_merges_readme_before_letter_as_one_document(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(
+            name="ACME GmbH", content="README body", letter_content="Letter body"
+        )
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            resp = admin_client.post(
+                _url(readme.pk), {"doc": "letter", "include_readme": True}, format="json"
+            )
+        assert resp.status_code == 200
+        # No diagrams to fit, so this is a single combined render — not two
+        # separate documents stitched together afterward.
+        assert render.call_count == 1
+        html = render.call_args.args[0]
+        assert '<section class="doc-section doc-section--readme">' in html
+        assert 'doc-section--break">' in html
+        assert "README body" in html
+        assert "Letter body" in html
+        assert html.index("README body") < html.index("Letter body")
+        assert 'filename="acme-gmbh-letter-with-readme.pdf"' in resp["Content-Disposition"]
+
+    def test_omitted_flag_renders_letter_only(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(letter_content="Letter body")
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
+            resp = admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
+        assert render.call_count == 1
+        assert "<section" not in render.call_args.args[0]
+        assert "with-readme" not in resp["Content-Disposition"]
+
+    def test_readme_mermaid_uses_readme_svgs_not_letter_svgs(self, admin_client: APIClient) -> None:
+        readme = ReadmeFactory(
+            content="```mermaid\nflowchart TD\nA-->B\n```",
+            letter_content="```mermaid\nflowchart TD\nC-->D\n```",
+        )
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", return_value=1),
+        ):
+            admin_client.post(
+                _url(readme.pk),
+                {
+                    "doc": "letter",
+                    "include_readme": True,
+                    "svgs": ["<svg>LETTER</svg>"],
+                    "readme_svgs": ["<svg>README</svg>"],
+                },
+                format="json",
+            )
+        # First call is the standalone README-only render used to discover the
+        # diagram-fit CSS; the last call is the final combined document.
+        fit_check_html = render.call_args_list[0].args[0]
+        combined_html = render.call_args_list[-1].args[0]
+        assert "<svg>README</svg>" in fit_check_html
+        assert "<svg>LETTER</svg>" not in fit_check_html
+        assert "<svg>README</svg>" in combined_html
+        assert "<svg>LETTER</svg>" in combined_html
+        assert combined_html.index("<svg>README</svg>") < combined_html.index("<svg>LETTER</svg>")
+
+    def test_readme_diagram_shrink_css_is_scoped_to_readme_section(
+        self, admin_client: APIClient
+    ) -> None:
+        readme = ReadmeFactory(content="```mermaid\nflowchart TD\nA-->B\n```")
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", side_effect=[2, 1]),
+        ):
+            admin_client.post(
+                _url(readme.pk),
+                {"doc": "letter", "include_readme": True, "readme_svgs": ["<svg>D</svg>"]},
+                format="json",
+            )
+        combined_html = render.call_args_list[-1].args[0]
+        assert ".doc-section--readme .rm-body img" in combined_html
 
 
 class TestRenderReadmeBodyHelper:

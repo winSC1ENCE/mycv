@@ -19,10 +19,15 @@ const props = withDefaults(
   }>(),
   { keys: () => [], busy: false, saveError: null },
 );
-const emit = defineEmits<{ save: []; cancel: []; export: [lang: "en" | "de"] }>();
+const emit = defineEmits<{
+  save: [];
+  cancel: [];
+  export: [lang: "en" | "de", includeReadme: boolean];
+}>();
 
 const { t } = useI18n();
 const lang = ref<"en" | "de">("en");
+const includeReadme = ref(false);
 const isLetter = computed(() => props.docType === "letter");
 
 const bodyModel = computed<string>({
@@ -151,12 +156,16 @@ function applyTemplate(): void {
             </button>
           </div>
           <div class="doc-editor__group">
+            <label v-if="isLetter" class="label--checkbox">
+              <input v-model="includeReadme" type="checkbox" />
+              {{ t("admin.readme.includeReadme") }}
+            </label>
             <button
               class="btn"
               type="button"
               :disabled="busy || !draft.id"
               :title="!draft.id ? t('admin.readme.saveFirst') : ''"
-              @click="emit('export', 'de')"
+              @click="emit('export', 'de', includeReadme)"
             >
               {{ t("admin.readme.exportDe") }}
             </button>
@@ -165,7 +174,7 @@ function applyTemplate(): void {
               type="button"
               :disabled="busy || !draft.id"
               :title="!draft.id ? t('admin.readme.saveFirst') : ''"
-              @click="emit('export', 'en')"
+              @click="emit('export', 'en', includeReadme)"
             >
               {{ t("admin.readme.exportEn") }}
             </button>

@@ -211,7 +211,7 @@ async function save(): Promise<void> {
   }
 }
 
-async function exportPdf(target: "en" | "de"): Promise<void> {
+async function exportPdf(target: "en" | "de", includeReadme: boolean): Promise<void> {
   if (!editing.value) return;
   busy.value = true;
   try {
@@ -224,14 +224,28 @@ async function exportPdf(target: "en" | "de"): Promise<void> {
         ? saved.letter_content_de || saved.letter_content || ""
         : (saved.letter_content ?? "");
     const svgs = await renderMermaidImages(body);
+
+    let readmeSvgs: string[] = [];
+    if (includeReadme) {
+      // The letter editor only tracks letter fields — look up the README body
+      // from the freshly reloaded list to rasterize its own Mermaid diagrams.
+      const full = items.value.find((i) => i.id === saved.id);
+      const readmeBody =
+        target === "de" ? full?.content_de || full?.content || "" : (full?.content ?? "");
+      readmeSvgs = await renderMermaidImages(readmeBody);
+    }
+
     const blob = await readmeApi.pdf(
       saved.id,
       target,
       svgs,
       `${window.location.origin}/`,
       "letter",
+      includeReadme,
+      readmeSvgs,
     );
-    downloadBlob(blob, `${slugify(saved.name ?? "letter") || "letter"}-letter.pdf`);
+    const suffix = includeReadme ? "-letter-with-readme" : "-letter";
+    downloadBlob(blob, `${slugify(saved.name ?? "letter") || "letter"}${suffix}.pdf`);
   } catch {
     saveError.value = "Export failed.";
   } finally {

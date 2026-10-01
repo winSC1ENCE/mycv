@@ -6,6 +6,11 @@
   <style>{{ css|safe }}</style>
 </head>
 <body>
+  <header class="doc-head">
+    <p class="doc-head__kicker">{{ kicker }}</p>
+    <h1 class="doc-head__title">{{ name }}</h1>
+    <p class="doc-head__sub">{{ person_name }}</p>
+  </header>
   <main class="rm-body">{{ body|safe }}</main>
 </body>
 </html>

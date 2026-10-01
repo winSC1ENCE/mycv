@@ -111,9 +111,12 @@ export const cvApi = {
 export const readmeApi = {
   ...crud<Readme, ReadmeWrite>("/admin/readmes"),
   /**
-   * Export a README as PDF. `svgs` are the client-rendered Mermaid diagrams;
-   * `baseUrl` is the visitor-facing origin (the backend's request Host is the
-   * internal proxy target, so the client supplies the real one).
+   * Export a README (or motivation letter) as PDF. `svgs` are the
+   * client-rendered Mermaid diagrams; `baseUrl` is the visitor-facing origin
+   * (the backend's request Host is the internal proxy target, so the client
+   * supplies the real one). For `doc: "letter"`, passing `includeReadme: true`
+   * merges the README PDF in front of the letter into one document — `readmeSvgs`
+   * are that README body's own (separate) Mermaid diagrams.
    */
   async pdf(
     id: Id,
@@ -121,10 +124,19 @@ export const readmeApi = {
     svgs: string[],
     baseUrl: string,
     doc: "readme" | "letter" = "readme",
+    includeReadme = false,
+    readmeSvgs: string[] = [],
   ): Promise<Blob> {
     const { data } = await http.post<Blob>(
       `/admin/readmes/${id}/pdf/`,
-      { lang, svgs, base_url: baseUrl, doc },
+      {
+        lang,
+        svgs,
+        base_url: baseUrl,
+        doc,
+        include_readme: includeReadme,
+        readme_svgs: readmeSvgs,
+      },
       { responseType: "blob" },
     );
     return data;

@@ -25,6 +25,14 @@
   font-style: normal;
 }
 
+:root {
+  --accent: #0e7490;
+  --accent-dark: #0b3a4a;
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: #e2e8f0;
+}
+
 @page {
   size: A4;
   margin: 18mm 16mm 22mm 16mm;
@@ -42,8 +50,37 @@ html, body {
   font-family: "Inter", sans-serif;
   font-size: 10.5pt;
   line-height: 1.5;
-  color: #0f172a;
+  color: var(--ink);
   background: white;
+}
+
+/* --- Corporate header band — same CI as cv.css/certificates.css --- */
+.doc-head {
+  background: linear-gradient(165deg, var(--accent-dark), var(--accent));
+  color: #fff;
+  border-radius: 2.5mm;
+  padding: 10mm 12mm;
+  margin-bottom: 8mm;
+}
+.doc-head__kicker {
+  font-size: 8.5pt;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2mm;
+}
+.doc-head__title { font-size: 18pt; font-weight: 700; line-height: 1.15; }
+.doc-head__sub {
+  font-size: 10.5pt;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  margin-top: 1.5mm;
+}
+
+/* Combined README + Letter export: one document, one continuous page counter. */
+.doc-section--break {
+  page-break-before: always;
+  break-before: page;
 }
 
 /* --- Badges (injected where the badges token appears) --- */

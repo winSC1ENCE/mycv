@@ -77,6 +77,12 @@ html, body {
   margin-top: 1.5mm;
 }
 
+/* Combined README + Letter export: one document, one continuous page counter. */
+.doc-section--break {
+  page-break-before: always;
+  break-before: page;
+}
+
 /* --- Badges (injected where the badges token appears) --- */
 .rm-badges {
   display: inline-flex;

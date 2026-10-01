@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import io
 import re
+from collections.abc import Callable
 from typing import Any
 
 import markdown as md
@@ -35,7 +36,7 @@ from rest_framework.views import APIView
 
 from apps.cv import models
 
-from .views import _assemble_pdf, _read_css, _render_pdf
+from .views import _read_css, _render_pdf
 
 VALID_LANGS = {"en", "de"}
 VALID_DOCS = {"readme", "letter"}
@@ -185,6 +186,40 @@ def _label_for(doc: str) -> str:
     return "Motivation Letter" if doc == "letter" else "README"
 
 
+def _prepare_body(
+    readme: models.Readme, lang: str, doc: str, svgs: list[object], public_url: str
+) -> str:
+    """Markdown -> sanitized HTML for one document body, badges token resolved."""
+    ctx = _placeholder_context(readme, public_url)
+    body = render_readme_body(readme, lang, public_url, doc=doc)
+    raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)
+    clean = nh3.clean(raw_html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
+    clean = _inject_mermaid(clean, [str(svg) for svg in svgs])
+    if doc == "letter":
+        badges = _badges_html("reference", readme.letter_reference, ctx["{{updated}}"])
+    else:
+        badges = _badges_html("version", readme.version, ctx["{{updated}}"])
+    return clean.replace("{{badges}}", badges)
+
+
+def _fit_to_one_page(render: Callable[[str], bytes]) -> tuple[bytes, str]:
+    """Re-render via ``render(extra_css)`` with shrinking diagram-height caps
+    until the result is a single page (or the shrink ladder is exhausted).
+
+    Returns the final bytes and the extra CSS that produced them, so a caller
+    that only needs to know *which* CSS fits (e.g. to reuse it scoped to one
+    section of a larger document) doesn't have to re-render from scratch.
+    """
+    extra_css = ""
+    pdf_bytes = render(extra_css)
+    for cap in _DIAGRAM_HEIGHT_STEPS:
+        if _page_count(pdf_bytes) == 1:
+            break
+        extra_css = f"\n.rm-body img, .rm-body svg {{ max-height: {cap}; width: auto; }}"
+        pdf_bytes = render(extra_css)
+    return pdf_bytes, extra_css
+
+
 def _render_document(
     readme: models.Readme,
     *,
@@ -199,17 +234,7 @@ def _render_document(
     Shares the corporate-header template/CSS with the other doc type; applies
     the one-page-fit diagram-shrink ladder only for ``doc == "readme"``.
     """
-    ctx = _placeholder_context(readme, public_url)
-    body = render_readme_body(readme, lang, public_url, doc=doc)
-    raw_html = md.markdown(body, extensions=_MARKDOWN_EXTENSIONS)
-    clean = nh3.clean(raw_html, tags=_ALLOWED_TAGS, attributes=_ALLOWED_ATTRS)
-    clean = _inject_mermaid(clean, [str(svg) for svg in svgs])
-    if doc == "letter":
-        badges = _badges_html("reference", readme.letter_reference, ctx["{{updated}}"])
-    else:
-        badges = _badges_html("version", readme.version, ctx["{{updated}}"])
-    clean = clean.replace("{{badges}}", badges)
-
+    clean = _prepare_body(readme, lang, doc, svgs, public_url)
     css = _read_css("readme.css")
     label = _label_for(doc)
 
@@ -233,17 +258,87 @@ def _render_document(
             font_config=font_config,
         )
 
-    pdf_bytes = render()
     if doc == "readme" and svgs:
         # A README must stay a one-pager: shrink the diagrams stepwise until
         # everything fits (remaining overflow means the text itself is too long).
-        for cap in _DIAGRAM_HEIGHT_STEPS:
-            if _page_count(pdf_bytes) == 1:
-                break
-            pdf_bytes = render(
-                f"\n.rm-body img, .rm-body svg {{ max-height: {cap}; width: auto; }}"
+        pdf_bytes, _ = _fit_to_one_page(render)
+        return pdf_bytes
+    return render()
+
+
+def _render_combined_document(
+    readme: models.Readme,
+    *,
+    lang: str,
+    letter_doc: str,
+    svgs: list[object],
+    readme_svgs: list[object],
+    public_url: str,
+    font_config: Any | None = None,
+) -> bytes:
+    """Render the README and the Letter as ONE document (one WeasyPrint call).
+
+    A single document — rather than two rendered PDFs merged via ``pypdf`` —
+    means the ``@page`` footer's page counter is naturally continuous (1, 2,
+    3…) across both parts, since it's one shared pagination context instead of
+    two independent ones.
+    """
+    readme_clean = _prepare_body(readme, lang, "readme", readme_svgs, public_url)
+    letter_clean = _prepare_body(readme, lang, letter_doc, svgs, public_url)
+    css = _read_css("readme.css")
+    readme_label = _label_for("readme")
+    letter_label = _label_for(letter_doc)
+
+    # The README section's own pagination is identical whether or not a Letter
+    # section follows it (same @page box/margins throughout), so the diagram-fit
+    # CSS can be discovered via a standalone-style render and reused here, scoped
+    # to the README section only — no need to re-measure inside the combined doc.
+    fit_css = ""
+    if readme_svgs:
+
+        def render_readme_alone(extra_css: str) -> bytes:
+            html = render_to_string(
+                "exports/readme.html",
+                {
+                    "name": readme.name,
+                    "kicker": readme_label,
+                    "person_name": readme.person.full_name,
+                    "body": mark_safe(readme_clean),  # nosec B308 B703 # noqa: S308
+                    "css": css + extra_css,
+                    "lang": lang,
+                },
             )
-    return pdf_bytes
+            return _render_pdf(
+                html,
+                base_url=str(settings.BASE_DIR),
+                title=f"{readme.name} — {readme_label}",
+                author=readme.person.full_name,
+                font_config=font_config,
+            )
+
+        _, fit_css = _fit_to_one_page(render_readme_alone)
+        fit_css = fit_css.replace(".rm-body", ".doc-section--readme .rm-body")
+
+    html = render_to_string(
+        "exports/readme_combined.html",
+        {
+            "name": readme.name,
+            "person_name": readme.person.full_name,
+            "readme_kicker": readme_label,
+            "letter_kicker": letter_label,
+            "readme_body": mark_safe(readme_clean),  # nosec B308 B703 # noqa: S308
+            "letter_body": mark_safe(letter_clean),  # nosec B308 B703 # noqa: S308
+            "css": css + fit_css,
+            "lang": lang,
+        },
+    )
+    return _render_pdf(
+        html,
+        base_url=str(settings.BASE_DIR),
+        title=f"{readme.name} — README + {letter_label}",
+        author=readme.person.full_name,
+        font_config=font_config,
+    )
 
 
 class ReadmePdfView(APIView):
@@ -289,36 +384,22 @@ class ReadmePdfView(APIView):
             base_url = request.build_absolute_uri("/")
         public_url = base_url
 
-        font_config = None
-        if include_readme:
-            # Shared across both renders: decompress the woff2 fonts once per
-            # request instead of once per document (mirrors CertificatesPdfView).
-            from weasyprint.text.fonts import FontConfiguration  # lazy, like _render_pdf
+        # Shared across every render in this request: decompress the woff2 fonts
+        # once instead of once per document (mirrors CertificatesPdfView).
+        from weasyprint.text.fonts import FontConfiguration  # lazy, like _render_pdf
 
-            font_config = FontConfiguration()
+        font_config = FontConfiguration()
 
         slug = slugify(readme.name) or "readme"
         if include_readme:
-            readme_pdf_bytes = _render_document(
+            pdf_bytes = _render_combined_document(
                 readme,
                 lang=lang,
-                doc="readme",
-                svgs=readme_svgs,
-                public_url=public_url,
-                font_config=font_config,
-            )
-            letter_pdf_bytes = _render_document(
-                readme,
-                lang=lang,
-                doc=doc,
+                letter_doc=doc,
                 svgs=svgs,
+                readme_svgs=readme_svgs,
                 public_url=public_url,
                 font_config=font_config,
-            )
-            pdf_bytes = _assemble_pdf(
-                [readme_pdf_bytes, letter_pdf_bytes],
-                title=f"{readme.name} — README + {_label_for(doc)}",
-                author=readme.person.full_name,
             )
             filename = f"{slug}-letter-with-readme.pdf"
         else:

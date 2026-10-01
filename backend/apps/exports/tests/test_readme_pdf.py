@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-import io
 from unittest.mock import patch
 
 import pytest
 from django.contrib.auth import get_user_model
-from pypdf import PdfReader, PdfWriter
 from rest_framework.test import APIClient
 
 from apps.cv.tests.factories import AccessKeyFactory, PersonFactory, ReadmeFactory
@@ -312,38 +310,31 @@ class TestLetterBlankLines:
         assert "<p>&nbsp;</p>" in html or "<p>\xa0</p>" in html
 
 
-def _fake_pdf(width: int) -> bytes:
-    writer = PdfWriter()
-    writer.add_blank_page(width=width, height=100)
-    buf = io.BytesIO()
-    writer.write(buf)
-    return buf.getvalue()
-
-
 class TestCombinedReadmeAndLetter:
-    """``include_readme`` merges the README PDF in front of the letter."""
+    """``include_readme`` renders the README and Letter as ONE document (one
 
-    def test_merges_readme_before_letter_in_render_and_page_order(
-        self, admin_client: APIClient
-    ) -> None:
+    WeasyPrint call), so the page counter in the footer stays continuous
+    across both parts instead of each part restarting its own count.
+    """
+
+    def test_merges_readme_before_letter_as_one_document(self, admin_client: APIClient) -> None:
         readme = ReadmeFactory(
             name="ACME GmbH", content="README body", letter_content="Letter body"
         )
-        widths = iter([250, 150])  # README rendered first, then the letter
-        with patch(
-            "apps.exports.readme._render_pdf",
-            side_effect=lambda *a, **k: _fake_pdf(next(widths)),
-        ) as render:
+        with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
             resp = admin_client.post(
                 _url(readme.pk), {"doc": "letter", "include_readme": True}, format="json"
             )
         assert resp.status_code == 200
-        assert render.call_count == 2
-        assert "README body" in render.call_args_list[0].args[0]
-        assert "Letter body" in render.call_args_list[1].args[0]
-        reader = PdfReader(io.BytesIO(resp.content))
-        assert len(reader.pages) == 2
-        assert [int(p.mediabox.width) for p in reader.pages] == [250, 150]
+        # No diagrams to fit, so this is a single combined render — not two
+        # separate documents stitched together afterward.
+        assert render.call_count == 1
+        html = render.call_args.args[0]
+        assert '<section class="doc-section doc-section--readme">' in html
+        assert 'doc-section--break">' in html
+        assert "README body" in html
+        assert "Letter body" in html
+        assert html.index("README body") < html.index("Letter body")
         assert 'filename="acme-gmbh-letter-with-readme.pdf"' in resp["Content-Disposition"]
 
     def test_omitted_flag_renders_letter_only(self, admin_client: APIClient) -> None:
@@ -351,6 +342,7 @@ class TestCombinedReadmeAndLetter:
         with patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render:
             resp = admin_client.post(_url(readme.pk), {"doc": "letter"}, format="json")
         assert render.call_count == 1
+        assert "<section" not in render.call_args.args[0]
         assert "with-readme" not in resp["Content-Disposition"]
 
     def test_readme_mermaid_uses_readme_svgs_not_letter_svgs(self, admin_client: APIClient) -> None:
@@ -358,12 +350,8 @@ class TestCombinedReadmeAndLetter:
             content="```mermaid\nflowchart TD\nA-->B\n```",
             letter_content="```mermaid\nflowchart TD\nC-->D\n```",
         )
-        widths = iter([250, 150])
         with (
-            patch(
-                "apps.exports.readme._render_pdf",
-                side_effect=lambda *a, **k: _fake_pdf(next(widths)),
-            ) as render,
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
             patch("apps.exports.readme._page_count", return_value=1),
         ):
             admin_client.post(
@@ -376,12 +364,31 @@ class TestCombinedReadmeAndLetter:
                 },
                 format="json",
             )
-        readme_html = render.call_args_list[0].args[0]
-        letter_html = render.call_args_list[1].args[0]
-        assert "<svg>README</svg>" in readme_html
-        assert "<svg>LETTER</svg>" not in readme_html
-        assert "<svg>LETTER</svg>" in letter_html
-        assert "<svg>README</svg>" not in letter_html
+        # First call is the standalone README-only render used to discover the
+        # diagram-fit CSS; the last call is the final combined document.
+        fit_check_html = render.call_args_list[0].args[0]
+        combined_html = render.call_args_list[-1].args[0]
+        assert "<svg>README</svg>" in fit_check_html
+        assert "<svg>LETTER</svg>" not in fit_check_html
+        assert "<svg>README</svg>" in combined_html
+        assert "<svg>LETTER</svg>" in combined_html
+        assert combined_html.index("<svg>README</svg>") < combined_html.index("<svg>LETTER</svg>")
+
+    def test_readme_diagram_shrink_css_is_scoped_to_readme_section(
+        self, admin_client: APIClient
+    ) -> None:
+        readme = ReadmeFactory(content="```mermaid\nflowchart TD\nA-->B\n```")
+        with (
+            patch("apps.exports.readme._render_pdf", return_value=_FAKE_PDF) as render,
+            patch("apps.exports.readme._page_count", side_effect=[2, 1]),
+        ):
+            admin_client.post(
+                _url(readme.pk),
+                {"doc": "letter", "include_readme": True, "readme_svgs": ["<svg>D</svg>"]},
+                format="json",
+            )
+        combined_html = render.call_args_list[-1].args[0]
+        assert ".doc-section--readme .rm-body img" in combined_html
 
 
 class TestRenderReadmeBodyHelper:

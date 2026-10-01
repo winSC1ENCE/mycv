@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <title>{{ name }} — README + Letter</title>
+  <style>{{ css|safe }}</style>
+</head>
+<body>
+  <section class="doc-section doc-section--readme">
+    <header class="doc-head">
+      <p class="doc-head__kicker">{{ readme_kicker }}</p>
+      <h1 class="doc-head__title">{{ name }}</h1>
+      <p class="doc-head__sub">{{ person_name }}</p>
+    </header>
+    <main class="rm-body">{{ readme_body|safe }}</main>
+  </section>
+  <section class="doc-section doc-section--letter doc-section--break">
+    <header class="doc-head">
+      <p class="doc-head__kicker">{{ letter_kicker }}</p>
+      <h1 class="doc-head__title">{{ name }}</h1>
+      <p class="doc-head__sub">{{ person_name }}</p>
+    </header>
+    <main class="rm-body">{{ letter_body|safe }}</main>
+  </section>
+</body>
+</html>
